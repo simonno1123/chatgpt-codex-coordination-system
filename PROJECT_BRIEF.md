@@ -12,7 +12,7 @@
 - 任务流转文件；
 - Git 基础治理。
 
-法律业务模块不是当前阶段任务。民事执行、银行流水、公司责任、证据审查、法律检索 MCP 和法律文书模板，只作为未来可选应用方向保留。
+非协同作业能力不是当前阶段任务。如需新增，必须由用户另行明确授权。
 
 ---
 
@@ -42,12 +42,9 @@
 
 当前暂停：
 
-- 法律业务 agent；
-- 法律业务 skill；
-- MCP 配置；
-- 法律业务模板；
-- 样例案件测试；
-- 任何具体法律分析规则落地。
+- 任何非协同作业能力；
+- 任何未获用户明确授权的独立能力；
+- 任何会把本系统变成业务系统的实现。
 
 ---
 
@@ -189,20 +186,11 @@ ACCEPTED / REWORK / BLOCKED / CANCELLED
 
 ## 九、当前边界
 
-当前项目不是法律业务系统本体，而是 ChatGPT-Codex 协同作业系统。
+当前项目不是业务系统本体，而是 ChatGPT-Codex 协同作业系统。
 
-当前阶段不得启动：
+当前阶段不得启动任何非协同作业能力。
 
-1. 民事执行财产线索 agent；
-2. 银行流水分析 skill；
-3. 公司人格否认或实控人责任 agent；
-4. 证据审查 agent；
-5. 北大法宝 MCP 配置；
-6. 法律业务输出模板；
-7. 样例案件测试；
-8. 任何具体法律分析规则。
-
-这些内容可以作为未来可选应用方向，但不属于当前协同系统建设阶段。
+如需新增非协同作业能力，必须由用户另行明确授权，并作为独立任务处理。
 
 ---
 
@@ -225,7 +213,7 @@ ACCEPTED / REWORK / BLOCKED / CANCELLED
 4. 根据实测结果局部修订 agent、skills 或模板；
 5. 形成稳定的协同作业使用说明。
 
-法律业务模块仅在协同系统稳定后，作为独立应用方向再由用户明确授权启动。
+任何非协同作业能力仅能在用户另行明确授权后启动。
 
 ---
 
@@ -233,7 +221,7 @@ ACCEPTED / REWORK / BLOCKED / CANCELLED
 
 Project name: Standard General ChatGPT-Codex Coordination System.
 
-The current system is a general-purpose coordination system. Its core responsibility is to govern how ChatGPT and Codex collaborate. It does not provide domain-specific business capability.
+The current system is a general-purpose coordination system. Its core responsibility is to govern how ChatGPT and Codex collaborate. It does not provide non-coordination capability.
 
 Core system capabilities include:
 
@@ -250,6 +238,6 @@ Core system capabilities include:
 11. Task state tracking.
 12. Scope guarding.
 
-All business capability is external to the core system. Legal workflows, MCP integrations, PDF/OCR, network management, database access, external platform access, industry knowledge bases, and document templates are future extensions only. They must not be listed as current core tasks.
+Any non-coordination capability is outside the core system. It must not be listed as current core work.
 
 Scope policy is defined in `SCOPE_POLICY.md`. Future tasks should be checked against that policy before implementation.

@@ -34,7 +34,7 @@ DONE 不等于 ACCEPTED。Codex 完成任务后，必须等待 ChatGPT 审查。
 - `TASKS.md`
 - Git 基础治理文件
 
-当前暂停所有法律业务模块。
+当前暂停所有非协同作业能力。
 
 ---
 
@@ -274,15 +274,15 @@ c668de9 chore: establish ChatGPT-Codex coordination baseline
 
 - 只修改 `PROJECT_BRIEF.md` 和 `TASKS.md`；
 - 将当前项目范围修正为 ChatGPT-Codex 协同作业系统；
-- 将法律业务内容降级为未来可选应用方向。
+- 将非协同作业能力排除在当前系统之外。
 
 限制：
 
-- 不得创建法律业务 agent；
-- 不得创建法律业务 skill；
-- 不得创建 `mcp/`；
-- 不得创建 `templates/`；
-- 不得创建 `tests/sample_cases/`；
+- 不得创建非协同作业 agent；
+- 不得创建非协同作业 skill；
+- 不得创建非协同作业目录；
+- 不得创建非协同作业模板；
+- 不得创建非协同作业样例；
 - 不得修改 `agents/`；
 - 不得修改 `skills/`；
 - 不得修改 `.codex-coordination/`；
@@ -313,7 +313,7 @@ c668de9 chore: establish ChatGPT-Codex coordination baseline
 
 - 创建一个最小协同流程演练；
 - 使用 `.codex-coordination/inbox/`、`outbox/`、`decisions/` 记录任务、结果和审查；
-- 不进入任何法律业务模块。
+- 不进入任何非协同作业模块。
 
 ---
 
@@ -329,17 +329,11 @@ c668de9 chore: establish ChatGPT-Codex coordination baseline
 
 ---
 
-## 未来可选应用方向
+## 非协同能力边界
 
-以下内容不属于当前协同系统建设阶段，仅作为后续可能应用方向保留。除非用户另行明确授权，不得创建相关目录或文件：
+非协同作业能力不属于当前系统建设阶段，不作为后续待办或预留规划保留。
 
-- 民事执行财产线索；
-- 银行流水分析；
-- 公司责任分析；
-- 证据审查；
-- 法律检索 MCP；
-- 法律文书模板；
-- 样例案件测试。
+如用户确需新增非协同作业能力，必须另行明确授权，并通过独立任务处理。
 
 ---
 
@@ -369,8 +363,8 @@ OUT_OF_SCOPE
 
 Only CORE, MAINTENANCE, TEST, and DOCS tasks may directly enter the current system.
 
-EXTENSION tasks require explicit user approval. Business capability must be recorded as Future Extensions, not as current core work.
+EXTENSION tasks require explicit user approval and are not part of the current core system.
 
-Future Extensions include legal workflows, legal research, MCP integrations, PDF/OCR, database access, network management, browser automation, GitHub automation, external APIs, business templates, and domain-specific agents or skills.
+Do not keep reserved extension lists as project planning. Any non-coordination capability requires separate explicit user authorization before implementation.
 
 Before creating extension files or directories, review `SCOPE_POLICY.md` and use `skills/scope_guardian.md`.

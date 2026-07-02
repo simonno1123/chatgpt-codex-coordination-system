@@ -15,12 +15,8 @@ Current scope:
 
 Out of current scope unless explicitly authorized:
 
-- Legal business agents
-- Legal business skills
-- MCP service configuration
-- Legal templates
-- Sample legal case tests
-- Any concrete legal analysis rules
+- Any capability that is not necessary for ChatGPT-Codex coordination.
+- Any file, directory, integration, workflow, agent, skill, template, configuration, or automation that serves non-coordination work.
 
 ## 2. Standard Workflow
 
@@ -79,7 +75,7 @@ Codex must not:
 4. Delete files unless explicitly authorized.
 5. Stage or commit files unless explicitly authorized.
 6. Add historical untracked files unless explicitly authorized.
-7. Start legal business modules unless explicitly authorized.
+7. Start non-coordination work unless explicitly authorized.
 
 ## 4. Task Types
 
@@ -325,7 +321,7 @@ These rules apply to every task unless explicitly overridden:
 
 1. Do not modify unauthorized files.
 2. Do not delete files.
-3. Do not create legal business modules.
+3. Do not create non-coordination modules.
 4. Do not add dependencies.
 5. Do not write real API keys, tokens, passwords, or credentials.
 6. Do not connect external services unless explicitly authorized.
@@ -381,7 +377,7 @@ Future work should improve convenience and automation without weakening the cont
 
 This project is the Standard General ChatGPT-Codex Coordination System.
 
-The core system is responsible for how ChatGPT and Codex collaborate. It is not responsible for domain-specific business work.
+The core system is responsible for how ChatGPT and Codex collaborate. It is not responsible for non-coordination work.
 
 All future tasks should include a Scope Classification:
 
@@ -396,6 +392,6 @@ OUT_OF_SCOPE
 
 Only CORE, MAINTENANCE, TEST, and DOCS tasks may directly enter the current core system.
 
-EXTENSION and OUT_OF_SCOPE tasks require explicit user approval and should be planned separately. Codex must not silently add business capability to the core system.
+EXTENSION and OUT_OF_SCOPE tasks require explicit user approval and should be handled separately. Codex must not silently add non-coordination capability to the core system.
 
-Refer to `SCOPE_POLICY.md` and `skills/scope_guardian.md` before approving any task that introduces business logic, external services, MCP, PDF/OCR, database access, browser automation, GitHub automation, network management, legal workflows, templates, or domain-specific agents and skills.
+Refer to `SCOPE_POLICY.md` and `skills/scope_guardian.md` before approving any task that introduces functionality not required for ChatGPT-Codex coordination.

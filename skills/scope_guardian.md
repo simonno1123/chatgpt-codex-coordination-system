@@ -2,7 +2,7 @@
 
 ## 1. Purpose
 
-This skill prevents the general ChatGPT-Codex coordination system from expanding into unrelated business domains.
+This skill prevents the general ChatGPT-Codex coordination system from expanding into unrelated non-coordination work.
 
 It determines whether a requested task belongs to the core coordination system, system maintenance, testing, documentation, a separate extension, or is out of scope.
 
@@ -45,20 +45,9 @@ A task is DOCS when it documents how to use or maintain the coordination system.
 
 ## 7. EXTENSION
 
-A task is EXTENSION when it introduces any domain-specific or external capability, including:
+A task is EXTENSION when it introduces functionality that is not required for ChatGPT-Codex coordination itself.
 
-1. Legal research.
-2. Case retrieval.
-3. PDF/OCR.
-4. Database access.
-5. Network management.
-6. MCP integration.
-7. GitHub automation.
-8. Browser automation.
-9. Business templates.
-10. Industry-specific agents or skills.
-
-EXTENSION tasks require explicit user approval and should be created separately from the core coordination system.
+EXTENSION tasks require explicit user approval and must be handled separately from the core coordination system.
 
 ## 8. OUT_OF_SCOPE
 
@@ -92,7 +81,7 @@ LOW / MEDIUM / HIGH
 
 ## 10. Default Rule
 
-If a task includes business logic, external services, MCP, legal content, network management, data processing, templates, or domain-specific workflows, classify it as EXTENSION unless the user explicitly states it is part of the core coordination system.
+If a task introduces functionality that is not necessary for ChatGPT-Codex coordination, classify it as EXTENSION unless the user explicitly states it is part of the core coordination system.
 
 ## 11. Final Rule
 

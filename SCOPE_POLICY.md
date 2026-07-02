@@ -4,7 +4,7 @@
 
 This document defines the scope boundary of the standard general-purpose ChatGPT-Codex coordination system.
 
-The system exists only to coordinate work between ChatGPT and Codex. It must not absorb business-specific functionality unless the user explicitly creates a separate extension.
+The system exists only to coordinate work between ChatGPT and Codex. It must not absorb non-coordination functionality unless the user explicitly authorizes a separate task.
 
 ## 2. Core System Scope
 
@@ -25,28 +25,15 @@ The following belong to the core coordination system:
 
 ## 3. Non-Core Scope
 
-The following do not belong to the core coordination system:
+Any capability that is not necessary for coordinating ChatGPT-Codex work is outside the core system.
 
-1. Legal business modules.
-2. Legal research tools.
-3. Case retrieval tools.
-4. MCP integrations.
-5. Network management modules.
-6. PDF/OCR workflows.
-7. Word/Excel document automation.
-8. Database integrations.
-9. Browser automation.
-10. GitHub issue or PR automation.
-11. External API integrations.
-12. Industry knowledge bases.
-13. Business templates.
-14. Domain-specific agents or skills.
+Non-core functionality must not be added to this project unless the user gives explicit instruction for a separate task.
 
 ## 4. Extension Rule
 
-Any non-core functionality must be created as a separate extension after explicit user instruction.
+Any non-core functionality requires explicit user instruction in a separate task.
 
-Extensions must not be added silently to the core system.
+Non-core functionality must not be added silently to the core system.
 
 ## 5. Scope Classification
 
@@ -63,16 +50,7 @@ Tasks classified as EXTENSION or OUT_OF_SCOPE require explicit user approval bef
 
 ## 6. Default Forbidden Expansion
 
-Unless explicitly authorized, Codex must not create:
-
-1. Business modules.
-2. Legal modules.
-3. MCP configuration.
-4. PDF/OCR modules.
-5. Database integrations.
-6. External API integrations.
-7. Domain-specific templates.
-8. Industry-specific agents or skills.
+Unless explicitly authorized, Codex must not create files, directories, integrations, workflows, agents, skills, templates, configurations, or automation that are not required for ChatGPT-Codex coordination.
 
 ## 7. Review Requirement
 
