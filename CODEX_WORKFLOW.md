@@ -376,3 +376,26 @@ The current project stage is complete enough for repeated coordination use:
 - Git baseline and line ending rules exist.
 
 Future work should improve convenience and automation without weakening the control model.
+
+## 15. Standard General Coordination Scope
+
+This project is the Standard General ChatGPT-Codex Coordination System.
+
+The core system is responsible for how ChatGPT and Codex collaborate. It is not responsible for domain-specific business work.
+
+All future tasks should include a Scope Classification:
+
+```text
+CORE
+MAINTENANCE
+TEST
+DOCS
+EXTENSION
+OUT_OF_SCOPE
+```
+
+Only CORE, MAINTENANCE, TEST, and DOCS tasks may directly enter the current core system.
+
+EXTENSION and OUT_OF_SCOPE tasks require explicit user approval and should be planned separately. Codex must not silently add business capability to the core system.
+
+Refer to `SCOPE_POLICY.md` and `skills/scope_guardian.md` before approving any task that introduces business logic, external services, MCP, PDF/OCR, database access, browser automation, GitHub automation, network management, legal workflows, templates, or domain-specific agents and skills.

@@ -226,3 +226,30 @@ ACCEPTED / REWORK / BLOCKED / CANCELLED
 5. 形成稳定的协同作业使用说明。
 
 法律业务模块仅在协同系统稳定后，作为独立应用方向再由用户明确授权启动。
+
+---
+
+## Standard General Coordination Scope
+
+Project name: Standard General ChatGPT-Codex Coordination System.
+
+The current system is a general-purpose coordination system. Its core responsibility is to govern how ChatGPT and Codex collaborate. It does not provide domain-specific business capability.
+
+Core system capabilities include:
+
+1. ChatGPT-Codex role separation.
+2. Codex task generation.
+3. Codex execution boundary control.
+4. DONE reporting.
+5. BLOCKED interruption handling.
+6. ChatGPT review decisions.
+7. REWORK task generation.
+8. Context compression.
+9. Git safety rules.
+10. Inbox / outbox / decisions flow.
+11. Task state tracking.
+12. Scope guarding.
+
+All business capability is external to the core system. Legal workflows, MCP integrations, PDF/OCR, network management, database access, external platform access, industry knowledge bases, and document templates are future extensions only. They must not be listed as current core tasks.
+
+Scope policy is defined in `SCOPE_POLICY.md`. Future tasks should be checked against that policy before implementation.

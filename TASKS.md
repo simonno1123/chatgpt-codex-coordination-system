@@ -349,3 +349,28 @@ c668de9 chore: establish ChatGPT-Codex coordination baseline
 2. `.gitattributes` 已创建但尚未纳入 commit。
 3. 已完成协同文件中部分内容此前为条件验收，后续如发现缺口应局部返工。
 4. 协同协议目录尚未通过真实 inbox / outbox / decisions 流程实测。
+
+---
+
+## Standard Scope Rules
+
+Current tasks should remain limited to the ChatGPT-Codex coordination system.
+
+Every future task should be classified as one of:
+
+```text
+CORE
+MAINTENANCE
+TEST
+DOCS
+EXTENSION
+OUT_OF_SCOPE
+```
+
+Only CORE, MAINTENANCE, TEST, and DOCS tasks may directly enter the current system.
+
+EXTENSION tasks require explicit user approval. Business capability must be recorded as Future Extensions, not as current core work.
+
+Future Extensions include legal workflows, legal research, MCP integrations, PDF/OCR, database access, network management, browser automation, GitHub automation, external APIs, business templates, and domain-specific agents or skills.
+
+Before creating extension files or directories, review `SCOPE_POLICY.md` and use `skills/scope_guardian.md`.
