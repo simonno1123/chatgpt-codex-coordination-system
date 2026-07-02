@@ -18,6 +18,26 @@ DONE 不等于 ACCEPTED。Codex 完成任务后，必须等待 ChatGPT 审查。
 
 ---
 
+## 当前系统范围
+
+当前项目只建设 ChatGPT-Codex 协同作业系统。
+
+系统本体包括：
+
+- `agents/codex_execution_coordinator.md`
+- `skills/codex_task_writer.md`
+- `skills/codex_output_reviewer.md`
+- `skills/codex_blocker_resolver.md`
+- `skills/project_context_compressor.md`
+- `.codex-coordination/`
+- `PROJECT_BRIEF.md`
+- `TASKS.md`
+- Git 基础治理文件
+
+当前暂停所有法律业务模块。
+
+---
+
 ## 已完成任务
 
 ### TASK_001_CREATE_CODEX_EXECUTION_COORDINATOR_AGENT
@@ -26,12 +46,12 @@ DONE 不等于 ACCEPTED。Codex 完成任务后，必须等待 ChatGPT 审查。
 
 结果：
 
-* 创建 `agents/codex_execution_coordinator.md`
+- 创建 `agents/codex_execution_coordinator.md`
 
 说明：
 
-* 基于 Codex DONE 回报进行条件验收；
-* 未逐行审查完整文件内容或 diff。
+- 基于 Codex DONE 回报进行条件验收；
+- 未逐行审查完整文件内容或 diff。
 
 ---
 
@@ -41,12 +61,12 @@ DONE 不等于 ACCEPTED。Codex 完成任务后，必须等待 ChatGPT 审查。
 
 结果：
 
-* 创建 `skills/codex_task_writer.md`
+- 创建 `skills/codex_task_writer.md`
 
 说明：
 
-* 基于 Codex DONE 回报进行条件验收；
-* 未逐行审查完整文件内容或 diff。
+- 基于 Codex DONE 回报进行条件验收；
+- 未逐行审查完整文件内容或 diff。
 
 ---
 
@@ -56,12 +76,12 @@ DONE 不等于 ACCEPTED。Codex 完成任务后，必须等待 ChatGPT 审查。
 
 结果：
 
-* 创建 `skills/codex_output_reviewer.md`
+- 创建 `skills/codex_output_reviewer.md`
 
 说明：
 
-* 基于 Codex DONE 回报进行条件验收；
-* 未逐行审查完整文件内容或 diff。
+- 基于 Codex DONE 回报进行条件验收；
+- 未逐行审查完整文件内容或 diff。
 
 ---
 
@@ -71,12 +91,12 @@ DONE 不等于 ACCEPTED。Codex 完成任务后，必须等待 ChatGPT 审查。
 
 结果：
 
-* 创建 `skills/codex_blocker_resolver.md`
+- 创建 `skills/codex_blocker_resolver.md`
 
 说明：
 
-* 基于 Codex DONE 回报进行条件验收；
-* 未逐行审查完整文件内容或 diff。
+- 基于 Codex DONE 回报进行条件验收；
+- 未逐行审查完整文件内容或 diff。
 
 ---
 
@@ -86,12 +106,12 @@ DONE 不等于 ACCEPTED。Codex 完成任务后，必须等待 ChatGPT 审查。
 
 结果：
 
-* 创建 `skills/project_context_compressor.md`
+- 创建 `skills/project_context_compressor.md`
 
 说明：
 
-* 基于 Codex DONE 回报进行条件验收；
-* 未逐行审查完整文件内容或 diff。
+- 基于 Codex DONE 回报进行条件验收；
+- 未逐行审查完整文件内容或 diff。
 
 ---
 
@@ -101,203 +121,231 @@ DONE 不等于 ACCEPTED。Codex 完成任务后，必须等待 ChatGPT 审查。
 
 结果：
 
-* 创建 `.codex-coordination/`
-* 创建 `.codex-coordination/README.md`
-* 创建 `.codex-coordination/inbox/`
-* 创建 `.codex-coordination/outbox/`
-* 创建 `.codex-coordination/decisions/`
-* 创建 `.codex-coordination/logs/`
-* 创建 `.codex-coordination/templates/`
-* 创建 `.codex-coordination/templates/task_template.md`
-* 创建 `.codex-coordination/templates/result_template.md`
-* 创建 `.codex-coordination/templates/decision_template.md`
-* 创建 `.codex-coordination/templates/context_pack_template.md`
+- 创建 `.codex-coordination/`
+- 创建 `.codex-coordination/README.md`
+- 创建 `.codex-coordination/inbox/`
+- 创建 `.codex-coordination/outbox/`
+- 创建 `.codex-coordination/decisions/`
+- 创建 `.codex-coordination/logs/`
+- 创建 `.codex-coordination/templates/`
+- 创建 `.codex-coordination/templates/task_template.md`
+- 创建 `.codex-coordination/templates/result_template.md`
+- 创建 `.codex-coordination/templates/decision_template.md`
+- 创建 `.codex-coordination/templates/context_pack_template.md`
 
 说明：
 
-* 基于 Codex DONE 回报进行条件验收；
-* 未逐行审查完整文件内容或 diff。
+- 基于 Codex DONE 回报进行条件验收；
+- 未逐行审查完整文件内容或 diff。
+
+---
+
+### TASK_007_CREATE_PROJECT_BRIEF_AND_TASKS
+
+状态：ACCEPTED_CONDITIONAL
+
+结果：
+
+- 创建 `PROJECT_BRIEF.md`
+- 创建 `TASKS.md`
+
+说明：
+
+- 基于 Codex DONE 回报进行条件验收；
+- 后续通过范围校准任务修正项目边界。
+
+---
+
+### TASK_008_DIAGNOSE_GIT_STATUS
+
+状态：ACCEPTED
+
+结果：
+
+- 确认原 `.git` 是空目录；
+- 确认 Git 安装正常；
+- 确认当前目录原本不是有效 Git 仓库。
+
+---
+
+### TASK_009_INITIALIZE_LOCAL_GIT_REPOSITORY_NO_COMMIT
+
+状态：ACCEPTED
+
+结果：
+
+- 备份原空 `.git` 为 `.git.empty-backup`；
+- 初始化本地 Git 仓库；
+- 未执行 `git add`；
+- 未执行 `git commit`。
+
+---
+
+### TASK_010_CREATE_PROJECT_GITIGNORE
+
+状态：ACCEPTED
+
+结果：
+
+- 创建 `.gitignore`；
+- 排除缓存、临时目录、大型抓包、数据库、生成文档、本地备份等内容；
+- 未执行 `git add`；
+- 未执行 `git commit`。
+
+---
+
+### TASK_010A_UPDATE_GITIGNORE_FOR_CODEX_LOCAL_DIRS
+
+状态：ACCEPTED
+
+结果：
+
+- 修改 `.gitignore`；
+- 增加 `.codex_deps/` 和 `.codex_ssh_lib/` 忽略规则；
+- 未执行 `git add`；
+- 未执行 `git commit`。
+
+---
+
+### TASK_011_STAGE_COORDINATION_FILES_ONLY_NO_COMMIT
+
+状态：ACCEPTED
+
+结果：
+
+- 只 staging 13 个协同机制相关文件；
+- 未 staging 历史旧文件；
+- 未执行 `git commit`。
+
+---
+
+### TASK_011A_REPAIR_GIT_OWNERSHIP_AND_PERMISSIONS
+
+状态：ACCEPTED
+
+结果：
+
+- 修复 `.git` ownership / ACL；
+- 解决 dubious ownership；
+- 未执行 `git add`；
+- 未执行 `git commit`。
+
+---
+
+### TASK_012_COMMIT_COORDINATION_BASELINE_IDENTITY_FIX
+
+状态：ACCEPTED
+
+结果：
+
+- 设置本仓库本地 Git identity；
+- 创建第一次基线 commit：
+
+```text
+c668de9 chore: establish ChatGPT-Codex coordination baseline
+```
+
+---
+
+### TASK_013_CREATE_GITATTRIBUTES_FOR_LINE_ENDINGS
+
+状态：DONE_PENDING_REVIEW
+
+结果：
+
+- 创建 `.gitattributes`；
+- 未执行 `git add`；
+- 未执行 `git commit`。
+
+说明：
+
+- 该文件尚未纳入版本控制；
+- 后续应单独 staging 和 commit。
 
 ---
 
 ## 当前任务
 
-### TASK_007_CREATE_PROJECT_BRIEF_AND_TASKS
+### TASK_SCOPE_CORRECTION_COORDINATION_SYSTEM_ONLY
 
-状态：READY
+状态：IN_PROGRESS
 
 目标：
 
-* 创建 `PROJECT_BRIEF.md`
-* 创建 `TASKS.md`
+- 只修改 `PROJECT_BRIEF.md` 和 `TASKS.md`；
+- 将当前项目范围修正为 ChatGPT-Codex 协同作业系统；
+- 将法律业务内容降级为未来可选应用方向。
 
 限制：
 
-* 不得修改已有文件；
-* 不得处理 `.git` 问题；
-* 不得创建法律业务模块；
-* 不得修改 `.codex-coordination/`；
-* 如同名文件已存在，必须 BLOCKED。
+- 不得创建法律业务 agent；
+- 不得创建法律业务 skill；
+- 不得创建 `mcp/`；
+- 不得创建 `templates/`；
+- 不得创建 `tests/sample_cases/`；
+- 不得修改 `agents/`；
+- 不得修改 `skills/`；
+- 不得修改 `.codex-coordination/`；
+- 不得执行 `git add`；
+- 不得执行 `git commit`。
 
 ---
 
 ## 后续待办任务
 
-### TASK_008_DIAGNOSE_GIT_STATUS
+### TASK_014_COMMIT_GITATTRIBUTES
 
 状态：READY
 
 目标：
 
-* 诊断当前目录下 `.git` 为什么不能被识别为有效仓库；
-* 只输出诊断结论；
-* 不得自动修复；
-* 不得删除或重建 `.git`。
+- 只 staging `.gitattributes`；
+- 创建单独 commit；
+- 不 staging 历史旧文件。
 
 ---
 
-### TASK_009_CREATE_LEGAL_CN_BASE_STRUCTURE
+### TASK_015_EXERCISE_COORDINATION_PROTOCOL_FLOW
 
 状态：READY
 
 目标：
 
-创建中国民商事诉讼与执行本地化系统的基础目录结构。
-
-预期目录：
-
-* templates/
-* mcp/
-* tests/sample_cases/
-
-说明：
-
-* `agents/` 和 `skills/` 已存在；
-* 不得覆盖已有文件。
+- 创建一个最小协同流程演练；
+- 使用 `.codex-coordination/inbox/`、`outbox/`、`decisions/` 记录任务、结果和审查；
+- 不进入任何法律业务模块。
 
 ---
 
-### TASK_010_CREATE_ENFORCEMENT_INVESTIGATOR_AGENT
+### TASK_016_REVIEW_COORDINATION_SKILLS
 
 状态：READY
 
 目标：
 
-创建民事执行财产线索调查 agent。
-
-预期文件：
-
-* agents/enforcement_investigator.md
+- 审查四个协同 skills；
+- 检查是否存在职责重叠、边界缺口或回报格式不一致；
+- 如需修改，拆成单文件 REWORK 任务。
 
 ---
 
-### TASK_011_CREATE_BANK_FLOW_ANALYSIS_SKILL
+## 未来可选应用方向
 
-状态：READY
+以下内容不属于当前协同系统建设阶段，仅作为后续可能应用方向保留。除非用户另行明确授权，不得创建相关目录或文件：
 
-目标：
-
-创建银行流水分析 skill。
-
-重点分析：
-
-1. 资金流向；
-2. 提现；
-3. 自我转账；
-4. 夫妻或关联账户转移；
-5. 最终受益人；
-6. 异常交易；
-7. 履行能力；
-8. 执行策略；
-9. 补证清单。
-
-预期文件：
-
-* skills/bank_flow_analysis.md
-
----
-
-### TASK_012_CREATE_COMPANY_LIABILITY_AGENT
-
-状态：READY
-
-目标：
-
-创建公司人格否认、实控人责任、股东损害债权人利益分析 agent。
-
-预期文件：
-
-* agents/company_liability_analyzer.md
-
----
-
-### TASK_013_CREATE_EVIDENCE_REVIEW_AGENT
-
-状态：READY
-
-目标：
-
-创建交易事实与证据审查 agent。
-
-适用材料：
-
-1. 微信聊天记录；
-2. 对账单；
-3. 送货单；
-4. 发票；
-5. 付款记录；
-6. 工商档案；
-7. 裁判文书；
-8. 谈话笔录。
-
-预期文件：
-
-* agents/evidence_reviewer.md
-
----
-
-### TASK_014_CREATE_PKULAW_MCP_PLACEHOLDERS
-
-状态：READY
-
-目标：
-
-创建北大法宝法律数据 MCP 与案例数据 MCP 的配置占位说明。
-
-要求：
-
-* 不得编造真实密钥；
-* 不得编造认证参数；
-* 不得写入真实 token；
-* 仅使用 placeholder。
-
-预期目录或文件：
-
-* mcp/
-
----
-
-### TASK_015_CREATE_OUTPUT_TEMPLATES
-
-状态：READY
-
-目标：
-
-创建常用法律输出模板。
-
-建议模板：
-
-* templates/evidence_catalog.md
-* templates/investigation_order_application.md
-* templates/enforcement_strategy_report.md
-* templates/legal_analysis_report.md
+- 民事执行财产线索；
+- 银行流水分析；
+- 公司责任分析；
+- 证据审查；
+- 法律检索 MCP；
+- 法律文书模板；
+- 样例案件测试。
 
 ---
 
 ## 当前全局风险
 
-1. `.git` 不能被识别为有效仓库，影响 diff 审查。
-2. 已完成文件多为条件验收，尚未逐行审查完整内容。
-3. 尚未创建法律业务模块。
-4. 尚未建立测试样例。
-5. 尚未接入外部 MCP。
+1. 历史旧文件仍大量处于 untracked 状态，需要继续选择性 add。
+2. `.gitattributes` 已创建但尚未纳入 commit。
+3. 已完成协同文件中部分内容此前为条件验收，后续如发现缺口应局部返工。
+4. 协同协议目录尚未通过真实 inbox / outbox / decisions 流程实测。
