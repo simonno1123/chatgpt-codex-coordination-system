@@ -97,7 +97,13 @@ Contains the main coordination agent.
 
 ### skills/
 
-Contains reusable coordination skills, including task writing, output review, blocker resolution, context compression, and scope guarding.
+Contains reusable coordination skills:
+
+- `skills/codex_task_writer.md` - writes bounded Codex tasks.
+- `skills/codex_output_reviewer.md` - reviews Codex DONE reports.
+- `skills/codex_blocker_resolver.md` - resolves Codex BLOCKED reports.
+- `skills/project_context_compressor.md` - compresses project context.
+- `skills/scope_guardian.md` - classifies scope and prevents unauthorized expansion.
 
 ### .codex-coordination/
 

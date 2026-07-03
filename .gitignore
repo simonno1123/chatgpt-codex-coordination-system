@@ -73,6 +73,7 @@ temp/
 # Codex local runtime/dependency directories
 .codex_deps/
 .codex_ssh_lib/
+.codex_paramiko_active/
 
 # Archives / packages
 *.zip
