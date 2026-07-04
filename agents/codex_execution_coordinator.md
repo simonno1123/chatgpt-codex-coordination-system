@@ -101,6 +101,7 @@ Codex 不负责：
 5. 是否允许修改依赖；
 6. 是否允许调整目录结构；
 7. 是否允许创建配置文件。
+8. 下一交接对象和交接理由。
 
 没有明确授权的文件，Codex 不得修改。
 
@@ -218,6 +219,21 @@ ACCEPTED / REWORK / BLOCKED
         ↓
 生成下一步任务
 ```
+
+每次状态流转都必须显式写明：
+
+```text
+Next Handoff Target: <ChatGPT Review | Codex Executor | User Decision | External Advisory Reviewer | None>
+Reason: <为什么下一步交给该对象>
+```
+
+默认规则：
+
+1. Codex 输出 DONE 或 BLOCKED 后，交给 `ChatGPT Review`。
+2. ChatGPT 生成已批准的执行任务或返工任务后，交给 `Codex Executor`。
+3. 需要用户确认方向、路径、凭证、仓库或授权时，交给 `User Decision`。
+4. 需要临时第二意见时，可交给 `External Advisory Reviewer`，但该对象不得执行，且意见必须回到 `ChatGPT Review`。
+5. 工作流完成且无需后续动作时，交给 `None`。
 
 ---
 
@@ -354,6 +370,14 @@ pytest output
 ## 八、DONE 回报格式
 
 规定 Codex 完成后必须如何回报。
+
+## 九、Next Handoff Target
+
+说明 Codex 完成或中断后应交给谁。
+
+## 十、Reason
+
+说明为什么交给该对象。
 ```
 
 ---
@@ -384,6 +408,10 @@ Codex 进入 BLOCKED 时，应要求其按以下格式输出：
 ## 6. Codex 初步判断
 
 ## 7. 需要 ChatGPT 决策的问题
+
+## 8. Next Handoff Target
+
+## 9. Reason
 ```
 
 本 agent 收到 BLOCKED 后，不应直接让 Codex“自行决定”，而应给出明确选择、理由、继续范围和禁止事项。
@@ -450,6 +478,10 @@ DONE
 ## 9. 潜在风险
 
 ## 10. 建议下一步
+
+## 11. Next Handoff Target
+
+## 12. Reason
 ```
 
 如存在删除文件，必须重点审查。
@@ -471,7 +503,8 @@ DONE
 9. 是否存在测试失败；
 10. 是否存在未说明风险；
 11. 是否需要回滚；
-12. 是否可以进入下一步。
+12. 是否可以进入下一步；
+13. 是否明确写出下一交接对象和理由。
 
 ---
 
@@ -508,6 +541,10 @@ BLOCKED
 ## 风险说明
 
 ## 下一步任务建议
+
+## Next Handoff Target
+
+## Reason
 ```
 
 ### 2. REWORK
@@ -535,6 +572,14 @@ BLOCKED
 ## 禁止事项
 
 ## 返工后回报格式
+
+## Next Handoff Target
+
+Codex Executor
+
+## Reason
+
+需要 Codex 按返工要求继续执行。
 ```
 
 ### 3. BLOCKED
@@ -560,6 +605,10 @@ BLOCKED
 ## Codex 暂停事项
 
 ## 用户或 ChatGPT 需要决策的问题
+
+## Next Handoff Target
+
+## Reason
 ```
 
 ---

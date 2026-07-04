@@ -8,6 +8,12 @@ It defines how ChatGPT plans, decomposes, reviews, and decides tasks, while Code
 
 The system is designed to make ChatGPT-Codex collaboration stable, auditable, and scope-controlled.
 
+This project is an AI Collaboration Operating System (ACOS).
+
+ACOS is the primary coordination system. A business or domain repository is an ACOS instance or user, not the owner of the core protocol.
+
+For example, `claude-for-legal-cn` is a China legal capability project that may use ACOS. It should not carry ACOS protocol upgrades, reviews, decisions, inbox / outbox lifecycle files, or multi-agent coordination rules unless a task explicitly authorizes a local instance mode.
+
 ## 2. What This System Does
 
 This system provides:
@@ -23,8 +29,33 @@ This system provides:
 9. Git safety rules.
 10. Optional inbox / outbox / decisions workflow.
 11. Scope classification and scope guarding.
+12. Explicit next handoff target rules.
 
-## 3. What This System Does Not Do
+## 3. ACOS and Instance Boundary
+
+ACOS owns the collaboration method used to develop any project.
+
+ACOS owns:
+
+1. Task protocols.
+2. Task lifecycle rules.
+3. Inbox / outbox / decisions / reviews flow.
+4. DONE / BLOCKED / REVIEW formats.
+5. Task templates.
+6. Multi-agent role boundaries.
+7. Scope guarding.
+8. Git safety rules.
+9. Project invocation guidance.
+
+Business or domain projects are ACOS instances or users. They own their domain capability, implementation, data, and workflows.
+
+`claude-for-legal-cn` is a legal capability project. It owns China legal skills, legal MCP integration, legal references, legal workflows, and faithful localization work. It is not the home for ACOS protocol upgrades.
+
+Coordination-system changes must go into ACOS first. Domain capability changes must go into the relevant business project.
+
+Protocol files such as `PROTOCOL.md`, task lifecycle records, reviews, decisions, inbox, outbox, and coordination logs must not be embedded into a business project unless the user explicitly authorizes local ACOS instance mode for that project.
+
+## 4. What This System Does Not Do
 
 This system does not implement non-coordination functionality.
 
@@ -32,7 +63,7 @@ Any capability that is not necessary for ChatGPT-Codex coordination is outside t
 
 Non-coordination functionality must not be added unless the user gives explicit instruction in a separate task.
 
-## 4. Core Workflow
+## 5. Core Workflow
 
 The standard workflow is:
 
@@ -52,7 +83,7 @@ ChatGPT reviews the result
 ACCEPTED / REWORK / BLOCKED
 ```
 
-## 5. Standard User Entry Points
+## 6. Standard User Entry Points
 
 Use the following prompts when working with this system:
 
@@ -72,7 +103,7 @@ Use the standard ChatGPT-Codex coordination system to resolve this Codex BLOCKED
 Use the standard ChatGPT-Codex coordination system to generate a bounded REWORK task.
 ```
 
-## 6. Scope Classification
+## 7. Scope Classification
 
 Every new request should be classified as one of:
 
@@ -89,7 +120,7 @@ Only coordination-system tasks should be handled inside this project.
 
 If a request introduces non-coordination functionality, it must be treated as EXTENSION or OUT_OF_SCOPE unless the user explicitly authorizes a separate task.
 
-## 7. Main Files
+## 8. Main Files
 
 ### agents/
 
@@ -125,7 +156,7 @@ Project-level context and current system definition.
 
 Task history, task queue, and coordination-system planning record.
 
-## 8. Codex Task Requirements
+## 9. Codex Task Requirements
 
 Every Codex task should include:
 
@@ -141,7 +172,7 @@ Every Codex task should include:
 
 Tasks should be small, bounded, and independently reviewable.
 
-## 9. Codex DONE Review
+## 10. Codex DONE Review
 
 A Codex DONE report does not mean the task is accepted.
 
@@ -162,7 +193,7 @@ REWORK
 BLOCKED
 ```
 
-## 10. Temporary Claude Advisory Role
+## 11. Temporary Claude Advisory Role
 
 Claude may be used temporarily only as a non-executing advisory reviewer or second-opinion source.
 
@@ -178,7 +209,7 @@ Claude must not modify files, create files, delete files, run commands, perform 
 
 Claude output is advisory only and must be reviewed by ChatGPT before it affects the project.
 
-## 11. Codex BLOCKED Handling
+## 12. Codex BLOCKED Handling
 
 When Codex reports BLOCKED, it must stop.
 
@@ -194,7 +225,30 @@ ChatGPT then decides whether to:
 
 Codex must not continue after BLOCKED without a ChatGPT decision.
 
-## 12. Git Safety Rules
+## 13. Explicit Handoff Target Rule
+
+Every task transition must name the next recipient.
+
+Required fields:
+
+```text
+Next Handoff Target: <ChatGPT Review | Codex Executor | User Decision | External Advisory Reviewer | None>
+Reason: <why this party receives the next step>
+```
+
+Use `ChatGPT Review` when Codex reports DONE or BLOCKED and the result needs review, acceptance, rework, or a decision.
+
+Use `Codex Executor` only when ChatGPT has already produced an approved bounded task or rework instruction for Codex to execute.
+
+Use `User Decision` when the next step requires user approval, project direction, credentials, repository choice, or another decision ChatGPT cannot safely make.
+
+Use `External Advisory Reviewer` only for non-executing second opinions. External advisory output is non-binding and must return to ChatGPT Review before it affects execution.
+
+Use `None` only when the workflow is complete and no further action is required.
+
+Task instructions, DONE reports, BLOCKED reports, review decisions, rework instructions, and next-step recommendations should include these fields.
+
+## 14. Git Safety Rules
 
 The default Git rule is:
 
@@ -215,7 +269,7 @@ git clean
 
 When staging or committing is authorized, the task must list exact files and the exact commit message.
 
-## 13. Optional File-Based Workflow
+## 15. Optional File-Based Workflow
 
 When file-based coordination is needed, use:
 
@@ -233,7 +287,7 @@ inbox -> outbox -> decisions
 
 This workflow is optional. The system can also be used directly in chat.
 
-## 14. Current Boundary
+## 16. Current Boundary
 
 The current project is limited to the ChatGPT-Codex coordination system.
 
@@ -241,7 +295,9 @@ It should not absorb non-coordination functionality.
 
 If the user requests non-coordination capability, classify the request first and handle it only after explicit authorization.
 
-## 15. Maintenance Rule
+ACOS protocol changes belong in this repository. Domain projects, including `claude-for-legal-cn`, should receive only domain-specific work unless explicitly configured as local ACOS instances.
+
+## 17. Maintenance Rule
 
 For future maintenance:
 

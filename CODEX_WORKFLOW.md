@@ -6,19 +6,43 @@ This project uses a controlled ChatGPT-Codex coordination workflow.
 
 ChatGPT acts as the planner, reviewer, and decision maker. Codex acts as the controlled executor. The goal is to make repeated work stable, convenient, and auditable without requiring the user to restate the whole background for every task.
 
+This project is an AI Collaboration Operating System (ACOS). ACOS is the primary coordination system for developing any project. A business or domain repository is an ACOS instance or user, not the owner of the core collaboration protocol.
+
 Current scope:
 
 - ChatGPT-Codex coordination agents
 - Coordination skills
 - File-based task protocol
 - Git-based review and rollback
+- ACOS task lifecycle and instance boundary rules
+- Explicit next handoff target rules
 
 Out of current scope unless explicitly authorized:
 
 - Any capability that is not necessary for ChatGPT-Codex coordination.
 - Any file, directory, integration, workflow, agent, skill, template, configuration, or automation that serves non-coordination work.
 
-## 2. Standard Workflow
+## 2. ACOS and Business Project Boundary
+
+ACOS owns collaboration mechanics:
+
+1. Task protocols.
+2. Task lifecycle rules.
+3. Inbox / outbox / decisions / reviews flow.
+4. DONE / BLOCKED / REVIEW formats.
+5. Task templates.
+6. Multi-agent role boundaries.
+7. scope_guardian rules.
+8. Git safety rules.
+9. Project invocation guidance.
+
+Business projects are ACOS instances or users. They own domain capability, implementation, data, and business workflows.
+
+For example, `claude-for-legal-cn` is a China legal capability project. It owns China legal skills, legal MCP integration, legal references, legal workflows, and faithful localization work. It must not be used as the home for ACOS protocol upgrades, reviews, decisions, inbox / outbox lifecycle files, or multi-agent coordination rules unless a task explicitly authorizes local ACOS instance mode.
+
+When a task concerns how AI agents collaborate, how tasks are assigned, how review decisions are recorded, or how protocol lifecycle files work, place it in ACOS. When a task concerns China legal capability, legal skills, legal MCP, legal references, or legal workflows, place it in `claude-for-legal-cn`.
+
+## 3. Standard Workflow
 
 The standard workflow is:
 
@@ -40,7 +64,7 @@ inbox -> outbox -> decisions
 
 Codex must not automatically move to the next task after reporting DONE. ChatGPT or the user must explicitly approve the next step.
 
-## 3. Roles
+## 4. Roles
 
 ### ChatGPT
 
@@ -119,7 +143,7 @@ Claude must not:
 
 Claude output is advisory only. ChatGPT remains responsible for all final ACCEPTED / REWORK / BLOCKED decisions. Codex remains the only execution agent.
 
-## 4. Task Types
+## 5. Task Types
 
 All future Codex tasks should use one of these task types.
 
@@ -176,7 +200,7 @@ Examples:
 
 Default rule: never use full-repository staging.
 
-## 5. Task Numbering
+## 6. Task Numbering
 
 Use sequential task numbers:
 
@@ -200,7 +224,7 @@ REWORK_TASK_021
 DECISION_TASK_021
 ```
 
-## 6. File Naming
+## 7. File Naming
 
 Use these paths and names for protocol files.
 
@@ -229,7 +253,7 @@ Use these paths and names for protocol files.
 .codex-coordination/logs/TASK_021_TEST.log
 ```
 
-## 7. Codex Task Structure
+## 8. Codex Task Structure
 
 Each Codex task should include:
 
@@ -241,10 +265,34 @@ Each Codex task should include:
 6. Acceptance criteria.
 7. BLOCKED rules.
 8. DONE report format.
+9. Next handoff target.
 
 The task must be small enough to review with `git diff` and `git status`.
 
-## 8. DONE Report Format
+## 9. Explicit Handoff Target Rule
+
+Every task transition must explicitly state who receives the next step.
+
+Required fields:
+
+```text
+Next Handoff Target: <ChatGPT Review | Codex Executor | User Decision | External Advisory Reviewer | None>
+Reason: <why this party receives the next step>
+```
+
+Use `ChatGPT Review` when Codex reports DONE or BLOCKED and the result needs review, acceptance, rework, or a decision.
+
+Use `Codex Executor` only when ChatGPT has already produced an approved bounded task or rework instruction for Codex to execute.
+
+Use `User Decision` when the next step requires user approval, project direction, credentials, repository choice, or another decision ChatGPT cannot safely make.
+
+Use `External Advisory Reviewer` only for non-executing second opinions. Advisory output is non-binding and must return to ChatGPT Review before it affects execution.
+
+Use `None` only when the workflow is complete and no further action is required.
+
+The handoff target must appear in Codex task instructions, DONE reports, BLOCKED reports, ChatGPT review decisions, rework instructions, and next-step recommendations.
+
+## 10. DONE Report Format
 
 Codex should report completed work with this structure:
 
@@ -272,11 +320,15 @@ DONE
 ## 9. Risks
 
 ## 10. Suggested Next Step
+
+## 11. Next Handoff Target
+
+## 12. Reason
 ```
 
 DONE means Codex finished execution. It does not mean ChatGPT accepted the result.
 
-## 9. BLOCKED Report Format
+## 11. BLOCKED Report Format
 
 Codex should stop and report BLOCKED when it cannot proceed safely.
 
@@ -302,9 +354,13 @@ Codex should stop and report BLOCKED when it cannot proceed safely.
 ## 6. Codex Preliminary Assessment
 
 ## 7. Decision Needed from ChatGPT
+
+## 8. Next Handoff Target
+
+## 9. Reason
 ```
 
-## 10. ChatGPT Review Format
+## 12. ChatGPT Review Format
 
 ChatGPT should review Codex output and choose one result:
 
@@ -324,8 +380,11 @@ The review should check:
 5. Whether verification was run.
 6. Whether risks remain.
 7. Whether the next action is safe.
+8. Whether the next handoff target is explicit and correct.
 
-## 11. Git Rules
+The review should name the next handoff target and reason. ACCEPTED may hand off to `None`, `Codex Executor`, or `User Decision` depending on the next step. REWORK should hand off to `Codex Executor`. BLOCKED should hand off to `User Decision` or `ChatGPT Review` depending on who must resolve the blocker.
+
+## 13. Git Rules
 
 Git operations must be narrow and explicit.
 
@@ -357,7 +416,7 @@ git remote set-url
 
 Historical untracked files must not be staged unless a task explicitly lists them.
 
-## 12. Safety Rules
+## 14. Safety Rules
 
 These rules apply to every task unless explicitly overridden:
 
@@ -371,8 +430,9 @@ These rules apply to every task unless explicitly overridden:
 8. Do not use full-repository Git staging.
 9. Stop with BLOCKED when scope is unclear.
 10. Wait for ChatGPT review after DONE.
+11. Include an explicit next handoff target and reason in task transition outputs.
 
-## 13. Daily Usage Examples
+## 15. Daily Usage Examples
 
 Ask ChatGPT to create a Codex task:
 
@@ -404,7 +464,7 @@ Ask Codex to run a narrow Git step:
 Only stage CODEX_WORKFLOW.md and do not commit.
 ```
 
-## 14. Current Operating Principle
+## 16. Current Operating Principle
 
 The current project stage is complete enough for repeated coordination use:
 
@@ -415,7 +475,7 @@ The current project stage is complete enough for repeated coordination use:
 
 Future work should improve convenience and automation without weakening the control model.
 
-## 15. Standard General Coordination Scope
+## 17. Standard General Coordination Scope
 
 This project is the Standard General ChatGPT-Codex Coordination System.
 
