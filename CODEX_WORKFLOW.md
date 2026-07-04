@@ -16,6 +16,7 @@ Current scope:
 - Git-based review and rollback
 - ACOS task lifecycle and instance boundary rules
 - Explicit next handoff target rules
+- Artifact routing and authority rules
 
 Out of current scope unless explicitly authorized:
 
@@ -292,7 +293,72 @@ Use `None` only when the workflow is complete and no further action is required.
 
 The handoff target must appear in Codex task instructions, DONE reports, BLOCKED reports, ChatGPT review decisions, rework instructions, and next-step recommendations.
 
-## 10. DONE Report Format
+## 10. Artifact Routing and Authority Rule
+
+Every ACOS artifact must declare:
+
+```text
+TASK ID:
+ARTIFACT TYPE:
+PRODUCER:
+TO:
+NEXT RECEIVER:
+MODE:
+PROJECT:
+AUTHORITY LIMIT:
+FORBIDDEN:
+OUTPUT:
+DO NOT SEND TO:
+```
+
+Allowed `ARTIFACT TYPE` values:
+
+1. `TASK`
+2. `RESULT`
+3. `ADVISORY REVIEW`
+4. `REVIEW`
+5. `DECISION`
+6. `RECORD`
+
+Role authority:
+
+1. ChatGPT may produce `TASK`, `REVIEW`, `DECISION`, and `RECORD`.
+2. Codex may produce `RESULT` or `BLOCKED RESULT` only.
+3. Claude may produce `ADVISORY REVIEW` only.
+4. Automation may produce `RESULT` or `RECORD` only.
+5. Automation must not produce `REVIEW`, `ADVISORY REVIEW`, or `DECISION`.
+6. Automation must not route output to itself for acceptance.
+7. Automation output must return to ChatGPT Review unless the task explicitly routes it to User Decision for missing credentials, authorization, or human judgment.
+
+Identity rule:
+
+1. No agent may produce an artifact under another agent's identity.
+2. Codex must never write `FROM: Claude` or `PRODUCER: Claude`.
+3. Codex must never write `FROM: ChatGPT` or `PRODUCER: ChatGPT`.
+
+Acceptance rule:
+
+1. No agent may route an artifact to itself for acceptance.
+2. Codex cannot accept its own `RESULT`.
+3. Claude cannot make a final `DECISION`.
+4. Automation cannot make a final `DECISION`.
+5. ChatGPT Review is the authorized final reviewer under ACOS.
+6. User Decision may authorize direction, scope, credentials, or whether to proceed, but User Decision does not replace ChatGPT Review unless the user explicitly suspends ACOS governance for that task.
+
+Commit rule:
+
+No commit may proceed unless a valid `DECISION` artifact has been produced by ChatGPT Review. User Decision may authorize whether to proceed, but Codex still requires a ChatGPT Review `DECISION` artifact before commit unless the user explicitly suspends ACOS governance for that task. A Codex `RESULT` alone is insufficient for commit.
+
+Routing rule:
+
+1. Every artifact must specify `NEXT RECEIVER`.
+2. Missing `NEXT RECEIVER` makes the artifact invalid or BLOCKED.
+3. If Claude is used, Claude output must return to ChatGPT Review.
+4. Claude must not route directly to Codex Executor.
+
+Invalid artifacts include identity-spoofed artifacts, missing receiver artifacts, self-acceptance artifacts, Codex-authored `REVIEW` or `DECISION` artifacts, and Claude-authored final `DECISION` artifacts.
+
+## 11. DONE Report Format
 
 Codex should report completed work with this structure:
 
@@ -328,7 +394,7 @@ DONE
 
 DONE means Codex finished execution. It does not mean ChatGPT accepted the result.
 
-## 11. BLOCKED Report Format
+## 12. BLOCKED Report Format
 
 Codex should stop and report BLOCKED when it cannot proceed safely.
 
@@ -360,7 +426,7 @@ Codex should stop and report BLOCKED when it cannot proceed safely.
 ## 9. Reason
 ```
 
-## 12. ChatGPT Review Format
+## 13. ChatGPT Review Format
 
 ChatGPT should review Codex output and choose one result:
 
@@ -381,10 +447,13 @@ The review should check:
 6. Whether risks remain.
 7. Whether the next action is safe.
 8. Whether the next handoff target is explicit and correct.
+9. Whether the artifact type, producer, receiver, and authority limit are valid.
 
 The review should name the next handoff target and reason. ACCEPTED may hand off to `None`, `Codex Executor`, or `User Decision` depending on the next step. REWORK should hand off to `Codex Executor`. BLOCKED should hand off to `User Decision` or `ChatGPT Review` depending on who must resolve the blocker.
 
-## 13. Git Rules
+ChatGPT must reject any artifact that spoofs another producer, routes itself for acceptance, lets Codex produce `REVIEW` or `DECISION`, lets Claude produce final `DECISION`, or treats Codex `RESULT` alone as sufficient authorization to commit.
+
+## 14. Git Rules
 
 Git operations must be narrow and explicit.
 
@@ -416,7 +485,7 @@ git remote set-url
 
 Historical untracked files must not be staged unless a task explicitly lists them.
 
-## 14. Safety Rules
+## 15. Safety Rules
 
 These rules apply to every task unless explicitly overridden:
 
@@ -431,8 +500,9 @@ These rules apply to every task unless explicitly overridden:
 9. Stop with BLOCKED when scope is unclear.
 10. Wait for ChatGPT review after DONE.
 11. Include an explicit next handoff target and reason in task transition outputs.
+12. Do not accept identity-spoofed artifacts or artifacts that exceed producer authority.
 
-## 15. Daily Usage Examples
+## 16. Daily Usage Examples
 
 Ask ChatGPT to create a Codex task:
 
@@ -464,7 +534,7 @@ Ask Codex to run a narrow Git step:
 Only stage CODEX_WORKFLOW.md and do not commit.
 ```
 
-## 16. Current Operating Principle
+## 17. Current Operating Principle
 
 The current project stage is complete enough for repeated coordination use:
 
@@ -475,7 +545,7 @@ The current project stage is complete enough for repeated coordination use:
 
 Future work should improve convenience and automation without weakening the control model.
 
-## 17. Standard General Coordination Scope
+## 18. Standard General Coordination Scope
 
 This project is the Standard General ChatGPT-Codex Coordination System.
 
