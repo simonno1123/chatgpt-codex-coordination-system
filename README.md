@@ -162,7 +162,23 @@ REWORK
 BLOCKED
 ```
 
-## 10. Codex BLOCKED Handling
+## 10. Temporary Claude Advisory Role
+
+Claude may be used temporarily only as a non-executing advisory reviewer or second-opinion source.
+
+The default workflow remains:
+
+```text
+ChatGPT -> Codex -> ChatGPT
+```
+
+Codex is the only execution agent.
+
+Claude must not modify files, create files, delete files, run commands, perform Git operations, generate directly applicable patches, or make final decisions.
+
+Claude output is advisory only and must be reviewed by ChatGPT before it affects the project.
+
+## 11. Codex BLOCKED Handling
 
 When Codex reports BLOCKED, it must stop.
 
@@ -178,7 +194,7 @@ ChatGPT then decides whether to:
 
 Codex must not continue after BLOCKED without a ChatGPT decision.
 
-## 11. Git Safety Rules
+## 12. Git Safety Rules
 
 The default Git rule is:
 
@@ -199,7 +215,7 @@ git clean
 
 When staging or committing is authorized, the task must list exact files and the exact commit message.
 
-## 12. Optional File-Based Workflow
+## 13. Optional File-Based Workflow
 
 When file-based coordination is needed, use:
 
@@ -217,7 +233,7 @@ inbox -> outbox -> decisions
 
 This workflow is optional. The system can also be used directly in chat.
 
-## 13. Current Boundary
+## 14. Current Boundary
 
 The current project is limited to the ChatGPT-Codex coordination system.
 
@@ -225,7 +241,7 @@ It should not absorb non-coordination functionality.
 
 If the user requests non-coordination capability, classify the request first and handle it only after explicit authorization.
 
-## 14. Maintenance Rule
+## 15. Maintenance Rule
 
 For future maintenance:
 

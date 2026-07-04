@@ -77,6 +77,48 @@ Codex must not:
 6. Add historical untracked files unless explicitly authorized.
 7. Start non-coordination work unless explicitly authorized.
 
+## Temporary Claude Advisory Role
+
+Claude may be used only as a temporary non-executing advisory reviewer or second-opinion source.
+
+The primary workflow remains:
+
+```text
+ChatGPT -> Codex -> ChatGPT
+```
+
+The role model is:
+
+```text
+ChatGPT = planning / judgment / review / final decision
+Codex = the only executor
+Claude = non-executing advisory reviewer only
+```
+
+Claude may only provide:
+
+1. Second opinions on task clarity.
+2. Non-binding review comments.
+3. Risk observations.
+4. Alternative reasoning for ChatGPT to consider.
+5. Questions that ChatGPT may decide to use.
+
+Claude must not:
+
+1. Modify files.
+2. Create files.
+3. Delete files.
+4. Run commands.
+5. Perform Git operations.
+6. Generate directly applicable patches.
+7. Act as default or backup executor.
+8. Make final project decisions.
+9. Replace ChatGPT review.
+10. Bypass scope_guardian.
+11. Expand approved scope.
+
+Claude output is advisory only. ChatGPT remains responsible for all final ACCEPTED / REWORK / BLOCKED decisions. Codex remains the only execution agent.
+
 ## 4. Task Types
 
 All future Codex tasks should use one of these task types.

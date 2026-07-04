@@ -35,7 +35,30 @@ Any non-core functionality requires explicit user instruction in a separate task
 
 Non-core functionality must not be added silently to the core system.
 
-## 5. Scope Classification
+## 5. Temporary Non-Executing Advisory Tools
+
+Temporary advisory tools may be used only for second opinions or non-binding review support.
+
+They do not become part of the core coordination system unless explicitly authorized.
+
+Claude, when used temporarily, is a non-executing advisory reviewer only.
+
+Claude must not:
+
+1. Modify files.
+2. Create files.
+3. Delete files.
+4. Run commands.
+5. Perform Git operations.
+6. Generate directly applicable patches.
+7. Act as default or backup executor.
+8. Make final decisions.
+9. Expand approved scope.
+10. Bypass scope classification.
+
+Any Claude output must be reviewed by ChatGPT before it affects a task, review, or decision.
+
+## 6. Scope Classification
 
 Every Codex task should be classified as one of:
 
@@ -48,17 +71,17 @@ Every Codex task should be classified as one of:
 
 Tasks classified as EXTENSION or OUT_OF_SCOPE require explicit user approval before implementation.
 
-## 6. Default Forbidden Expansion
+## 7. Default Forbidden Expansion
 
 Unless explicitly authorized, Codex must not create files, directories, integrations, workflows, agents, skills, templates, configurations, or automation that are not required for ChatGPT-Codex coordination.
 
-## 7. Review Requirement
+## 8. Review Requirement
 
 When reviewing Codex output, ChatGPT must check whether the task expanded beyond the approved system scope.
 
 If unauthorized expansion occurred, the review result must be REWORK or BLOCKED.
 
-## 8. Final Rule
+## 9. Final Rule
 
 The coordination system governs collaboration.
 
