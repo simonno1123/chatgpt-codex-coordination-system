@@ -6,7 +6,7 @@
 
 它服务于 `agents/codex_execution_coordinator.md`，是 ChatGPT-Codex 协同作业机制中的中断决策组件。
 
-本 skill 的核心目标，是在 Codex 遇到路径冲突、权限边界不明、同名文件、项目结构不一致、技术方案选择、外部配置不确定、法律业务逻辑不确定等问题时，由 ChatGPT 对问题进行判断，并给出明确、可执行、边界清楚的继续指令。
+本 skill 的核心目标，是在 Codex 遇到路径冲突、权限边界不明、同名文件、项目结构不一致、技术方案选择、外部配置不确定、未授权领域规则或业务逻辑不确定等问题时，由 ChatGPT 对问题进行判断，并给出明确、可执行、边界清楚的继续指令。
 
 本 skill 不鼓励 Codex 自行决定不确定事项。相反，它要求 Codex 在不确定时暂停，并把问题结构化提交给 ChatGPT。
 
@@ -23,8 +23,8 @@
 5. Codex 发现已有项目规范与任务书冲突；
 6. Codex 面临多个技术实现路径；
 7. Codex 无法判断是否应覆盖、迁移、重命名或删除文件；
-8. Codex 需要确认 MCP、API、环境变量、认证方式等外部配置；
-9. Codex 对法律业务逻辑不确定；
+8. Codex 需要确认外部工具、API、环境变量、认证方式等外部配置；
+9. Codex 对未授权领域规则或业务逻辑不确定；
 10. Codex 执行测试失败，但无法判断是否应修复；
 11. Codex 发现任务书存在矛盾、遗漏或不可执行之处；
 12. 用户需要 ChatGPT 对 Codex 的可选方案进行决策。
@@ -39,7 +39,7 @@
 2. 审查 Codex 输出质量，此时应使用 `codex_output_reviewer.md`；
 3. 生成新的 Codex 任务书，此时应使用 `codex_task_writer.md`；
 4. 让 Codex 自行扩大任务范围；
-5. 让 Codex 自行决定法律业务规则；
+5. 让 Codex 自行决定未授权领域规则或业务逻辑；
 6. 在缺少用户关键授权时强行继续执行；
 7. 绕过安全边界处理高风险操作。
 
@@ -61,7 +61,7 @@
 10. 是否存在同名文件；
 11. 是否涉及未授权文件；
 12. 是否涉及依赖、配置、环境变量或外部服务；
-13. 是否涉及法律业务逻辑；
+13. 是否涉及未授权领域规则或业务逻辑；
 14. 是否涉及删除、覆盖、重命名、迁移或大范围重构。
 
 如果缺少关键信息，应优先要求 Codex 补充，不应直接授权继续。
@@ -74,6 +74,30 @@ Codex 提出 BLOCKED 时，应要求其使用以下格式：
 
 ```markdown
 # Codex 执行中断问题
+
+ARTIFACT TYPE:
+BLOCKED RESULT
+
+PRODUCER:
+Codex Executor
+
+TO:
+ChatGPT Review
+
+MODE:
+BLOCKED
+
+PROJECT:
+[项目路径或项目名称]
+
+AUTHORITY LIMIT:
+[Codex 当前授权边界]
+
+FORBIDDEN:
+[Codex 当前不得继续的事项]
+
+OUTPUT:
+BLOCKED RESULT
 
 ## 1. 当前任务
 
@@ -94,7 +118,13 @@ Codex 提出 BLOCKED 时，应要求其使用以下格式：
 ## 6. Codex 初步判断
 
 ## 7. 需要 ChatGPT 决策的问题
+
+## 8. NEXT RECEIVER
+
+## 9. Reason
 ```
+
+NEXT RECEIVER 和 Reason 必须保留在输出末尾，用于明确信息传递对象。
 
 如果 Codex 没有按上述格式提交，应要求其补充，而不是直接决策。
 
@@ -152,7 +182,7 @@ Codex 提出 BLOCKED 时，应要求其使用以下格式：
 涉及以下内容时，不得让 Codex 编造：
 
 1. API 地址；
-2. MCP 服务地址；
+2. 外部工具或服务地址；
 3. 密钥；
 4. token；
 5. 环境变量名；
@@ -162,31 +192,25 @@ Codex 提出 BLOCKED 时，应要求其使用以下格式：
 
 如果真实信息缺失，应使用占位符或说明文档，并明确“需用户提供真实配置”。
 
-### 5. 法律业务判断保留原则
+### 5. Domain-specific judgment preservation principle
 
-涉及以下法律业务内容时，Codex 不得自行决策：
+涉及任何未授权领域规则、业务逻辑、外部知识体系、领域数据、专用工作流、专门工具或外部服务时，Codex 不得自行决策。
 
-1. 民事执行财产线索判断；
-2. 银行流水异常交易规则；
-3. 公司人格否认构成要件；
-4. 实控人责任；
-5. 股东损害债权人利益；
-6. 债权人撤销权；
-7. 执行异议之诉；
-8. 代位析产；
-9. 表见代理或职务行为认定；
-10. 证据三性评价；
-11. 裁判规则归纳；
-12. 浙江地区司法实践；
-13. 诉讼请求设计；
-14. 调查令申请范围。
+常见情形包括：
+
+1. 领域规则或业务逻辑不明确；
+2. 外部依据、示例数据或服务能力未经确认；
+3. 地域、行业、组织或专用流程规则需要确认；
+4. 策略、判断标准或验收口径存在多种可能；
+5. 任务需要用户授权、凭证、真实配置或人类判断；
+6. 领域结论可能影响后续项目方向或风险承担。
 
 处理方式：
 
-1. ChatGPT 给出明确业务判断；
-2. Codex 只负责按判断落地文档；
+1. ChatGPT 或 User Decision 给出明确判断；
+2. Codex 只负责按判断落地授权范围内的内容；
 3. 不确定时继续 BLOCKED；
-4. 不得将未经确认的诉讼策略写成确定结论。
+4. 不得将未经确认的领域策略或业务逻辑写成确定结论。
 
 ### 6. 测试失败处理原则
 
@@ -288,7 +312,7 @@ CANCEL_TASK
 4. 是否接入外部服务；
 5. 是否使用真实密钥或账号；
 6. 是否改变项目架构；
-7. 是否处理法律策略上的重大选择。
+7. 是否处理领域策略、业务逻辑或项目方向上的重大选择。
 
 ### 7. CANCEL_TASK
 
@@ -309,6 +333,30 @@ CANCEL_TASK
 
 ```markdown
 # BLOCKED 问题答复
+
+ARTIFACT TYPE:
+REVIEW / DECISION
+
+PRODUCER:
+ChatGPT
+
+TO:
+Codex Executor / User Decision
+
+MODE:
+BLOCKED RESOLUTION
+
+PROJECT:
+[项目路径或项目名称]
+
+AUTHORITY LIMIT:
+[允许继续的范围和边界]
+
+FORBIDDEN:
+[仍然禁止的事项]
+
+OUTPUT:
+REVIEW / DECISION
 
 ## 一、结论
 
@@ -351,6 +399,14 @@ CANCEL_TASK
 1. 
 2. 
 3. 
+
+## NEXT RECEIVER
+
+[ChatGPT Review / Codex Executor / User Decision / External Advisory Reviewer / None]
+
+## Reason
+
+[说明为什么交给该接收方]
 ```
 
 ---
@@ -420,14 +476,14 @@ CANCEL_TASK
 3. 写明需用户提供；
 4. 不修改真实 `.env`。
 
-### 5. 法律业务逻辑不确定
+### 5. Domain-specific logic uncertain
 
 默认处理：
 
 1. Codex 暂停；
-2. ChatGPT 给出业务判断；
+2. ChatGPT 或 User Decision 给出领域或业务判断；
 3. Codex 只负责落地；
-4. 如材料不足，写成“待确认”或“需补证”，不得写成定论。
+4. 如材料不足，写成“待确认”或“需补充信息”，不得写成定论。
 
 ### 6. 测试失败
 
@@ -455,41 +511,69 @@ CANCEL_TASK
 
 ---
 
-## 十一、法律业务 BLOCKED 的特殊格式
+## 十一、Domain-specific BLOCKED format
 
-如果 Codex 因法律业务逻辑不确定而 BLOCKED，应要求其按以下格式提问：
+如果 Codex 因未授权领域规则或业务逻辑不确定而 BLOCKED，应要求其按以下格式提问：
 
 ```markdown
-# 法律业务逻辑 BLOCKED
+# Domain-specific logic BLOCKED
+
+ARTIFACT TYPE:
+BLOCKED RESULT
+
+PRODUCER:
+Codex Executor
+
+TO:
+ChatGPT Review
+
+MODE:
+BLOCKED
+
+PROJECT:
+[项目路径或项目名称]
+
+AUTHORITY LIMIT:
+[Codex 当前授权边界]
+
+FORBIDDEN:
+[Codex 当前不得继续的事项]
+
+OUTPUT:
+BLOCKED RESULT
 
 ## 1. 当前任务
 
-## 2. 不确定的法律业务问题
+## 2. 不确定的领域或业务问题
 
-## 3. 涉及的业务模块
+## 3. 涉及的模块、数据、工具或流程
 
-例如：执行财产线索 / 银行流水 / 公司人格否认 / 实控人责任 / 证据审查 / 北大法宝 MCP / 类案检索
+例如：领域规则 / 业务流程 / 外部工具 / 数据来源 / 认证配置 / 验收口径 / 用户授权
 
 ## 4. Codex 不确定的原因
 
-## 5. 可能写法
+## 5. 可选处理方式
 
-### 写法 A
+### 方案 A
 
-### 写法 B
+### 方案 B
 
-### 写法 C
+### 方案 C
 
 ## 6. 需要 ChatGPT 决策的问题
+
+## 7. NEXT RECEIVER
+
+## 8. Reason
 ```
 
 ChatGPT 答复时，应明确：
 
-1. 采用哪种写法；
+1. 采用哪种方案；
 2. 为什么；
 3. 是否需要保留风险提示；
-4. 是否需要写入反方抗辩；
-5. 是否需要写入补证清单；
+4. 是否需要写入假设、替代解释或反向风险；
+5. 是否需要写入待确认事项或后续验证清单；
 6. 哪些内容不得写成定论。
 
 ---
@@ -509,7 +593,9 @@ ChatGPT 答复时，应明确：
 9. Codex 请求写入真实密钥；
 10. Codex 请求大范围重构；
 11. Codex 请求合并多个任务；
-12. Codex 请求自行决定法律业务规则。
+12. Codex 请求自行决定未授权领域规则或业务逻辑；
+13. Codex 请求跳过 ChatGPT Review 或 User Decision；
+14. Codex 请求把 BLOCKED 输出路由给自己验收。
 
 ---
 

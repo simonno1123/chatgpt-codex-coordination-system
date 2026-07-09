@@ -22,7 +22,7 @@
 6. 需要让 Codex 修改指定文件；
 7. 需要让 Codex 根据审查意见返工；
 8. 需要让 Codex 根据报错日志局部修复；
-9. 需要将法律业务逻辑落地为文档、规则或模板；
+9. 需要将经授权的领域规则或业务逻辑落地为文档、规则或模板；
 10. 需要生成一条可复制给 Codex 的完整任务书。
 
 ---
@@ -32,11 +32,11 @@
 本 skill 不应用于：
 
 1. 让 Codex 自行决定项目架构；
-2. 让 Codex 自行选择法律业务规则；
+2. 让 Codex 自行决定未授权领域规则或业务逻辑；
 3. 让 Codex 自行扩大任务范围；
 4. 让 Codex 一次性重构整个项目；
 5. 让 Codex 删除、迁移、重命名大量文件；
-6. 让 Codex 编造外部 API、MCP、密钥、认证参数；
+6. 让 Codex 编造外部 API、工具服务、密钥、认证参数；
 7. 让 Codex 未经授权修改依赖文件或核心配置文件；
 8. 让 Codex 在没有验收标准的情况下自由发挥。
 
@@ -56,7 +56,7 @@
 8. 是否允许运行测试；
 9. 是否允许修改依赖；
 10. 是否允许修改配置；
-11. 是否存在法律业务边界；
+11. 是否存在领域或业务边界；
 12. 本轮任务的验收标准；
 13. Codex 回报格式；
 14. 遇到不确定事项时的 BLOCKED 规则。
@@ -80,7 +80,7 @@
 7. BLOCKED 规则明确；
 8. DONE 回报格式固定；
 9. 不依赖 Codex 自行猜测；
-10. 不把法律业务判断交给 Codex 决定。
+10. 不把未授权领域或业务判断交给 Codex 决定。
 
 ---
 
@@ -127,8 +127,8 @@
 4. 中断处理 skill；
 5. 上下文压缩 skill；
 6. 协作目录协议；
-7. 具体法律业务 agent；
-8. 具体法律业务 skill；
+7. 具体领域 agent；
+8. 具体领域 skill；
 9. 输出模板；
 10. 测试样例。
 
@@ -140,6 +140,33 @@
 
 ```markdown
 # Codex 执行任务：[TASK_ID]
+
+ARTIFACT TYPE:
+TASK
+
+PRODUCER:
+ChatGPT
+
+TO:
+Codex Executor
+
+NEXT RECEIVER:
+ChatGPT Review
+
+MODE:
+[CREATE / EDIT / REVIEW / TEST / COMMIT]
+
+PROJECT:
+[项目路径或项目名称]
+
+AUTHORITY LIMIT:
+[Codex 本轮被授权的最大权限边界]
+
+FORBIDDEN:
+[不得执行的操作]
+
+OUTPUT:
+RESULT 或 BLOCKED RESULT
 
 ## 一、任务背景
 
@@ -172,7 +199,24 @@
 ## 八、DONE 回报格式
 
 规定 Codex 完成后必须如何回报。
+
+## 九、NEXT RECEIVER
+
+规定 Codex 完成或中断后应交给谁。
+
+## 十、Reason
+
+说明下一接收方为何接收本 artifact。
 ```
+
+任务书必须保留 ACOS 角色边界：
+
+1. ChatGPT 可产出 `TASK`、`REVIEW`、`DECISION`。
+2. Codex 只能产出 `RESULT` 或 `BLOCKED RESULT`。
+3. External Advisory Reviewer 只能产出 `ADVISORY REVIEW`。
+4. Codex 不得产出 `REVIEW` 或 `DECISION`。
+5. External Advisory Reviewer 不得产出最终 `DECISION`。
+6. Codex 输出完成或中断后必须交回 `ChatGPT Review`。
 
 ---
 
@@ -408,19 +452,19 @@ docker-compose.yml
 
 ---
 
-## 十七、法律业务任务的特殊要求
+## 十七、Domain-specific task special requirements
 
-当任务涉及中国民商事诉讼、民事执行、公司责任、股东责任、人格否认、债权人撤销权、银行流水、证据审查、北大法宝 MCP 等内容时，任务书必须增加法律业务边界。
+当任务涉及任何具体业务领域、外部知识体系、领域数据、专用工作流、专门工具或外部服务时，任务书必须增加领域边界。
 
 应明确：
 
 1. Codex 只能根据任务书落地结构；
-2. Codex 不得自行编造法律依据；
-3. Codex 不得自行编造案例；
-4. Codex 不得自行扩展浙江地区裁判规则；
-5. Codex 不得把未经确认的诉讼策略写成确定结论；
-6. 不确定法律问题必须 BLOCKED；
-7. 输出中必须保留风险、反方抗辩、补证清单等结构。
+2. Codex 不得自行决定未授权领域规则或业务逻辑；
+3. Codex 不得自行编造外部依据、示例数据、服务能力或领域结论；
+4. Codex 不得自行扩展地域、行业、组织或专用流程规则；
+5. Codex 不得把未经确认的策略写成确定结论；
+6. 不确定的领域问题必须 BLOCKED；
+7. 输出中必须保留风险、假设、待确认事项和后续验证清单等结构。
 
 ---
 
@@ -444,25 +488,25 @@ docker-compose.yml
 
 ## 一、返工原因
 
-上一步 `skills/bank_flow_analysis.md` 存在以下问题：
+上一步 `skills/domain_workflow_check.md` 存在以下问题：
 
-1. 只做金额汇总；
-2. 未分析资金流向；
-3. 未识别提现、自我转账、关联账户转移；
-4. 未输出履行能力判断。
+1. 只做表层摘要；
+2. 未区分已授权规则和待确认规则；
+3. 未标记假设、风险和外部依赖；
+4. 未输出可验收的后续验证清单。
 
 ## 二、任务目标
 
 只修改：
 
-- skills/bank_flow_analysis.md
+- skills/domain_workflow_check.md
 
 ## 三、禁止事项
 
 1. 不得修改其他文件；
 2. 不得新增新 skill；
 3. 不得删除原有风险提示结构；
-4. 不得编造案例或法条。
+4. 不得编造外部依据、示例数据或领域规则。
 ```
 
 ---
@@ -509,7 +553,7 @@ pytest
 4. 不让 Codex 自由发挥；
 5. 不默认授权；
 6. 不含模糊措辞；
-7. 不把业务判断交给 Codex；
+7. 不把未授权领域或业务判断交给 Codex；
 8. 每条要求尽量可验收。
 
 ---
@@ -520,6 +564,33 @@ pytest
 
 ````markdown
 # Codex 执行任务：[TASK_ID]
+
+ARTIFACT TYPE:
+TASK
+
+PRODUCER:
+ChatGPT
+
+TO:
+Codex Executor
+
+NEXT RECEIVER:
+ChatGPT Review
+
+MODE:
+[CREATE / EDIT / REVIEW / TEST / COMMIT]
+
+PROJECT:
+[项目路径或项目名称]
+
+AUTHORITY LIMIT:
+[Codex 本轮被授权的最大权限边界]
+
+FORBIDDEN:
+[不得执行的操作]
+
+OUTPUT:
+RESULT 或 BLOCKED RESULT
 
 ## 一、任务背景
 
@@ -577,6 +648,8 @@ pytest
 7. 测试结果：
 8. 潜在风险：
 9. 建议下一步：
+10. NEXT RECEIVER:
+11. Reason:
 ````
 
 ---

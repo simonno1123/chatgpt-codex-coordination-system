@@ -2,11 +2,13 @@
 
 ## 一、用途
 
-本 skill 用于将长对话、项目背景、用户目标、已完成任务、当前任务、关键决策、禁止事项和法律业务边界，压缩成 Codex 可以直接消费的简洁上下文包。
+本 skill 用于将长对话、项目背景、用户目标、已完成任务、当前任务、关键决策、禁止事项、权限边界和 artifact routing 信息，压缩成 Codex 可以直接消费的简洁上下文包。
 
-它服务于 `agents/codex_execution_coordinator.md`，是 ChatGPT-Codex 协同作业机制中的上下文压缩组件。
+它服务于 `agents/codex_execution_coordinator.md`，是 ACOS 中的上下文压缩组件。
 
 本 skill 的核心目标，是减少 Codex 在执行任务前需要理解的上下文长度，避免 Codex 因背景过长、信息混杂或任务边界不清而出现误解、越权修改或无效探索。
+
+本 skill 是 provider-neutral 的通用协同能力，不绑定任何具体模型、工具或领域。
 
 ---
 
@@ -20,10 +22,11 @@
 4. Codex 出现重复执行旧任务的情况；
 5. Codex 混淆当前任务与前序任务；
 6. 需要将 ChatGPT 的设计决策转交给 Codex；
-7. 需要将法律业务边界压缩给 Codex；
+7. 需要将项目边界、实例边界或领域限制压缩给 Codex；
 8. 需要生成任务前置背景；
 9. 需要建立项目阶段总结；
-10. 需要把 DONE / ACCEPTED / REWORK / BLOCKED 状态整理成任务上下文。
+10. 需要把 DONE / ACCEPTED / REWORK / BLOCKED / DECISION 状态整理成任务上下文；
+11. 需要在上下文包中明确下一接收方和信息传递理由。
 
 ---
 
@@ -35,9 +38,10 @@
 2. 审查 Codex 输出，此时应使用 `codex_output_reviewer.md`；
 3. 处理 BLOCKED 问题，此时应使用 `codex_blocker_resolver.md`；
 4. 替 Codex 扩大任务范围；
-5. 替 Codex 生成法律结论；
+5. 替 Codex 生成领域结论或实例策略；
 6. 将未经确认的信息写成项目既定事实；
-7. 压缩掉关键禁止事项和验收标准。
+7. 压缩掉关键禁止事项、权限边界和验收标准；
+8. 把上下文包当成执行授权、REVIEW 或 DECISION。
 
 ---
 
@@ -56,10 +60,12 @@
 9. 任务状态；
 10. 当前风险；
 11. `.git` 或 diff 审查限制；
-12. 法律业务边界；
-13. Codex 禁止事项；
-14. 本轮任务只需要知道的最小背景；
-15. 不应传给 Codex 的冗余信息。
+12. 项目边界、实例边界或领域限制；
+13. Artifact Routing 元数据；
+14. 角色权限边界；
+15. Codex 禁止事项；
+16. 本轮任务只需要知道的最小背景；
+17. 不应传给 Codex 的冗余信息。
 
 ---
 
@@ -76,9 +82,12 @@
 5. 明确当前任务状态；
 6. 明确已完成文件；
 7. 明确禁止事项；
-8. 明确法律业务边界；
-9. 避免重复长篇历史对话；
-10. 避免让 Codex 误以为旧任务仍需执行。
+8. 明确项目边界、权限边界和路由边界；
+9. 明确 Codex 只能输出 RESULT 或 BLOCKED RESULT；
+10. 避免重复长篇历史对话；
+11. 避免让 Codex 误以为旧任务仍需执行。
+
+上下文包是辅助 artifact。它不能替代 TASK、REVIEW、DECISION 或用户授权。
 
 ---
 
@@ -89,64 +98,104 @@
 ```markdown
 # Project Context Pack for Codex
 
+ARTIFACT TYPE:
+CONTEXT PACK
+
+PRODUCER:
+ChatGPT
+
+TO:
+Codex Executor
+
+MODE:
+CONTEXT
+
+PROJECT:
+[项目路径或项目名称]
+
+AUTHORITY LIMIT:
+[本上下文包只提供背景，不扩大 Codex 授权]
+
+FORBIDDEN:
+[本轮仍然禁止的事项]
+
+OUTPUT:
+CONTEXT PACK
+
 ## 1. Project Goal
 
 [项目总体目标]
 
-## 2. Current Phase
+## 2. Project / Instance Boundary
+
+1. 
+2. 
+3. 
+
+## 3. Current Phase
 
 [当前阶段]
 
-## 3. Completed and Accepted Tasks
+## 4. Completed and Accepted Tasks
 
 - [TASK_ID]：[结果]
 
-## 4. Current Task
+## 5. Current Task
 
 [TASK_ID + 本轮只做什么]
 
-## 5. Existing Files
+## 6. Relevant Files
 
-- [已存在关键文件]
+- [本轮相关文件]
 
-## 6. Key Decisions
-
-1. 
-2. 
-3. 
-
-## 7. Legal Business Boundaries
+## 7. Key Decisions
 
 1. 
 2. 
 3. 
 
-## 8. Allowed Scope for Current Task
+## 8. Artifact Routing and Authority Context
+
+1. 
+2. 
+3. 
+
+## 9. Allowed Scope for Current Task
 
 - 
 
-## 9. Forbidden Actions
+## 10. Forbidden Actions
 
 1. 
 2. 
 3. 
 
-## 10. Known Risks
+## 11. Known Risks
 
 1. 
 2. 
 3. 
 
-## 11. What Codex Should Ignore
+## 12. What Codex Should Ignore
 
 1. 
 2. 
 3. 
 
-## 12. Expected Output
+## 13. Expected Output
 
 [Codex 本轮应输出什么]
+
+## NEXT RECEIVER
+
+[ChatGPT Review / Codex Executor / User Decision / External Advisory Reviewer / None]
+
+## Reason
+
+[说明为什么交给该接收方]
 ```
+
+NEXT RECEIVER 和 Reason 必须保留在输出末尾，用于明确信息传递对象。
 
 ---
 
@@ -160,10 +209,12 @@
 2. 允许操作范围；
 3. 禁止事项；
 4. 已完成且会影响当前任务的文件；
-5. 法律业务边界；
-6. 验收标准；
-7. BLOCKED 规则；
-8. 已知风险。
+5. 项目边界、实例边界或领域限制；
+6. Artifact Routing 元数据；
+7. 角色权限边界；
+8. 验收标准；
+9. BLOCKED 规则；
+10. 已知风险。
 
 ### 2. 删除无关历史讨论
 
@@ -172,7 +223,7 @@
 1. 已经完成且与当前任务无关的长篇说明；
 2. 重复的任务书内容；
 3. 用户与 ChatGPT 的探索性讨论；
-4. 不影响当前任务的法律案例讨论；
+4. 不影响当前任务的领域讨论；
 5. 不影响当前任务的技术设想；
 6. 已被否定的方案；
 7. Codex 不需要知道的聊天过程。
@@ -198,18 +249,36 @@
 2. 本轮不做什么；
 3. 哪些文件不得修改；
 4. 遇到什么情况必须 BLOCKED；
-5. 完成后如何回报。
+5. 完成后如何回报；
+6. 输出末尾的 NEXT RECEIVER 和 Reason。
 
-### 5. 保留法律业务边界
+### 5. 保留角色和权限边界
 
-如果项目涉及中国民商事争议解决和民事执行，压缩包必须保留：
+压缩包必须保留：
 
-1. Codex 不得编造法律依据；
-2. Codex 不得编造案例；
-3. Codex 不得自行归纳浙江地区裁判规则；
-4. Codex 不得将诉讼策略写成确定结论；
-5. 材料不足时应写明待补证或待确认；
-6. 法律判断由 ChatGPT 或用户决策，Codex 只负责落地。
+1. ChatGPT 负责 TASK / REVIEW / DECISION；
+2. Codex 只能执行授权任务并输出 RESULT / BLOCKED RESULT；
+3. External Advisory Reviewer 只能输出 ADVISORY REVIEW；
+4. Codex 不得自行验收；
+5. Codex 不得伪装其他主体；
+6. 需要用户授权、凭证或人类判断时，应交给 User Decision。
+
+### 6. 保留项目和实例边界
+
+如果当前任务发生在 ACOS 中，压缩包必须明确：
+
+1. ACOS 是项目无关的协同基础设施；
+2. 本轮只修正协同系统；
+3. 具体项目推进应在具体项目窗口中进行；
+4. 不得把项目实例规则写入 ACOS 核心层；
+5. 不得把 ACOS 协同协议误写入项目实例，除非用户明确授权 local ACOS instance mode。
+
+如果当前任务发生在项目实例中，压缩包必须明确：
+
+1. 该项目只是 ACOS 的使用者；
+2. Codex 只能处理该项目已授权范围；
+3. 未授权领域规则、实例策略或验收口径不应由 Codex 自行决定；
+4. 不确定时应 BLOCKED。
 
 ---
 
@@ -218,7 +287,7 @@
 在本项目中，默认项目目标为：
 
 ```text
-构建一套 ChatGPT-Codex 协同作业机制，使 ChatGPT 负责规划、架构、任务拆解、法律业务判断、审查和返工决策，Codex 负责局部文件创建、修改、测试和回报。
+构建 ACOS（AI Collaboration Operating System），使 ChatGPT 负责规划、任务设计、审查和最终决策，Codex 作为唯一执行者负责授权范围内的文件修改、命令执行、Git 操作和结果回报，External Advisory Reviewer 只提供非执行性 ADVISORY REVIEW。
 ```
 
 当前协同机制优先建立以下构件：
@@ -230,7 +299,7 @@
 5. `skills/project_context_compressor.md`
 6. `.codex-coordination/` 文件协议目录
 
-在上述构件完成前，不应直接开发复杂法律业务模块。
+本项目只修正 ACOS。具体项目推进必须在具体项目窗口中进行，不应混入本仓库。
 
 ---
 
@@ -241,72 +310,101 @@
 ```markdown
 # Project Context Pack for Codex
 
+ARTIFACT TYPE:
+CONTEXT PACK
+
+PRODUCER:
+ChatGPT
+
+TO:
+Codex Executor
+
+MODE:
+CONTEXT
+
+PROJECT:
+/Users/zhang/Documents/chatgpt-codex-coordination-system
+
+AUTHORITY LIMIT:
+This context pack only summarizes accepted ACOS scope and does not authorize extra file edits.
+
+FORBIDDEN:
+Do not modify project instances, do not stage, do not commit, do not push, and do not change files outside the current task.
+
+OUTPUT:
+CONTEXT PACK
+
 ## 1. Project Goal
 
-建立 ChatGPT-Codex 协同作业机制。ChatGPT 负责规划、任务拆解、审查、返工和法律业务判断；Codex 负责小步执行、文件创建、测试和回报。
+建立 ACOS。ChatGPT 负责 TASK / REVIEW / DECISION；Codex 负责授权范围内的执行并输出 RESULT / BLOCKED RESULT；External Advisory Reviewer 只能输出 ADVISORY REVIEW。
 
-## 2. Current Phase
+## 2. Project / Instance Boundary
 
-正在创建协同机制的基础 agent / skills，尚未进入具体法律业务模块开发。
+本轮只处理 ACOS 仓库。具体项目推进必须在具体项目窗口中进行。
 
-## 3. Completed and Accepted Tasks
+## 3. Current Phase
 
-- TASK_001：已条件验收，创建 `agents/codex_execution_coordinator.md`。
-- TASK_002：已条件验收，创建 `skills/codex_task_writer.md`。
-- TASK_003：已条件验收，创建 `skills/codex_output_reviewer.md`。
-- TASK_004：已条件验收，创建 `skills/codex_blocker_resolver.md`。
+Skill layer genericization is in progress.
 
-## 4. Current Task
+## 4. Completed and Accepted Tasks
 
-TASK_005：只创建 `skills/project_context_compressor.md`。
+- TASK_016A：accepted, genericized `skills/codex_task_writer.md`.
+- TASK_016B：accepted, genericized `skills/codex_output_reviewer.md`.
+- TASK_016C：accepted, genericized `skills/codex_blocker_resolver.md`.
 
-## 5. Existing Files
+## 5. Current Task
 
-- `agents/codex_execution_coordinator.md`
-- `skills/codex_task_writer.md`
-- `skills/codex_output_reviewer.md`
-- `skills/codex_blocker_resolver.md`
+TASK_016D：only rework `skills/project_context_compressor.md`.
 
-## 6. Key Decisions
+## 6. Relevant Files
 
-1. 每次只给 Codex 一个小任务。
-2. Codex 遇到不确定事项必须 BLOCKED。
-3. ChatGPT 负责法律业务判断和验收。
-4. 当前不处理 `.git` 问题。
+- `skills/project_context_compressor.md`
 
-## 7. Legal Business Boundaries
+## 7. Key Decisions
 
-1. Codex 不得编造法律依据或案例。
-2. Codex 不得自行确定诉讼策略。
-3. 法律业务逻辑由 ChatGPT 或用户确认后再落地。
+1. One skill is reworked per task lifecycle.
+2. Codex must not self-review or produce DECISION.
+3. Context packs do not expand execution authority.
 
-## 8. Allowed Scope for Current Task
+## 8. Artifact Routing and Authority Context
 
-- 新增 `skills/project_context_compressor.md`
+1. Codex outputs RESULT or BLOCKED RESULT only.
+2. ChatGPT Review decides ACCEPTED / REWORK / BLOCKED.
+3. NEXT RECEIVER and Reason must appear at the end of the output.
 
-## 9. Forbidden Actions
+## 9. Allowed Scope for Current Task
 
-1. 不得修改已有文件。
-2. 不得创建其他 skill 或 agent。
-3. 不得创建 `.codex-coordination/`。
-4. 不得处理 `.git` 问题。
-5. 不得引入依赖。
+- Modify `skills/project_context_compressor.md` only.
 
-## 10. Known Risks
+## 10. Forbidden Actions
 
-1. `.git` 当前不可用，后续 diff 审查受影响。
-2. 前序任务均为条件验收，尚未逐行审查完整文件内容。
+1. Do not modify core governance files.
+2. Do not modify project instances.
+3. Do not run git add / commit / push.
+4. Do not create files.
 
-## 11. What Codex Should Ignore
+## 11. Known Risks
 
-1. 不要重复创建前序文件。
-2. 不要处理法律业务模块。
-3. 不要处理 Git 问题。
-4. 不要创建协作目录协议。
+1. Other accepted skill edits may still be uncommitted.
+2. Existing unrelated worktree changes must remain isolated.
 
-## 12. Expected Output
+## 12. What Codex Should Ignore
 
-完成后回报新增文件、修改文件、删除文件、验证方式、测试结果、潜在风险和下一步建议。
+1. Do not handle other modified files.
+2. Do not continue into the next task.
+3. Do not sync remote state.
+
+## 13. Expected Output
+
+RESULT with modified file, summary, diff stat, git status, and routing.
+
+## NEXT RECEIVER
+
+ChatGPT Review
+
+## Reason
+
+TASK_016D must be reviewed before any commit or next task.
 ```
 
 ---
@@ -319,12 +417,14 @@ TASK_005：只创建 `skills/project_context_compressor.md`。
 2. 把尚未执行的任务写成已完成；
 3. 把条件验收写成无保留验收；
 4. 删除禁止事项；
-5. 删除法律业务边界；
+5. 删除项目边界、实例边界或权限边界；
 6. 删除 `.git` 风险；
 7. 把多个任务合并给 Codex；
 8. 让 Codex 自行选择下一步；
-9. 让 Codex 自行处理法律判断；
-10. 将用户探索性想法写成既定项目规则。
+9. 让 Codex 自行处理领域判断；
+10. 将用户探索性想法写成既定项目规则；
+11. 省略 Artifact Routing 元数据；
+12. 省略输出末尾的 NEXT RECEIVER 和 Reason。
 
 ---
 
@@ -340,8 +440,9 @@ TASK_005：只创建 `skills/project_context_compressor.md`。
 6. 避免重复历史对话；
 7. 保留操作边界；
 8. 保留风险提示；
-9. 可直接复制给 Codex；
-10. 能防止 Codex 执行错任务。
+9. 保留 artifact routing 元数据；
+10. 可直接复制给 Codex；
+11. 能防止 Codex 执行错任务。
 
 ---
 
