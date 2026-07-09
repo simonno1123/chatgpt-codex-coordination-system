@@ -275,20 +275,30 @@ DO NOT SEND TO:
 
 Allowed artifact types:
 
-1. `TASK`
-2. `RESULT`
-3. `ADVISORY REVIEW`
-4. `REVIEW`
-5. `DECISION`
-6. `RECORD`
+1. `GOVERNANCE PROPOSAL`
+2. `TASK`
+3. `RESULT`
+4. `ADVISORY REVIEW`
+5. `REVIEW`
+6. `DECISION`
+7. `RECORD`
 
 Role authority:
 
-1. ChatGPT may produce `TASK`, `REVIEW`, `DECISION`, and `RECORD`.
+1. ChatGPT may produce `GOVERNANCE PROPOSAL`, `TASK`, `REVIEW`, `DECISION`, and `RECORD`.
 2. Codex may produce `RESULT` or `BLOCKED RESULT` only.
 3. External Advisory Reviewer may produce `ADVISORY REVIEW` only. Current provider: Gemini 3.5 Flash.
 4. Automation may produce `RESULT` or `RECORD` only.
 5. Automation must not produce `REVIEW`, `ADVISORY REVIEW`, or `DECISION`.
+
+Governance proposal rule:
+
+1. `GOVERNANCE PROPOSAL` is for ACOS system architecture changes, authority model changes, role definition changes, and protocol upgrade suggestions.
+2. A `GOVERNANCE PROPOSAL` is not an execution task and does not authorize file changes, commits, pushes, or final decisions.
+3. A `GOVERNANCE PROPOSAL` must route to ChatGPT Review.
+4. ChatGPT Review may convert an accepted `GOVERNANCE PROPOSAL` into a bounded `TASK` for Codex Executor.
+5. Required flow: `GOVERNANCE PROPOSAL -> ChatGPT Review -> TASK -> Codex Executor -> RESULT -> ChatGPT DECISION`.
+6. `GOVERNANCE PROPOSAL` must not be sent to a business project instance or to External Advisory Reviewer unless ChatGPT explicitly requests a non-executing advisory review.
 6. Automation must not route output to itself for acceptance.
 7. Automation output must return to ChatGPT Review unless the task explicitly routes it to User Decision for missing credentials, authorization, or human judgment.
 
@@ -318,7 +328,7 @@ Routing rule:
 3. If External Advisory Reviewer is used, advisory output must return to ChatGPT Review.
 4. External Advisory Reviewer must not route directly to Codex Executor.
 
-Invalid artifacts include identity-spoofed artifacts, missing receiver artifacts, self-acceptance artifacts, Codex-authored review or decision artifacts, and External Advisory Reviewer-authored final decision artifacts.
+Invalid artifacts include identity-spoofed artifacts, missing receiver artifacts, self-acceptance artifacts, Codex-authored review or decision artifacts, External Advisory Reviewer-authored final decision artifacts, and governance proposals routed directly into execution.
 
 ## 15. Git Safety Rules
 

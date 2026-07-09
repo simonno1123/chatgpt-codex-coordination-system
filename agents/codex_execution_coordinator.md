@@ -255,7 +255,7 @@ DO NOT SEND TO:
 
 Artifact authority rules:
 
-1. ChatGPT may produce `TASK`, `REVIEW`, `DECISION`, and `RECORD`.
+1. ChatGPT may produce `GOVERNANCE PROPOSAL`, `TASK`, `REVIEW`, `DECISION`, and `RECORD`.
 2. Codex may produce `RESULT` or `BLOCKED RESULT` only.
 3. External Advisory Reviewer may produce `ADVISORY REVIEW` only. Current provider: Gemini 3.5 Flash.
 4. Automation may produce `RESULT` or `RECORD` only.
@@ -269,6 +269,15 @@ Artifact authority rules:
 12. User Decision may authorize direction, scope, credentials, or whether to proceed, but User Decision does not replace ChatGPT Review unless the user explicitly suspends ACOS governance for that task.
 13. No commit may proceed unless ChatGPT Review has produced a valid `DECISION` artifact. User Decision may authorize whether to proceed, but Codex still requires a ChatGPT Review `DECISION` artifact before commit unless the user explicitly suspends ACOS governance for that task.
 14. If External Advisory Reviewer is used, advisory output must return to `ChatGPT Review` and must not route directly to `Codex Executor`.
+
+Governance proposal rules:
+
+1. `GOVERNANCE PROPOSAL` is for ACOS system architecture changes, authority model changes, role definition changes, and protocol upgrade suggestions.
+2. A `GOVERNANCE PROPOSAL` is not an execution task and does not authorize file changes, commits, pushes, or final decisions.
+3. A `GOVERNANCE PROPOSAL` must route to ChatGPT Review.
+4. ChatGPT Review may convert an accepted `GOVERNANCE PROPOSAL` into a bounded `TASK` for Codex Executor.
+5. Required flow: `GOVERNANCE PROPOSAL -> ChatGPT Review -> TASK -> Codex Executor -> RESULT -> ChatGPT DECISION`.
+6. `GOVERNANCE PROPOSAL` must not be sent to a business project instance or to External Advisory Reviewer unless ChatGPT explicitly requests a non-executing advisory review.
 
 ---
 
@@ -547,8 +556,9 @@ DONE
 16. 是否存在 Codex 产出 REVIEW / DECISION；
 17. 是否存在 External Advisory Reviewer 产出最终 DECISION；
 18. 是否存在未经过 ChatGPT DECISION 的 commit 授权。
+19. 是否存在 GOVERNANCE PROPOSAL 跳过 ChatGPT Review 直接进入执行链。
 
-身份伪造、越权 artifact、自我验收、Codex 产出 REVIEW / DECISION、External Advisory Reviewer 产出最终 DECISION，均应判定为 invalid artifact。invalid artifact 不应被当作普通 ACCEPTED 结果处理。
+身份伪造、越权 artifact、自我验收、Codex 产出 REVIEW / DECISION、External Advisory Reviewer 产出最终 DECISION、GOVERNANCE PROPOSAL 直接进入执行链，均应判定为 invalid artifact。invalid artifact 不应被当作普通 ACCEPTED 结果处理。
 
 ---
 

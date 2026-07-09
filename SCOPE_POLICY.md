@@ -146,15 +146,21 @@ Every artifact must declare:
 10. `OUTPUT`
 11. `DO NOT SEND TO`
 
-Allowed artifact types are `TASK`, `RESULT`, `ADVISORY REVIEW`, `REVIEW`, `DECISION`, and `RECORD`.
+Allowed artifact types are `GOVERNANCE PROPOSAL`, `TASK`, `RESULT`, `ADVISORY REVIEW`, `REVIEW`, `DECISION`, and `RECORD`.
 
 Role authority is limited as follows:
 
-1. ChatGPT may produce `TASK`, `REVIEW`, `DECISION`, and `RECORD`.
+1. ChatGPT may produce `GOVERNANCE PROPOSAL`, `TASK`, `REVIEW`, `DECISION`, and `RECORD`.
 2. Codex may produce `RESULT` or `BLOCKED RESULT` only.
 3. External Advisory Reviewer may produce `ADVISORY REVIEW` only. Current provider: Gemini 3.5 Flash.
 4. Automation may produce `RESULT` or `RECORD` only.
 5. Automation must not produce `REVIEW`, `ADVISORY REVIEW`, or `DECISION`.
+
+`GOVERNANCE PROPOSAL` is for ACOS system architecture changes, authority model changes, role definition changes, and protocol upgrade suggestions. It is not an execution task and does not authorize file changes, commits, pushes, or final decisions.
+
+A `GOVERNANCE PROPOSAL` must route to ChatGPT Review. ChatGPT Review may convert an accepted `GOVERNANCE PROPOSAL` into a bounded `TASK` for Codex Executor. Required flow: `GOVERNANCE PROPOSAL -> ChatGPT Review -> TASK -> Codex Executor -> RESULT -> ChatGPT DECISION`.
+
+`GOVERNANCE PROPOSAL` must not be sent to a business project instance or to External Advisory Reviewer unless ChatGPT explicitly requests a non-executing advisory review.
 6. Automation must not route output to itself for acceptance.
 7. Automation output must return to ChatGPT Review unless the task explicitly routes it to User Decision for missing credentials, authorization, or human judgment.
 
