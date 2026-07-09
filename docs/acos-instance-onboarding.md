@@ -184,7 +184,25 @@ Its legal skills, MCP integrations, domain references, and domain workflows rema
 
 ACOS may generate a bounded TASK that targets the `claude-for-legal-cn` project path, but ACOS protocol upgrades, role definitions, templates, linter rules, and governance decisions stay in the ACOS repository unless the user explicitly authorizes local ACOS instance mode.
 
-## 9. Onboarding Checklist
+## 9. Instance Validation Record
+
+The `claude-for-legal-cn` project was used as an external ACOS instance validation target.
+
+Validation result:
+
+- ACOS can generate bounded tasks for an external project instance.
+- Codex can execute read-only checks and tightly scoped project-instance commits without copying ACOS core files into the instance.
+- Codex can return `RESULT` artifacts to ChatGPT Review for decision.
+- ChatGPT Review can accept, block, or redirect instance work while preserving ACOS as the protocol source.
+
+Boundary conclusion:
+
+- The ACOS instance flow is usable.
+- `claude-for-legal-cn` remains a project instance, not ACOS core.
+- Future `claude-for-legal-cn` project development, dirty-worktree cleanup, commits, and pushes should proceed in the project-specific thread.
+- ACOS should only receive feedback from that project as `GOVERNANCE PROPOSAL` when the issue concerns collaboration mechanics.
+
+## 10. Onboarding Checklist
 
 Before invoking Codex in a project instance, confirm:
 
@@ -197,7 +215,7 @@ Before invoking Codex in a project instance, confirm:
 7. ACOS core files are not being copied into the instance.
 8. Any governance issue is routed back to ACOS as `GOVERNANCE PROPOSAL`.
 
-## 10. Summary
+## 11. Summary
 
 ACOS governs collaboration. Project instances own project work.
 
