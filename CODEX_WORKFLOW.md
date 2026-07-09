@@ -102,9 +102,15 @@ Codex must not:
 6. Add historical untracked files unless explicitly authorized.
 7. Start non-coordination work unless explicitly authorized.
 
-## Temporary Claude Advisory Role
+## Temporary External Advisory Reviewer Role
 
-Claude may be used only as a temporary non-executing advisory reviewer or second-opinion source.
+External Advisory Reviewer may be used only as a temporary non-executing advisory reviewer or second-opinion source.
+
+Current provider:
+
+```text
+Gemini 3.5 Flash
+```
 
 The primary workflow remains:
 
@@ -117,10 +123,10 @@ The role model is:
 ```text
 ChatGPT = planning / judgment / review / final decision
 Codex = the only executor
-Claude = non-executing advisory reviewer only
+External Advisory Reviewer = non-executing advisory reviewer only
 ```
 
-Claude may only provide:
+External Advisory Reviewer may only provide:
 
 1. Second opinions on task clarity.
 2. Non-binding review comments.
@@ -128,7 +134,7 @@ Claude may only provide:
 4. Alternative reasoning for ChatGPT to consider.
 5. Questions that ChatGPT may decide to use.
 
-Claude must not:
+External Advisory Reviewer must not:
 
 1. Modify files.
 2. Create files.
@@ -142,7 +148,7 @@ Claude must not:
 10. Bypass scope_guardian.
 11. Expand approved scope.
 
-Claude output is advisory only. ChatGPT remains responsible for all final ACCEPTED / REWORK / BLOCKED decisions. Codex remains the only execution agent.
+External Advisory Reviewer output is advisory only. ChatGPT remains responsible for all final ACCEPTED / REWORK / BLOCKED decisions. Codex remains the only execution agent.
 
 ## 5. Task Types
 
@@ -324,7 +330,7 @@ Role authority:
 
 1. ChatGPT may produce `TASK`, `REVIEW`, `DECISION`, and `RECORD`.
 2. Codex may produce `RESULT` or `BLOCKED RESULT` only.
-3. Claude may produce `ADVISORY REVIEW` only.
+3. External Advisory Reviewer may produce `ADVISORY REVIEW` only. Current provider: Gemini 3.5 Flash.
 4. Automation may produce `RESULT` or `RECORD` only.
 5. Automation must not produce `REVIEW`, `ADVISORY REVIEW`, or `DECISION`.
 6. Automation must not route output to itself for acceptance.
@@ -333,14 +339,14 @@ Role authority:
 Identity rule:
 
 1. No agent may produce an artifact under another agent's identity.
-2. Codex must never write `FROM: Claude` or `PRODUCER: Claude`.
+2. Codex must never write `FROM: External Advisory Reviewer`, `PRODUCER: External Advisory Reviewer`, `FROM: Gemini 3.5 Flash`, or `PRODUCER: Gemini 3.5 Flash`.
 3. Codex must never write `FROM: ChatGPT` or `PRODUCER: ChatGPT`.
 
 Acceptance rule:
 
 1. No agent may route an artifact to itself for acceptance.
 2. Codex cannot accept its own `RESULT`.
-3. Claude cannot make a final `DECISION`.
+3. External Advisory Reviewer cannot make a final `DECISION`.
 4. Automation cannot make a final `DECISION`.
 5. ChatGPT Review is the authorized final reviewer under ACOS.
 6. User Decision may authorize direction, scope, credentials, or whether to proceed, but User Decision does not replace ChatGPT Review unless the user explicitly suspends ACOS governance for that task.
@@ -353,10 +359,10 @@ Routing rule:
 
 1. Every artifact must specify `NEXT RECEIVER`.
 2. Missing `NEXT RECEIVER` makes the artifact invalid or BLOCKED.
-3. If Claude is used, Claude output must return to ChatGPT Review.
-4. Claude must not route directly to Codex Executor.
+3. If External Advisory Reviewer is used, advisory output must return to ChatGPT Review.
+4. External Advisory Reviewer must not route directly to Codex Executor.
 
-Invalid artifacts include identity-spoofed artifacts, missing receiver artifacts, self-acceptance artifacts, Codex-authored `REVIEW` or `DECISION` artifacts, and Claude-authored final `DECISION` artifacts.
+Invalid artifacts include identity-spoofed artifacts, missing receiver artifacts, self-acceptance artifacts, Codex-authored `REVIEW` or `DECISION` artifacts, and External Advisory Reviewer-authored final `DECISION` artifacts.
 
 ## 11. DONE Report Format
 
@@ -451,7 +457,7 @@ The review should check:
 
 The review should name the next handoff target and reason. ACCEPTED may hand off to `None`, `Codex Executor`, or `User Decision` depending on the next step. REWORK should hand off to `Codex Executor`. BLOCKED should hand off to `User Decision` or `ChatGPT Review` depending on who must resolve the blocker.
 
-ChatGPT must reject any artifact that spoofs another producer, routes itself for acceptance, lets Codex produce `REVIEW` or `DECISION`, lets Claude produce final `DECISION`, or treats Codex `RESULT` alone as sufficient authorization to commit.
+ChatGPT must reject any artifact that spoofs another producer, routes itself for acceptance, lets Codex produce `REVIEW` or `DECISION`, lets External Advisory Reviewer produce final `DECISION`, or treats Codex `RESULT` alone as sufficient authorization to commit.
 
 ## 14. Git Rules
 

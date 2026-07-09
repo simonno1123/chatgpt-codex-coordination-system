@@ -63,7 +63,7 @@ Codex 不负责：
 8. 在未获授权时修改核心配置文件；
 9. 将不确定事项写成确定规则。
 10. 产出 REVIEW 或 DECISION artifact；
-11. 以 Claude、ChatGPT 或其他 agent 身份产出 artifact。
+11. 以 External Advisory Reviewer、Gemini 3.5 Flash、ChatGPT 或其他 agent 身份产出 artifact。
 
 ---
 
@@ -257,18 +257,18 @@ Artifact authority rules:
 
 1. ChatGPT may produce `TASK`, `REVIEW`, `DECISION`, and `RECORD`.
 2. Codex may produce `RESULT` or `BLOCKED RESULT` only.
-3. Claude may produce `ADVISORY REVIEW` only.
+3. External Advisory Reviewer may produce `ADVISORY REVIEW` only. Current provider: Gemini 3.5 Flash.
 4. Automation may produce `RESULT` or `RECORD` only.
 5. Automation must not produce `REVIEW`, `ADVISORY REVIEW`, or `DECISION`.
 6. Automation must not route output to itself for acceptance.
 7. Automation output must return to ChatGPT Review unless the task explicitly routes it to User Decision for missing credentials, authorization, or human judgment.
 8. No agent may produce an artifact under another agent's identity.
-9. Codex must never write `FROM: Claude`, `PRODUCER: Claude`, `FROM: ChatGPT`, or `PRODUCER: ChatGPT`.
+9. Codex must never write `FROM: External Advisory Reviewer`, `PRODUCER: External Advisory Reviewer`, `FROM: Gemini 3.5 Flash`, `PRODUCER: Gemini 3.5 Flash`, `FROM: ChatGPT`, or `PRODUCER: ChatGPT`.
 10. No agent may route an artifact to itself for acceptance.
 11. ChatGPT Review is the authorized final reviewer under ACOS.
 12. User Decision may authorize direction, scope, credentials, or whether to proceed, but User Decision does not replace ChatGPT Review unless the user explicitly suspends ACOS governance for that task.
 13. No commit may proceed unless ChatGPT Review has produced a valid `DECISION` artifact. User Decision may authorize whether to proceed, but Codex still requires a ChatGPT Review `DECISION` artifact before commit unless the user explicitly suspends ACOS governance for that task.
-14. If Claude is used, Claude output must return to `ChatGPT Review` and must not route directly to `Codex Executor`.
+14. If External Advisory Reviewer is used, advisory output must return to `ChatGPT Review` and must not route directly to `Codex Executor`.
 
 ---
 
@@ -415,7 +415,7 @@ pytest output
 说明为什么交给该对象。
 ```
 
-本 agent 给 Codex 的任务书必须要求 Codex 输出 `RESULT` 或 `BLOCKED RESULT`。不得要求 Codex 输出 `REVIEW`、`DECISION`，或代替 Claude / ChatGPT 写 artifact。
+本 agent 给 Codex 的任务书必须要求 Codex 输出 `RESULT` 或 `BLOCKED RESULT`。不得要求 Codex 输出 `REVIEW`、`DECISION`，或代替 External Advisory Reviewer / Gemini 3.5 Flash / ChatGPT 写 artifact。
 
 ---
 
@@ -543,12 +543,12 @@ DONE
 12. 是否可以进入下一步；
 13. 是否明确写出下一交接对象和理由；
 14. artifact type、producer、receiver 和 authority limit 是否有效；
-15. 是否存在身份伪造，如 Codex 写出 `FROM: Claude` 或 `PRODUCER: ChatGPT`；
+15. 是否存在身份伪造，如 Codex 写出 `FROM: External Advisory Reviewer`、`PRODUCER: Gemini 3.5 Flash` 或 `PRODUCER: ChatGPT`；
 16. 是否存在 Codex 产出 REVIEW / DECISION；
-17. 是否存在 Claude 产出最终 DECISION；
+17. 是否存在 External Advisory Reviewer 产出最终 DECISION；
 18. 是否存在未经过 ChatGPT DECISION 的 commit 授权。
 
-身份伪造、越权 artifact、自我验收、Codex 产出 REVIEW / DECISION、Claude 产出最终 DECISION，均应判定为 invalid artifact。invalid artifact 不应被当作普通 ACCEPTED 结果处理。
+身份伪造、越权 artifact、自我验收、Codex 产出 REVIEW / DECISION、External Advisory Reviewer 产出最终 DECISION，均应判定为 invalid artifact。invalid artifact 不应被当作普通 ACCEPTED 结果处理。
 
 ---
 

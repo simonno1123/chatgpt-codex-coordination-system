@@ -70,9 +70,15 @@ Temporary advisory tools may be used only for second opinions or non-binding rev
 
 They do not become part of the core coordination system unless explicitly authorized.
 
-Claude, when used temporarily, is a non-executing advisory reviewer only.
+External Advisory Reviewer, when used temporarily, is a non-executing advisory reviewer only.
 
-Claude must not:
+Current provider:
+
+```text
+Gemini 3.5 Flash
+```
+
+External Advisory Reviewer must not:
 
 1. Modify files.
 2. Create files.
@@ -85,7 +91,7 @@ Claude must not:
 9. Expand approved scope.
 10. Bypass scope classification.
 
-Any Claude output must be reviewed by ChatGPT before it affects a task, review, or decision.
+Any External Advisory Reviewer output must be reviewed by ChatGPT before it affects a task, review, or decision.
 
 ## 7. Scope Classification
 
@@ -122,7 +128,7 @@ Valid handoff targets are:
 4. `External Advisory Reviewer`
 5. `None`
 
-External advisory reviewers are non-executing only. Their output must return to ChatGPT Review before it can affect execution.
+External advisory reviewers are non-executing only. Their output must return to ChatGPT Review before it can affect execution. Current provider: Gemini 3.5 Flash.
 
 ## 10. Artifact Routing and Authority Requirement
 
@@ -146,21 +152,21 @@ Role authority is limited as follows:
 
 1. ChatGPT may produce `TASK`, `REVIEW`, `DECISION`, and `RECORD`.
 2. Codex may produce `RESULT` or `BLOCKED RESULT` only.
-3. Claude may produce `ADVISORY REVIEW` only.
+3. External Advisory Reviewer may produce `ADVISORY REVIEW` only. Current provider: Gemini 3.5 Flash.
 4. Automation may produce `RESULT` or `RECORD` only.
 5. Automation must not produce `REVIEW`, `ADVISORY REVIEW`, or `DECISION`.
 6. Automation must not route output to itself for acceptance.
 7. Automation output must return to ChatGPT Review unless the task explicitly routes it to User Decision for missing credentials, authorization, or human judgment.
 
-No agent may produce an artifact under another agent's identity. Codex must never write `FROM: Claude`, `PRODUCER: Claude`, `FROM: ChatGPT`, or `PRODUCER: ChatGPT`.
+No agent may produce an artifact under another agent's identity. Codex must never write `FROM: External Advisory Reviewer`, `PRODUCER: External Advisory Reviewer`, `FROM: Gemini 3.5 Flash`, `PRODUCER: Gemini 3.5 Flash`, `FROM: ChatGPT`, or `PRODUCER: ChatGPT`.
 
-No agent may route an artifact to itself for acceptance. Codex cannot accept its own `RESULT`; Claude and automation cannot make final `DECISION` artifacts.
+No agent may route an artifact to itself for acceptance. Codex cannot accept its own `RESULT`; External Advisory Reviewer and automation cannot make final `DECISION` artifacts.
 
 ChatGPT Review is the authorized final reviewer under ACOS. User Decision may authorize direction, scope, credentials, or whether to proceed, but User Decision does not replace ChatGPT Review unless the user explicitly suspends ACOS governance for that task.
 
 No commit may proceed unless a valid `DECISION` artifact has been produced by ChatGPT Review. User Decision may authorize whether to proceed, but Codex still requires a ChatGPT Review `DECISION` artifact before commit unless the user explicitly suspends ACOS governance for that task. Codex `RESULT` alone is insufficient for commit.
 
-Every artifact must specify `NEXT RECEIVER`. Missing `NEXT RECEIVER` makes the artifact invalid or BLOCKED. If Claude is used, Claude output must return to ChatGPT Review and must not route directly to Codex Executor.
+Every artifact must specify `NEXT RECEIVER`. Missing `NEXT RECEIVER` makes the artifact invalid or BLOCKED. If External Advisory Reviewer is used, advisory output must return to ChatGPT Review and must not route directly to Codex Executor.
 
 ## 11. Final Rule
 
