@@ -1,4 +1,30 @@
-# Codex Execution Result
+# ACOS Result Template
+
+ARTIFACT TYPE:
+RESULT / BLOCKED RESULT
+
+PRODUCER:
+Codex Executor
+
+TO:
+ChatGPT Review
+
+MODE:
+[EDIT / READONLY / GIT / TEST / DOCS / MAINTENANCE]
+
+PROJECT:
+[Project path or repository name]
+
+AUTHORITY LIMIT:
+[Restate the authority granted by the TASK]
+
+FORBIDDEN:
+[Restate the actions that remained forbidden]
+
+OUTPUT:
+RESULT / BLOCKED RESULT
+
+---
 
 ## 1. Task ID
 
@@ -10,67 +36,50 @@ DONE / BLOCKED
 
 ## 3. Summary
 
-[简要说明本轮完成或阻塞情况。]
+[Briefly explain what was completed or why execution was blocked.]
 
 ## 4. Files Created
 
-- [新增文件]
+- [Created file, or "None"]
 
 ## 5. Files Modified
 
-- [修改文件]
+- [Modified file, or "None"]
 
 ## 6. Files Deleted
 
-- [删除文件]
+- [Deleted file, or "None"]
 
 ## 7. Commands Run
 
-- [运行命令]
+- [Command, or "None"]
 
 ## 8. Verification Method
 
-[说明如何验证。]
+[Explain how the result was verified.]
 
 ## 9. Test Results
 
-[说明测试结果；如果未运行测试，说明原因。]
+[Explain test or check results. If no tests were run, explain why.]
 
-## 10. Risks
+## 10. Authorization Check
 
-1. [风险一]
-2. [风险二]
+1. Were only authorized files touched?
+2. Were forbidden files or directories left untouched?
+3. Was any git add / commit / push executed?
+4. Was any REVIEW, DECISION, or self-acceptance produced by Codex?
 
-## 11. Questions for ChatGPT
+## 11. Risks
 
-如无问题，写“无”。
+1. [Risk one]
+2. [Risk two]
 
-如有 BLOCKED 问题，请使用：
+## 12. Questions for ChatGPT Review
 
-```markdown
-# Codex Execution Blocker
+[If none, write "None". If blocked, state the exact decision needed.]
 
-## 1. Current Task
+NEXT RECEIVER:
+ChatGPT Review
 
-## 2. Completed Work
-
-## 3. Blocker Description
-
-## 4. Related Files
-
-## 5. Options
-
-### Option A
-
-### Option B
-
-### Option C
-
-## 6. Codex Preliminary Assessment
-
-## 7. Decision Needed from ChatGPT
-```
-
-## 12. Suggested Next Step
-
-[Codex 可提出建议，但不得自行执行下一任务。]
+Reason:
+Codex RESULT or BLOCKED RESULT must be reviewed by ChatGPT Review before ACCEPTED, REWORK, BLOCKED, commit, push, or next task.

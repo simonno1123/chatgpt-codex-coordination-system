@@ -1,4 +1,30 @@
-# Codex Task
+# ACOS Task Template
+
+ARTIFACT TYPE:
+TASK
+
+PRODUCER:
+ChatGPT
+
+TO:
+Codex Executor
+
+MODE:
+[EDIT / READONLY / GIT / TEST / DOCS / MAINTENANCE]
+
+PROJECT:
+[Project path or repository name]
+
+AUTHORITY LIMIT:
+[Exactly what Codex may do for this task]
+
+FORBIDDEN:
+[Actions, files, directories, roles, or workflows Codex must not touch]
+
+OUTPUT:
+RESULT or BLOCKED RESULT only
+
+---
 
 ## 1. Task ID
 
@@ -10,109 +36,123 @@ READY
 
 ## 3. Background
 
-[说明当前项目阶段、已完成任务、本任务来源和本任务边界。]
+[Describe the current project phase, accepted prior decisions, source of this task, and task boundary.]
 
 ## 4. Goal
 
-本任务只完成：
+This task only completes:
 
-- [明确单一目标]
+- [Single explicit goal]
 
 ## 5. Allowed Scope
 
-允许新增或修改：
+Allowed files or directories:
 
-- [具体文件或目录]
+- [Specific file or directory]
 
-## 6. Forbidden Actions
+Allowed commands:
 
-1. 不得删除任何已有文件。
-2. 不得修改未授权文件。
-3. 不得引入新依赖。
-4. 不得修改核心配置文件。
-5. 不得处理本任务之外的问题。
-6. 不得编造外部服务配置。
-7. 遇到不确定事项必须 BLOCKED。
+- [Specific command, if authorized]
 
-## 7. Requirements
+## 6. Requirements
 
-1. [具体要求一]
-2. [具体要求二]
-3. [具体要求三]
+1. [Requirement one]
+2. [Requirement two]
+3. [Requirement three]
 
-## 8. Acceptance Criteria
+## 7. Acceptance Criteria
 
-1. 完成指定目标。
-2. 未越权修改。
-3. 未删除文件。
-4. 未引入未授权依赖。
-5. 输出验证结果。
-6. 输出潜在风险。
+1. The stated goal is completed.
+2. Only authorized files are modified.
+3. No unauthorized files are created, deleted, staged, committed, or pushed.
+4. Artifact Routing metadata is preserved.
+5. Role authority remains unchanged.
+6. Risks and verification method are reported.
 
-## 9. BLOCKED Rules
+## 8. BLOCKED Rules
 
-如遇以下情况，暂停并输出 BLOCKED：
+Codex must stop and output BLOCKED RESULT if:
 
-1. 目标文件已存在；
-2. 需要修改未授权文件；
-3. 当前项目结构与任务描述不一致；
-4. 存在多个实现路径且影响架构；
-5. 外部服务配置不明确；
-6. 法律业务逻辑不确定；
-7. 测试失败且无法判断是否应在本任务中修复。
+1. Current directory or project identity is unclear.
+2. Required files are missing or conflict with the task description.
+3. Completing the task requires modifying unauthorized files.
+4. Multiple implementation paths would change architecture or authority boundaries.
+5. External tools, services, credentials, or environment configuration are unclear.
+6. Domain-specific rules, project strategy, or acceptance standards are not authorized.
+7. Tests or checks fail and the fix is outside the authorized scope.
+8. The task would require Codex to produce REVIEW, DECISION, or self-acceptance.
 
-## 10. BLOCKED Report Format
+## 9. RESULT Format
 
-```markdown
-# Codex Execution Blocker
+Codex must produce RESULT or BLOCKED RESULT only.
 
-## 1. Current Task
-
-## 2. Completed Work
-
-## 3. Blocker Description
-
-## 4. Related Files
-
-## 5. Options
-
-### Option A
-
-### Option B
-
-### Option C
-
-## 6. Codex Preliminary Assessment
-
-## 7. Decision Needed from ChatGPT
-```
-
-## 11. DONE Report Format
-
-完成后请输出：
+Required fields:
 
 ```markdown
-# Codex Execution Result
+ARTIFACT TYPE:
+RESULT / BLOCKED RESULT
 
-## 1. Status
+PRODUCER:
+Codex Executor
 
-DONE
+TO:
+ChatGPT Review
 
-## 2. Summary
+MODE:
+[Same mode as the task]
 
-## 3. Files Created
+PROJECT:
+[Project path or repository name]
 
-## 4. Files Modified
+AUTHORITY LIMIT:
+[Restate the task authority limit]
 
-## 5. Files Deleted
+FORBIDDEN:
+[Restate forbidden actions]
 
-## 6. Commands Run
+OUTPUT:
+RESULT / BLOCKED RESULT
 
-## 7. Verification Method
+Status:
+DONE / BLOCKED
 
-## 8. Test Results
+Modified files:
+- [File path]
 
-## 9. Risks
+Summary:
+- [What changed or why blocked]
 
-## 10. Suggested Next Step
+Verification:
+- [Commands, checks, or static review performed]
+
+Risks:
+- [Known risks]
+
+NEXT RECEIVER:
+ChatGPT Review
+
+Reason:
+[Why ChatGPT Review is the next receiver]
 ```
+
+## 10. Role Boundary Reminder
+
+Allowed artifact authorities:
+
+- ChatGPT: TASK, REVIEW, DECISION
+- Codex Executor: RESULT, BLOCKED RESULT
+- External Advisory Reviewer: ADVISORY REVIEW only
+- Automation: RESULT, RECORD only
+
+Forbidden authority drift:
+
+- Codex must not produce REVIEW or DECISION.
+- Codex must not self-accept work.
+- External Advisory Reviewer must not execute tasks or produce DECISION.
+- Automation must not produce REVIEW or DECISION.
+
+NEXT RECEIVER:
+ChatGPT Review
+
+Reason:
+After Codex executes the TASK, the RESULT or BLOCKED RESULT must return to ChatGPT Review.

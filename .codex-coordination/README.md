@@ -6,7 +6,7 @@
 
 其目标是将“任务下发—Codex 执行—结果回报—ChatGPT 审查—返工或继续执行”的过程结构化、可追踪、可审查。
 
-本目录不存放业务源码，不存放密钥，不存放真实外部服务认证信息。
+本目录不存放项目实例源码，不存放密钥，不存放真实外部服务认证信息。
 
 ---
 
@@ -21,6 +21,7 @@
   templates/
     task_template.md
     result_template.md
+    review_template.md
     decision_template.md
     context_pack_template.md
 ```
@@ -72,6 +73,7 @@ decisions/TASK_006_DECISION.md
 
 * task_template.md
 * result_template.md
+* review_template.md
 * decision_template.md
 * context_pack_template.md
 
@@ -110,20 +112,36 @@ DONE 不等于 ACCEPTED。
 标准流程：
 
 ```text
-ChatGPT 生成任务书
+ChatGPT 生成 TASK
         ↓
-任务书放入 inbox/
+TASK 放入 inbox/
         ↓
-Codex 执行任务
+Codex Executor 执行授权任务
         ↓
-Codex 将结果写入 outbox/
+Codex Executor 将 RESULT 或 BLOCKED RESULT 写入 outbox/
         ↓
-ChatGPT 审查结果
+ChatGPT Review 审查结果
         ↓
-审查结论写入 decisions/
+REVIEW 或 DECISION 写入 decisions/
         ↓
-ACCEPTED / REWORK / BLOCKED / CANCELLED
+ACCEPTED / REWORK / BLOCKED / CANCELLED / NO_FURTHER_ACTION
 ```
+
+所有 artifact 必须包含以下路由和权限字段：
+
+```text
+ARTIFACT TYPE:
+PRODUCER:
+TO:
+NEXT RECEIVER:
+MODE:
+PROJECT:
+AUTHORITY LIMIT:
+FORBIDDEN:
+OUTPUT:
+```
+
+为保持信息传递明确，`NEXT RECEIVER` 和 `Reason` 应出现在 artifact 输出末尾。
 
 ---
 
@@ -131,14 +149,16 @@ ACCEPTED / REWORK / BLOCKED / CANCELLED
 
 Codex 执行任务时必须遵守：
 
-1. 只处理 inbox 中当前任务书指定的任务；
-2. 只修改任务书授权范围内的文件；
-3. 不得删除已有文件，除非任务书明确授权；
-4. 不得修改依赖文件，除非任务书明确授权；
+1. 只处理 inbox 中当前 TASK 指定的任务；
+2. 只修改 TASK 授权范围内的文件；
+3. 不得删除已有文件，除非 TASK 明确授权；
+4. 不得修改依赖文件，除非 TASK 明确授权；
 5. 不得编造外部服务配置；
-6. 遇到不确定事项必须输出 BLOCKED；
-7. 完成后必须输出 DONE 回报；
-8. 不得自行推进下一任务。
+6. 遇到不确定事项必须输出 BLOCKED RESULT；
+7. 完成后必须输出 RESULT；
+8. 不得自行推进下一任务；
+9. 不得输出 REVIEW 或 DECISION；
+10. 不得自我验收。
 
 ---
 
@@ -166,23 +186,44 @@ ChatGPT 审查 Codex 输出时应判断：
 1. 真实 API key；
 2. 真实 token；
 3. 真实账号密码；
-4. 未脱敏客户资料；
-5. 未脱敏案件材料；
+4. 未脱敏个人资料；
+5. 未脱敏项目实例资料；
 6. 银行卡号、身份证号等敏感信息；
 7. 外部服务真实认证参数。
 
 如确需记录配置，应使用占位符，例如：
 
 ```text
-<OPENAI_API_KEY>
-<PKULAW_MCP_URL>
-<PKULAW_AUTH_TOKEN>
+<API_KEY>
+<EXTERNAL_SERVICE_URL>
+<AUTH_TOKEN>
 ```
 
 ---
 
-## 九、当前阶段说明
+## 九、角色权限边界
 
-当前目录仅用于建立协同作业协议，不直接实现法律业务功能。
+允许的 artifact 权限如下：
 
-后续法律业务模块，例如民事执行财产线索、银行流水分析、公司人格否认、证据审查和北大法宝 MCP，应通过 inbox 任务逐步创建。
+```text
+ChatGPT: TASK / REVIEW / DECISION
+Codex Executor: RESULT / BLOCKED RESULT
+External Advisory Reviewer: ADVISORY REVIEW only
+Automation: RESULT / RECORD only
+```
+
+禁止的权限漂移：
+
+1. Codex Executor 不得输出 REVIEW 或 DECISION；
+2. Codex Executor 不得自我验收；
+3. External Advisory Reviewer 不得执行任务或输出 DECISION；
+4. Automation 不得输出 REVIEW 或 DECISION；
+5. 任何 artifact 不得伪装 PRODUCER 或 TO。
+
+---
+
+## 十、当前阶段说明
+
+当前目录仅用于建立 ACOS 协同作业协议，不直接实现任何项目实例能力。
+
+具体项目实例的推进应在具体项目窗口中进行；本目录只记录协同协议、任务流转、结果、审查和决策 artifact。

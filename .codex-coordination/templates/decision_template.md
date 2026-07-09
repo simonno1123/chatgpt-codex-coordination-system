@@ -1,50 +1,73 @@
-# ChatGPT Review Decision
+# ACOS Decision Template
 
-## 1. Task ID
+ARTIFACT TYPE:
+DECISION
 
-[TASK_ID]
+PRODUCER:
+ChatGPT Review
 
-## 2. Review Result
+TO:
+Relevant Receiver
 
-ACCEPTED / REWORK / BLOCKED / CANCELLED
+MODE:
+[GOVERNANCE / REVIEW RESOLUTION / USER AUTHORIZATION / STOP]
 
-## 3. Review Basis
+PROJECT:
+[Project path or repository name]
 
-1. Original task:
-2. Codex result:
+AUTHORITY LIMIT:
+[What this decision authorizes, rejects, or stops]
+
+FORBIDDEN:
+[Actions that remain forbidden after this decision]
+
+OUTPUT:
+DECISION
+
+---
+
+## 1. Decision ID
+
+[DECISION_ID]
+
+## 2. Related Task or Artifact
+
+[TASK_ID / RESULT / REVIEW / GOVERNANCE PROPOSAL]
+
+## 3. Decision
+
+ACCEPTED / REWORK / BLOCKED / CANCELLED / USER_DECISION_REQUIRED / NO_FURTHER_ACTION
+
+## 4. Basis
+
+1. Original task or proposal:
+2. Result or evidence reviewed:
 3. File scope:
 4. Verification result:
 5. Known risks:
 
-## 4. Accepted Items
+## 5. Authorized Next Action
 
-1. 
-2. 
-3. 
+- [Exact next action, or "None"]
 
-## 5. Issues or Risks
+## 6. Forbidden Actions
 
-1. 
-2. 
-3. 
+1. Codex must not produce REVIEW or DECISION.
+2. Codex must not self-accept work.
+3. External Advisory Reviewer must not execute tasks or produce DECISION.
+4. Automation must not produce REVIEW or DECISION.
+5. [Additional task-specific forbidden action]
 
-## 6. Required Fixes
+## 7. Receiver Instructions
 
-如无返工要求，写“无”。
+[Instruction for Codex Executor, User Decision, External Advisory Reviewer, Automation, or None.]
 
-## 7. Approved Scope for Next Action
+## 8. Record Notes
 
-- 
+[What should be recorded for lifecycle traceability.]
 
-## 8. Forbidden Actions
+NEXT RECEIVER:
+[Codex Executor / User Decision / ChatGPT Review / External Advisory Reviewer / Automation / None]
 
-1. 
-2. 
-3. 
-
-## 9. Next Instruction for Codex
-
-[如 ACCEPTED，给出下一任务方向。]
-[如 REWORK，给出返工任务。]
-[如 BLOCKED，说明需要补充的信息或用户决策。]
-[如 CANCELLED，说明停止原因。]
+Reason:
+[Why this receiver gets the next artifact or why no further action is needed.]
