@@ -56,6 +56,10 @@ Coordination-system changes must go into ACOS first. Domain capability changes m
 
 Protocol files such as `PROTOCOL.md`, task lifecycle records, reviews, decisions, inbox, outbox, and coordination logs must not be embedded into a business project unless the user explicitly authorizes local ACOS instance mode for that project.
 
+## 3A. Instance Onboarding
+
+See `docs/acos-instance-onboarding.md` for the recommended way to connect business or domain projects to ACOS without copying ACOS core files into those projects.
+
 ## 4. What This System Does Not Do
 
 This system does not implement non-coordination functionality.
