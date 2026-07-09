@@ -18,27 +18,38 @@
 
 ## 二、当前阶段
 
-当前阶段：ChatGPT-Codex 协同作业系统建设。
+当前阶段：ACOS 核心建设完成，进入维护与状态收口阶段。
+
+当前状态：
+
+```text
+Core Governance: COMPLETE
+Artifact Routing: COMPLETE
+Skill Layer: COMPLETE
+Remote Sync: COMPLETE
+Maintenance: ACTIVE
+```
 
 已完成：
 
-- 主控 agent；
-- 任务书生成 skill；
-- 输出审查 skill；
-- BLOCKED 处理 skill；
-- 上下文压缩 skill；
-- 文件驱动协作协议目录；
-- 项目总控文档；
-- Git 初始化、忽略规则和基线提交。
+- 主控 agent 并更新其角色定义；
+- 任务书生成、输出审查、BLOCKED 处理、上下文压缩和范围守护（scope_guardian）共 5 个协同 skills；
+- 文件驱动协作协议目录 `.codex-coordination/`；
+- 项目总控文档与项目范围修正；
+- Git 初始化、忽略规则、attributes 属性以及基线提交；
+- 最小协同流程文件流转的实测演练；
+- 建立多 Agent 确权边界与文件路由协议，并将顾问角色演进为 Gemini 3.5 Flash。
+- 新增 `GOVERNANCE PROPOSAL` artifact type；
+- 完成 TASK_016 skill layer 通用化整改，并同步到 `origin/master`。
 
 当前允许继续完善：
 
 - 协同 agent；
-- 协同 skills；
-- `.codex-coordination/` 协议层；
+- 协同 skills 的维护性修正；
+- `.codex-coordination/` 协议层与模板的清理；
 - 任务状态、回报、审查和返工流程；
-- Git diff、status、commit、回滚等基础治理；
-- 协同流程的实测样例。
+- Git 基础治理；
+- 已完成任务的运行记录归档与状态对账。
 
 当前暂停：
 
@@ -123,6 +134,7 @@ skills/
   codex_output_reviewer.md
   codex_blocker_resolver.md
   project_context_compressor.md
+  scope_guardian.md
 
 .codex-coordination/
   README.md
@@ -139,9 +151,10 @@ skills/
 PROJECT_BRIEF.md
 TASKS.md
 .gitignore
+.gitattributes
 ```
 
-`.gitattributes` 已创建但尚未纳入基线提交，后续应单独 staging 和 commit。
+`.gitattributes` 已通过 commit `5ad1edc` 纳入版本控制。
 
 ---
 
@@ -197,9 +210,9 @@ ACCEPTED / REWORK / BLOCKED / CANCELLED
 ## 十、当前风险
 
 1. 历史旧文件仍大量处于 untracked 状态，需要继续选择性 add。
-2. `.gitattributes` 已创建但尚未纳入 commit。
-3. 已提交的协同文件此前多为条件验收，后续如发现内容缺口，应通过小范围 REWORK 修正。
-4. 当前尚未实测完整的 inbox / outbox / decisions 文件流转。
+2. 已完成任务的状态记录可能与实际 Git 历史产生漂移，需要通过独立 bookkeeping 任务对账。
+3. TASK_021 已 READY，但不得在 TASK_016 生命周期记录收口前提前启动。
+4. 如后续发现协同文件内容缺口，应通过小范围 REWORK 修正。
 
 ---
 
@@ -207,11 +220,11 @@ ACCEPTED / REWORK / BLOCKED / CANCELLED
 
 建议后续按以下顺序推进：
 
-1. 单独 staging 并 commit `.gitattributes`；
-2. 创建一个最小测试任务，实测 `.codex-coordination/inbox → outbox → decisions` 流程；
-3. 对四个协同 skills 做一次内容审查；
-4. 根据实测结果局部修订 agent、skills 或模板；
-5. 形成稳定的协同作业使用说明。
+1. 完成 TASK_016 状态记录与运行 artifact 的审查、提交和同步；
+2. 启动 `TASK_021_CORRECT_TEMPLATES_SCOPE_WORDS`；
+3. 对 `.codex-coordination/templates/` 做模板层通用化清理；
+4. 根据模板清理结果局部修订使用说明；
+5. 维持 ACOS 与具体项目实例的边界隔离。
 
 任何非协同作业能力仅能在用户另行明确授权后启动。
 

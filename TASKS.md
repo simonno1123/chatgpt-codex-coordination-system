@@ -249,83 +249,120 @@ c668de9 chore: establish ChatGPT-Codex coordination baseline
 
 ### TASK_013_CREATE_GITATTRIBUTES_FOR_LINE_ENDINGS
 
-状态：DONE_PENDING_REVIEW
+状态：ACCEPTED
 
 结果：
 
 - 创建 `.gitattributes`；
-- 未执行 `git add`；
-- 未执行 `git commit`。
-
-说明：
-
-- 该文件尚未纳入版本控制；
-- 后续应单独 staging 和 commit。
+- 通过 commit `5ad1edc` 纳入版本控制。
 
 ---
-
-## 当前任务
-
-### TASK_SCOPE_CORRECTION_COORDINATION_SYSTEM_ONLY
-
-状态：IN_PROGRESS
-
-目标：
-
-- 只修改 `PROJECT_BRIEF.md` 和 `TASKS.md`；
-- 将当前项目范围修正为 ChatGPT-Codex 协同作业系统；
-- 将非协同作业能力排除在当前系统之外。
-
-限制：
-
-- 不得创建非协同作业 agent；
-- 不得创建非协同作业 skill；
-- 不得创建非协同作业目录；
-- 不得创建非协同作业模板；
-- 不得创建非协同作业样例；
-- 不得修改 `agents/`；
-- 不得修改 `skills/`；
-- 不得修改 `.codex-coordination/`；
-- 不得执行 `git add`；
-- 不得执行 `git commit`。
-
----
-
-## 后续待办任务
 
 ### TASK_014_COMMIT_GITATTRIBUTES
 
-状态：READY
+状态：ACCEPTED
 
-目标：
+结果：
 
-- 只 staging `.gitattributes`；
-- 创建单独 commit；
-- 不 staging 历史旧文件。
+- 只 staging `.gitattributes`并创建单独 commit (`5ad1edc`)。
 
 ---
 
 ### TASK_015_EXERCISE_COORDINATION_PROTOCOL_FLOW
 
-状态：READY
+状态：ACCEPTED
 
-目标：
+结果：
 
-- 创建一个最小协同流程演练；
-- 使用 `.codex-coordination/inbox/`、`outbox/`、`decisions/` 记录任务、结果和审查；
-- 不进入任何非协同作业模块。
+- 创建一个最小协同流程演练，实测了 `.codex-coordination/inbox/`、`outbox/`、`decisions/` 文件流转流程（编号为 `TASK_017`，对应 commit `9eba7e6`）。
+
+---
+
+### TASK_018_ADD_ADVISORY_ROLE
+
+状态：ACCEPTED
+
+结果：
+
+- 增加非执行性质的顾问角色 (Claude)（对应 commit `45fcf3b`）。
+
+---
+
+### TASK_019_ADD_ROUTING_AND_AUTHORITY_RULES
+
+状态：ACCEPTED
+
+结果：
+
+- 增加文件路由与多 Agent 角色确权边界规则（对应 commit `21ca388`）。
+
+---
+
+### TASK_020_REPLACE_ADVISORY_PROVIDER_WITH_GEMINI
+
+状态：ACCEPTED
+
+结果：
+
+- 将临时顾问角色从 Claude 替换为 Gemini 3.5 Flash，并更新各规则文件（对应 commit `35c028d`）。
 
 ---
 
 ### TASK_016_REVIEW_COORDINATION_SKILLS
 
+状态：ACCEPTED
+
+结果：
+
+- 完成对 5 个协同 skills 的审计；
+- 确认 `scope_guardian.md` 无需修改；
+- 将 4 个存在领域残留或 artifact routing 缺口的 skill 拆成单文件 REWORK 任务；
+- 完成并验收 TASK_016A-D：
+  - `skills/codex_task_writer.md`
+  - `skills/codex_output_reviewer.md`
+  - `skills/codex_blocker_resolver.md`
+  - `skills/project_context_compressor.md`
+- 通过 commit `037d257 docs: generalize ACOS skill layer` 固化 skill layer 通用化整改；
+- 已 push 到 `origin/master`。
+
+生命周期状态：
+
+```text
+COMPLETED
+ACCEPTED
+COMMITTED
+PUSHED
+```
+
+相关记录：
+
+- `.codex-coordination/inbox/TASK_016_REVIEW_COORDINATION_SKILLS.md`
+- `.codex-coordination/outbox/TASK_016_RESULT.md`
+
+---
+
+## 当前任务
+
+当前无执行中的功能或治理任务。
+
+说明：
+
+- TASK_016 已完成、验收、提交并推送；
+- TASK_021 保持 READY，尚未启动；
+- 当前仅进行任务记录与项目状态对账。
+
+---
+
+## 后续待办任务
+
+### TASK_021_CORRECT_TEMPLATES_SCOPE_WORDS
+
 状态：READY
 
 目标：
 
-- 审查四个协同 skills；
-- 检查是否存在职责重叠、边界缺口或回报格式不一致；
-- 如需修改，拆成单文件 REWORK 任务。
+- 修正 `.codex-coordination/templates/` 下的任务模板和上下文压缩模板；
+- 清理残留的法律/业务特异性词汇，用标准通用协同描述替换。
 
 ---
 
@@ -333,16 +370,13 @@ c668de9 chore: establish ChatGPT-Codex coordination baseline
 
 非协同作业能力不属于当前系统建设阶段，不作为后续待办或预留规划保留。
 
-如用户确需新增非协同作业能力，必须另行明确授权，并通过独立任务处理。
-
 ---
 
 ## 当前全局风险
 
 1. 历史旧文件仍大量处于 untracked 状态，需要继续选择性 add。
-2. `.gitattributes` 已创建但尚未纳入 commit。
-3. 已完成协同文件中部分内容此前为条件验收，后续如发现缺口应局部返工。
-4. 协同协议目录尚未通过真实 inbox / outbox / decisions 流程实测。
+2. TASK_016 生命周期已经完成，但相关状态记录与运行 artifact 仍需完成审查和版本固化。
+3. TASK_021 已 READY，但不得在状态对账完成前提前启动。
 
 ---
 
