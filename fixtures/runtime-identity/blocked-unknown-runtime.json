@@ -1,0 +1,7 @@
+{
+  "case_id": "blocked-unknown-runtime",
+  "runtime_identity": "Unknown Runtime",
+  "producer": "Unknown Producer",
+  "artifact_type": "RESULT",
+  "expected_result": "BLOCKED"
+}

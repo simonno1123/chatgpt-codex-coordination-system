@@ -1,0 +1,7 @@
+{
+  "case_id": "blocked-unknown-artifact",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "artifact_type": "UNKNOWN ARTIFACT",
+  "expected_result": "BLOCKED"
+}

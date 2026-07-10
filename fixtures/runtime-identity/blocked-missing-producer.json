@@ -1,0 +1,6 @@
+{
+  "case_id": "blocked-missing-producer",
+  "runtime_identity": "Codex Executor Runtime",
+  "artifact_type": "RESULT",
+  "expected_result": "BLOCKED"
+}

@@ -1,0 +1,7 @@
+{
+  "case_id": "invalid-automation-decision",
+  "runtime_identity": "Automation Runtime",
+  "producer": "Automation",
+  "artifact_type": "DECISION",
+  "expected_result": "DENY"
+}

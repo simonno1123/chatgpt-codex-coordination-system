@@ -1,0 +1,7 @@
+{
+  "case_id": "valid-codex-blocked-result",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "artifact_type": "BLOCKED RESULT",
+  "expected_result": "PASS"
+}

@@ -1,0 +1,7 @@
+{
+  "case_id": "valid-chatgpt-governance-proposal",
+  "runtime_identity": "ChatGPT Review Runtime",
+  "producer": "ChatGPT",
+  "artifact_type": "GOVERNANCE PROPOSAL",
+  "expected_result": "PASS"
+}

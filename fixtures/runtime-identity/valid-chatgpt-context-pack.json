@@ -1,0 +1,7 @@
+{
+  "case_id": "valid-chatgpt-context-pack",
+  "runtime_identity": "ChatGPT Review Runtime",
+  "producer": "ChatGPT",
+  "artifact_type": "CONTEXT PACK",
+  "expected_result": "PASS"
+}

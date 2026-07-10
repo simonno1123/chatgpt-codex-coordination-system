@@ -1,0 +1,7 @@
+{
+  "case_id": "invalid-advisory-task",
+  "runtime_identity": "External Advisory Runtime",
+  "producer": "External Advisory Reviewer",
+  "artifact_type": "TASK",
+  "expected_result": "DENY"
+}

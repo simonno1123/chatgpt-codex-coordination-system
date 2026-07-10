@@ -1,0 +1,7 @@
+{
+  "case_id": "valid-automation-result",
+  "runtime_identity": "Automation Runtime",
+  "producer": "Automation",
+  "artifact_type": "RESULT",
+  "expected_result": "PASS"
+}

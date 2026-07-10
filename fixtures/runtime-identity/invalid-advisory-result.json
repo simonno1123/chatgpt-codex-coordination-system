@@ -1,0 +1,7 @@
+{
+  "case_id": "invalid-advisory-result",
+  "runtime_identity": "External Advisory Runtime",
+  "producer": "External Advisory Reviewer",
+  "artifact_type": "RESULT",
+  "expected_result": "DENY"
+}

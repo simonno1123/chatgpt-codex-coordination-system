@@ -1,0 +1,7 @@
+{
+  "case_id": "valid-chatgpt-decision",
+  "runtime_identity": "ChatGPT Review Runtime",
+  "producer": "ChatGPT Review",
+  "artifact_type": "DECISION",
+  "expected_result": "PASS"
+}

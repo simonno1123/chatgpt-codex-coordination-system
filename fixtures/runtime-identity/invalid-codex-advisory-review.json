@@ -1,0 +1,7 @@
+{
+  "case_id": "invalid-codex-advisory-review",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "artifact_type": "ADVISORY REVIEW",
+  "expected_result": "DENY"
+}

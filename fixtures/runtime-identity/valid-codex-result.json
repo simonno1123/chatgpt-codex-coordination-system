@@ -1,0 +1,7 @@
+{
+  "case_id": "valid-codex-result",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "artifact_type": "RESULT",
+  "expected_result": "PASS"
+}
