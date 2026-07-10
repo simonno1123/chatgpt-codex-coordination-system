@@ -1,0 +1,13 @@
+{
+  "case_id": "valid-codex-create-script",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "operation": "create",
+  "target_path": "scripts/acos-filesystem-permission-checker.py",
+  "repository_scope": "ACOS CORE",
+  "task_allowed_paths": ["scripts/acos-filesystem-permission-checker.py"],
+  "governance_authorized": true,
+  "expected_path_class": "ACOS EXECUTABLE TOOLING",
+  "expected_allowed": true,
+  "expected_result": "PASS"
+}

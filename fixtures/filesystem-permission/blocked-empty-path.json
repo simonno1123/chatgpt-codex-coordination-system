@@ -1,0 +1,9 @@
+{
+  "case_id": "blocked-empty-path",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "operation": "read",
+  "target_path": "   ",
+  "repository_scope": "ACOS CORE",
+  "expected_result": "BLOCKED"
+}

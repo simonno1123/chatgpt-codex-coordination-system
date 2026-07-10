@@ -1,0 +1,11 @@
+{
+  "case_id": "invalid-codex-edit-linter",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "operation": "edit",
+  "target_path": "scripts/acos-linter.py",
+  "repository_scope": "ACOS CORE",
+  "task_allowed_paths": ["scripts/acos-filesystem-permission-checker.py"],
+  "governance_authorized": true,
+  "expected_result": "DENY"
+}

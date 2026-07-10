@@ -1,0 +1,12 @@
+{
+  "case_id": "valid-automation-create-record",
+  "runtime_identity": "Automation Runtime",
+  "producer": "Automation",
+  "operation": "create",
+  "target_path": ".codex-coordination/outbox/automation-record.json",
+  "repository_scope": "ACOS CORE",
+  "artifact_type": "RECORD",
+  "automation_allowed_paths": [".codex-coordination/outbox/automation-record.json"],
+  "expected_path_class": "ACOS CORE GOVERNANCE",
+  "expected_result": "PASS"
+}

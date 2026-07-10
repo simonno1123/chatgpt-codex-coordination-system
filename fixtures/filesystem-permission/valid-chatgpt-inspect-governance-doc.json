@@ -1,0 +1,10 @@
+{
+  "case_id": "valid-chatgpt-inspect-governance-doc",
+  "runtime_identity": "ChatGPT Review Runtime",
+  "producer": "ChatGPT Review",
+  "operation": "inspect",
+  "target_path": "docs/acos-v2-filesystem-permission-model.md",
+  "repository_scope": "ACOS CORE",
+  "expected_path_class": "ACOS CORE DOCUMENTATION",
+  "expected_result": "PASS"
+}

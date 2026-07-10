@@ -1,0 +1,9 @@
+{
+  "case_id": "blocked-unknown-runtime",
+  "runtime_identity": "Unknown Runtime",
+  "producer": "Unknown",
+  "operation": "read",
+  "target_path": "scripts/tool.py",
+  "repository_scope": "ACOS CORE",
+  "expected_result": "BLOCKED"
+}

@@ -1,0 +1,10 @@
+{
+  "case_id": "invalid-codex-unapproved-governance",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "operation": "edit",
+  "target_path": "governance/policy.md",
+  "repository_scope": "ACOS CORE",
+  "task_allowed_paths": ["governance/policy.md"],
+  "expected_result": "DENY"
+}

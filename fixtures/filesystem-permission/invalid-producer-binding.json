@@ -1,0 +1,9 @@
+{
+  "case_id": "invalid-producer-binding",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "ChatGPT",
+  "operation": "read",
+  "target_path": "scripts/tool.py",
+  "repository_scope": "ACOS CORE",
+  "expected_result": "DENY"
+}

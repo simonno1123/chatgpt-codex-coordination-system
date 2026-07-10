@@ -1,0 +1,13 @@
+{
+  "case_id": "invalid-instance-local-write-without-mode",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "operation": "create",
+  "target_path": ".codex-coordination/outbox/result.md",
+  "repository_scope": "BUSINESS PROJECT",
+  "task_allowed_paths": [".codex-coordination/outbox/result.md"],
+  "business_task_authorized": true,
+  "governance_authorized": true,
+  "expected_path_class": "INSTANCE-LOCAL COORDINATION",
+  "expected_result": "DENY"
+}

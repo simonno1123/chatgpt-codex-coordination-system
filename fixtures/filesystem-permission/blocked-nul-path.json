@@ -1,0 +1,9 @@
+{
+  "case_id": "blocked-nul-path",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "operation": "read",
+  "target_path": "scripts/unsafe\u0000path.py",
+  "repository_scope": "ACOS CORE",
+  "expected_result": "BLOCKED"
+}

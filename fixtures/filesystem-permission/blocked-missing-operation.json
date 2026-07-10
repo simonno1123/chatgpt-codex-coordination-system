@@ -1,0 +1,8 @@
+{
+  "case_id": "blocked-missing-operation",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "target_path": "scripts/tool.py",
+  "repository_scope": "ACOS CORE",
+  "expected_result": "BLOCKED"
+}

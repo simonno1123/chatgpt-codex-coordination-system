@@ -1,0 +1,10 @@
+{
+  "case_id": "invalid-automation-edit-governance",
+  "runtime_identity": "Automation Runtime",
+  "producer": "Automation",
+  "operation": "edit",
+  "target_path": "governance/policy.md",
+  "repository_scope": "ACOS CORE",
+  "automation_allowed_paths": ["governance/policy.md"],
+  "expected_result": "DENY"
+}

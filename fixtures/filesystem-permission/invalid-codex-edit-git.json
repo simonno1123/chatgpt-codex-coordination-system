@@ -1,0 +1,11 @@
+{
+  "case_id": "invalid-codex-edit-git",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "operation": "edit",
+  "target_path": ".git/config",
+  "repository_scope": "ACOS CORE",
+  "task_allowed_paths": [".git/config"],
+  "governance_authorized": true,
+  "expected_result": "DENY"
+}

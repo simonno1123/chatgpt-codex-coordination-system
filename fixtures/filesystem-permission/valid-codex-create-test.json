@@ -1,0 +1,12 @@
+{
+  "case_id": "valid-codex-create-test",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "operation": "create",
+  "target_path": "tests/test_acos_filesystem_permission_checker.py",
+  "repository_scope": "ACOS CORE",
+  "task_allowed_paths": ["tests/test_acos_filesystem_permission_checker.py"],
+  "governance_authorized": true,
+  "expected_path_class": "TEST ASSETS",
+  "expected_result": "PASS"
+}

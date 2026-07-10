@@ -1,0 +1,11 @@
+{
+  "case_id": "invalid-codex-delete-without-capability",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "operation": "delete",
+  "target_path": "tests/obsolete.py",
+  "repository_scope": "ACOS CORE",
+  "task_allowed_paths": ["tests/obsolete.py"],
+  "governance_authorized": true,
+  "expected_result": "DENY"
+}

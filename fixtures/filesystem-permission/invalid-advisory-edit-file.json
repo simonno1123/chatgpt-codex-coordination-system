@@ -1,0 +1,9 @@
+{
+  "case_id": "invalid-advisory-edit-file",
+  "runtime_identity": "External Advisory Runtime",
+  "producer": "External Advisory Reviewer",
+  "operation": "edit",
+  "target_path": "docs/policy.md",
+  "repository_scope": "ACOS CORE",
+  "expected_result": "DENY"
+}

@@ -1,0 +1,10 @@
+{
+  "case_id": "blocked-path-class-conflict",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "operation": "read",
+  "target_path": "scripts/tool.py",
+  "repository_scope": "ACOS CORE",
+  "path_class": "ACOS CORE DOCUMENTATION",
+  "expected_result": "BLOCKED"
+}

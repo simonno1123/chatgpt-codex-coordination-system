@@ -1,0 +1,10 @@
+{
+  "case_id": "valid-chatgpt-read-root-governance",
+  "runtime_identity": "ChatGPT Review Runtime",
+  "producer": "ChatGPT",
+  "operation": "read",
+  "target_path": "SCOPE_POLICY.md",
+  "repository_scope": "ACOS CORE",
+  "expected_path_class": "ROOT GOVERNANCE FILES",
+  "expected_result": "PASS"
+}

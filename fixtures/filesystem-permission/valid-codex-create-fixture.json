@@ -1,0 +1,12 @@
+{
+  "case_id": "valid-codex-create-fixture",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "operation": "create",
+  "target_path": "fixtures/filesystem-permission/example.json",
+  "repository_scope": "ACOS CORE",
+  "task_allowed_paths": ["fixtures/filesystem-permission/"],
+  "governance_authorized": true,
+  "expected_path_class": "FIXTURE ASSETS",
+  "expected_result": "PASS"
+}

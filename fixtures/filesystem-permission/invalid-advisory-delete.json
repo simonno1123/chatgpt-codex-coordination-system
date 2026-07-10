@@ -1,0 +1,9 @@
+{
+  "case_id": "invalid-advisory-delete",
+  "runtime_identity": "External Advisory Runtime",
+  "producer": "External Advisory Reviewer",
+  "operation": "delete",
+  "target_path": "tests/test_policy.py",
+  "repository_scope": "ACOS CORE",
+  "expected_result": "DENY"
+}

@@ -1,0 +1,10 @@
+{
+  "case_id": "invalid-automation-edit-script",
+  "runtime_identity": "Automation Runtime",
+  "producer": "Automation",
+  "operation": "edit",
+  "target_path": "scripts/tool.py",
+  "repository_scope": "ACOS CORE",
+  "automation_allowed_paths": ["scripts/tool.py"],
+  "expected_result": "DENY"
+}

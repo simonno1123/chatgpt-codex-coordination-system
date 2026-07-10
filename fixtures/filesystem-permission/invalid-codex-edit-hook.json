@@ -1,0 +1,11 @@
+{
+  "case_id": "invalid-codex-edit-hook",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "operation": "edit",
+  "target_path": ".githooks/pre-commit",
+  "repository_scope": "ACOS CORE",
+  "task_allowed_paths": ["scripts/acos-filesystem-permission-checker.py"],
+  "governance_authorized": true,
+  "expected_result": "DENY"
+}

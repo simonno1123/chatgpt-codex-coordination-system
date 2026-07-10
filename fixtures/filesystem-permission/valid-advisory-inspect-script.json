@@ -1,0 +1,10 @@
+{
+  "case_id": "valid-advisory-inspect-script",
+  "runtime_identity": "External Advisory Runtime",
+  "producer": "External Advisory Reviewer",
+  "operation": "inspect",
+  "target_path": "scripts/acos-filesystem-permission-checker.py",
+  "repository_scope": "ACOS CORE",
+  "expected_path_class": "ACOS EXECUTABLE TOOLING",
+  "expected_result": "PASS"
+}

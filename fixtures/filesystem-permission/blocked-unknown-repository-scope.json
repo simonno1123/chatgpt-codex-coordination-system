@@ -1,0 +1,9 @@
+{
+  "case_id": "blocked-unknown-repository-scope",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "operation": "read",
+  "target_path": "scripts/tool.py",
+  "repository_scope": "UNKNOWN",
+  "expected_result": "BLOCKED"
+}

@@ -1,0 +1,8 @@
+{
+  "case_id": "blocked-missing-producer",
+  "runtime_identity": "Codex Executor Runtime",
+  "operation": "read",
+  "target_path": "scripts/tool.py",
+  "repository_scope": "ACOS CORE",
+  "expected_result": "BLOCKED"
+}

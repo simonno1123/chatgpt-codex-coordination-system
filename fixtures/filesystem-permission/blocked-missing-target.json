@@ -1,0 +1,8 @@
+{
+  "case_id": "blocked-missing-target",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "operation": "read",
+  "repository_scope": "ACOS CORE",
+  "expected_result": "BLOCKED"
+}

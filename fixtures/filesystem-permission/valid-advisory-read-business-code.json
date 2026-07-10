@@ -1,0 +1,10 @@
+{
+  "case_id": "valid-advisory-read-business-code",
+  "runtime_identity": "External Advisory Runtime",
+  "producer": "External Advisory Reviewer",
+  "operation": "read",
+  "target_path": "src/app.py",
+  "repository_scope": "BUSINESS PROJECT",
+  "expected_path_class": "BUSINESS PROJECT",
+  "expected_result": "PASS"
+}

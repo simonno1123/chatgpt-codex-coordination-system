@@ -1,0 +1,10 @@
+{
+  "case_id": "valid-codex-read-decision",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "operation": "read",
+  "target_path": ".codex-coordination/decisions/accepted.md",
+  "repository_scope": "ACOS CORE",
+  "expected_path_class": "ACOS CORE GOVERNANCE",
+  "expected_result": "PASS"
+}

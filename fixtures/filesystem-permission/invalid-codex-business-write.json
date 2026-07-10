@@ -1,0 +1,11 @@
+{
+  "case_id": "invalid-codex-business-write",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "operation": "edit",
+  "target_path": "src/app.py",
+  "repository_scope": "BUSINESS PROJECT",
+  "task_allowed_paths": ["src/app.py"],
+  "expected_path_class": "BUSINESS PROJECT",
+  "expected_result": "DENY"
+}
