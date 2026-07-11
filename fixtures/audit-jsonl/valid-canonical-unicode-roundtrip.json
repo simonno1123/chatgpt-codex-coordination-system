@@ -1,0 +1,12 @@
+{
+  "case_id": "valid-canonical-unicode-roundtrip",
+  "mode": "roundtrip",
+  "auto_event_id": true,
+  "events": [{
+    "schema_version":"1.0","sequence":1,"timestamp":"2026-07-11T01:06:00Z",
+    "event_type":"validation_completed","project":"ACOS","task_id":"TASK_054","producer":"Automation",
+    "runtime_identity":"Automation Runtime","artifact_type":"RECORD","status":"completed",
+    "details":{"message":"确定性审计","emoji":"not-used"}
+  }],
+  "expected_result": "PASS"
+}

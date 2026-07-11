@@ -1,0 +1,8 @@
+{
+  "case_id": "invalid-automation-decision-event",
+  "mode": "generate",
+  "events": [
+    {"schema_version":"1.0","event_id":"evt-auto-decision","sequence":1,"timestamp":"2026-07-11T02:01:00Z","event_type":"decision_issued","project":"ACOS","task_id":"TASK_054","producer":"Automation","runtime_identity":"Automation Runtime","artifact_type":"DECISION","status":"accepted","details":{}}
+  ],
+  "expected_result": "DENY"
+}

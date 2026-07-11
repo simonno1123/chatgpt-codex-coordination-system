@@ -1,0 +1,11 @@
+{
+  "case_id": "valid-commit-record-no-push-authorization",
+  "mode": "generate",
+  "events": [{
+    "schema_version":"1.0","event_id":"evt-commit","sequence":1,"timestamp":"2026-07-11T01:00:00Z",
+    "event_type":"commit_created","project":"ACOS","task_id":"TASK_054","producer":"Codex Executor",
+    "runtime_identity":"Codex Executor Runtime","artifact_type":"RESULT","operation":"commit",
+    "status":"completed","commit_hash":"abc123","details":{"grants_push":false}
+  }],
+  "expected_result": "PASS"
+}

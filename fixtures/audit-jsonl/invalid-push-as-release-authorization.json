@@ -1,0 +1,9 @@
+{
+  "case_id": "invalid-push-as-release-authorization",
+  "mode": "generate",
+  "treat_audit_as_authorization": true,
+  "events": [
+    {"schema_version":"1.0","event_id":"evt-push-release","sequence":1,"timestamp":"2026-07-11T02:05:00Z","event_type":"push_completed","project":"ACOS","task_id":"TASK_054","producer":"Codex Executor","runtime_identity":"Codex Executor Runtime","artifact_type":"RESULT","operation":"push","status":"completed","commit_hash":"abc1234","remote":"origin/master","details":{"authorization_claim":"release"}}
+  ],
+  "expected_result": "DENY"
+}

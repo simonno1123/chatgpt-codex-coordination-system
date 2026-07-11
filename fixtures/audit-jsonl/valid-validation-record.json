@@ -1,0 +1,11 @@
+{
+  "case_id": "valid-validation-record",
+  "mode": "generate",
+  "events": [{
+    "schema_version":"1.0","event_id":"evt-validation","sequence":1,"timestamp":"2026-07-11T01:05:00Z",
+    "event_type":"validation_completed","project":"ACOS","task_id":"TASK_054","producer":"Automation",
+    "runtime_identity":"Automation Runtime","artifact_type":"RECORD","status":"completed",
+    "details":{"tests":47,"result":"pass"}
+  }],
+  "expected_result": "PASS"
+}

@@ -1,0 +1,8 @@
+{
+  "case_id": "invalid-event-runtime-mismatch",
+  "mode": "generate",
+  "events": [
+    {"schema_version":"1.0","event_id":"evt-runtime-mismatch","sequence":1,"timestamp":"2026-07-11T02:07:00Z","event_type":"validation_completed","project":"ACOS","task_id":"TASK_054","producer":"ChatGPT Review","runtime_identity":"ChatGPT Review Runtime","artifact_type":"RECORD","status":"pass","details":{}}
+  ],
+  "expected_result": "DENY"
+}

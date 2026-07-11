@@ -1,0 +1,11 @@
+{
+  "case_id": "valid-operation-blocked-record",
+  "mode": "generate",
+  "events": [{
+    "schema_version":"1.0","event_id":"evt-blocked","sequence":1,"timestamp":"2026-07-11T01:04:00Z",
+    "event_type":"operation_blocked","project":"ACOS","task_id":"TASK_054","producer":"Automation",
+    "runtime_identity":"Automation Runtime","artifact_type":"RECORD","operation":"commit",
+    "status":"blocked","details":{"reason":"state unknown"}
+  }],
+  "expected_result": "PASS"
+}

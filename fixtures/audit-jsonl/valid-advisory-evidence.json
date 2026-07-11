@@ -1,0 +1,11 @@
+{
+  "case_id": "valid-advisory-evidence",
+  "mode": "generate",
+  "events": [{
+    "schema_version":"1.0","event_id":"evt-advisory","sequence":1,"timestamp":"2026-07-11T01:02:00Z",
+    "event_type":"advisory_review_received","project":"ACOS","task_id":"TASK_054",
+    "producer":"External Advisory Reviewer","runtime_identity":"External Advisory Runtime",
+    "artifact_type":"ADVISORY REVIEW","status":"received","details":{"evidence_only":true}
+  }],
+  "expected_result": "PASS"
+}

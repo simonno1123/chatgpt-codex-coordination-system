@@ -1,0 +1,8 @@
+{
+  "case_id": "valid-operation-completed-no-next-authorization",
+  "mode": "generate",
+  "events": [
+    {"schema_version":"1.0","event_id":"evt-op-complete","sequence":1,"timestamp":"2026-07-11T01:00:00Z","event_type":"operation_completed","project":"ACOS","task_id":"TASK_054","producer":"Codex Executor","runtime_identity":"Codex Executor Runtime","artifact_type":"RESULT","operation":"fixture validation","status":"completed","details":{"grants_next_operation":false}}
+  ],
+  "expected_result": "PASS"
+}

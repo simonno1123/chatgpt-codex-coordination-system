@@ -1,0 +1,9 @@
+{
+  "case_id": "invalid-audit-as-commit-authorization",
+  "mode": "generate",
+  "treat_audit_as_authorization": true,
+  "events": [
+    {"schema_version":"1.0","event_id":"evt-record-commit","sequence":1,"timestamp":"2026-07-11T02:03:00Z","event_type":"validation_completed","project":"ACOS","task_id":"TASK_054","producer":"Automation","runtime_identity":"Automation Runtime","artifact_type":"RECORD","operation":"commit","status":"pass","details":{"authorization_claim":"commit"}}
+  ],
+  "expected_result": "DENY"
+}

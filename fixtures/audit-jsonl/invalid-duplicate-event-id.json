@@ -1,0 +1,4 @@
+{"case_id":"invalid-duplicate-event-id","mode":"simulate_tamper","tamper":"duplicate_event_id","events":[
+{"schema_version":"1.0","event_id":"evt-1","sequence":1,"timestamp":"2026-07-11T02:00:00Z","event_type":"task_created","project":"ACOS","producer":"ChatGPT","runtime_identity":"ChatGPT Review Runtime","artifact_type":"TASK","status":"completed","details":{}},
+{"schema_version":"1.0","event_id":"evt-2","sequence":2,"timestamp":"2026-07-11T02:01:00Z","event_type":"result_received","project":"ACOS","producer":"Codex Executor","runtime_identity":"Codex Executor Runtime","artifact_type":"RESULT","status":"completed","details":{}}
+],"expected_result":"DENY"}

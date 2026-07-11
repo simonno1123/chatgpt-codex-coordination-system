@@ -1,0 +1,9 @@
+{
+  "case_id": "invalid-commit-as-push-authorization",
+  "mode": "generate",
+  "treat_audit_as_authorization": true,
+  "events": [
+    {"schema_version":"1.0","event_id":"evt-commit-push","sequence":1,"timestamp":"2026-07-11T02:04:00Z","event_type":"commit_created","project":"ACOS","task_id":"TASK_054","producer":"Codex Executor","runtime_identity":"Codex Executor Runtime","artifact_type":"RESULT","operation":"commit","status":"completed","commit_hash":"abc1234","details":{"authorization_claim":"push"}}
+  ],
+  "expected_result": "DENY"
+}

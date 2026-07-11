@@ -1,0 +1,11 @@
+{
+  "case_id": "valid-operation-denied-record",
+  "mode": "generate",
+  "events": [{
+    "schema_version":"1.0","event_id":"evt-denied","sequence":1,"timestamp":"2026-07-11T01:03:00Z",
+    "event_type":"operation_denied","project":"ACOS","task_id":"TASK_054","producer":"Automation",
+    "runtime_identity":"Automation Runtime","artifact_type":"RECORD","operation":"push",
+    "status":"denied","details":{"reason":"missing authorization"}
+  }],
+  "expected_result": "PASS"
+}

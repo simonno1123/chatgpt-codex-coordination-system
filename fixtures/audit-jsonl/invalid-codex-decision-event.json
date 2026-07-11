@@ -1,0 +1,8 @@
+{
+  "case_id": "invalid-codex-decision-event",
+  "mode": "generate",
+  "events": [
+    {"schema_version":"1.0","event_id":"evt-codex-decision","sequence":1,"timestamp":"2026-07-11T02:02:00Z","event_type":"decision_issued","project":"ACOS","task_id":"TASK_054","producer":"Codex Executor","runtime_identity":"Codex Executor Runtime","artifact_type":"DECISION","status":"accepted","details":{}}
+  ],
+  "expected_result": "DENY"
+}

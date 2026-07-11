@@ -1,0 +1,1 @@
+{"case_id":"blocked-missing-event-id","mode":"generate","events":[{"schema_version":"1.0","sequence":1,"timestamp":"2026-07-11T03:01:00Z","event_type":"task_created","project":"ACOS","task_id":"TASK_054","producer":"ChatGPT","runtime_identity":"ChatGPT Review Runtime","artifact_type":"TASK","status":"created","details":{}}],"expected_result":"BLOCKED"}
