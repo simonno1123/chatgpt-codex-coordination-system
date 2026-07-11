@@ -1,0 +1,1 @@
+{"template":"valid_lifecycle","case_id":"blocked-lifecycle-contradictory","lifecycle_events":["preliminary_review","advisory_request","advisory_review","advisory_review","chatgpt_final_decision"]}

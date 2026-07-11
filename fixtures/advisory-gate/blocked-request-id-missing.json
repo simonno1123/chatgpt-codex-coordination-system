@@ -1,0 +1,1 @@
+{"template":"valid_request","case_id":"blocked-request-id-missing","omit_fields":["request_id"]}

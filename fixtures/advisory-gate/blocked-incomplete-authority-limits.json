@@ -1,0 +1,1 @@
+{"template":"valid_request","case_id":"blocked-incomplete-authority-limits","authority_limits":["Read-only"],"forbidden_actions":["No file modification"]}

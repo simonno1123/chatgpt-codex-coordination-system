@@ -1,0 +1,1 @@
+{"template":"classify_mandatory","case_id":"blocked-missing-artifact-type","omit_fields":["artifact_type"]}

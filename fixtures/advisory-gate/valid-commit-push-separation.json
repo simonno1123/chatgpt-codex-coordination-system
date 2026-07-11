@@ -1,0 +1,1 @@
+{"template":"valid_consumption","case_id":"valid-commit-push-separation","commit_authorization_present":true,"push_authorization_present":false,"release_authorization_present":false}

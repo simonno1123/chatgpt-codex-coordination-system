@@ -1,0 +1,1 @@
+{"template":"valid_review","case_id":"valid-readonly-tests-declared","claimed_commands":["unit_test","fixture_cli_validation","compilation_validation","git status"],"claimed_git_actions":["git status"],"compliance_declaration":"Executed declared read-only validation commands; no writes, Git mutations, network, or authorization."}
