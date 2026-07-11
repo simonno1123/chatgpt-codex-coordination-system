@@ -1,0 +1,21 @@
+{
+  "case_id": "valid-automation-test",
+  "runtime_identity": "Automation Runtime",
+  "producer": "Automation",
+  "requested_operation": "test",
+  "authorized_operation": "test",
+  "repository_scope": "ACOS CORE",
+  "branch": "master",
+  "head": "abc123",
+  "worktree_state": "clean",
+  "staged_paths": [],
+  "changed_paths": [],
+  "authorization_id": "AUTH-TEST-1",
+  "authorization_runtime": "Automation Runtime",
+  "authorization_scope": "ACOS CORE",
+  "authorization_branch": "master",
+  "authorization_head": "abc123",
+  "authorization_source": "POLICY",
+  "command": "git diff --check",
+  "expected_result": "PASS"
+}

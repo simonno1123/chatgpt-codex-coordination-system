@@ -1,0 +1,15 @@
+{
+  "case_id": "blocked-pathspecs-not-array",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "requested_operation": "stage",
+  "authorized_operation": "stage",
+  "repository_scope": "ACOS CORE",
+  "branch": "master",
+  "head": "abc123",
+  "worktree_state": "dirty_staged",
+  "staged_paths": ["scripts/tool.py"],
+  "changed_paths": ["scripts/tool.py"],
+  "pathspecs": "scripts/tool.py",
+  "expected_result": "BLOCKED"
+}

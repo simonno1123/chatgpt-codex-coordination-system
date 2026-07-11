@@ -1,0 +1,17 @@
+{
+  "case_id": "blocked-local-ahead-type",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "requested_operation": "push",
+  "authorized_operation": "push",
+  "repository_scope": "ACOS CORE",
+  "branch": "master",
+  "head": "abc123",
+  "worktree_state": "clean",
+  "staged_paths": [],
+  "changed_paths": [],
+  "local_ahead": "1",
+  "local_behind": 0,
+  "diverged": false,
+  "expected_result": "BLOCKED"
+}

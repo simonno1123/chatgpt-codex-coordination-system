@@ -1,0 +1,22 @@
+{
+  "case_id": "invalid-wrong-repository-scope",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "requested_operation": "edit",
+  "authorized_operation": "edit",
+  "repository_scope": "BUSINESS PROJECT",
+  "branch": "main",
+  "head": "biz123",
+  "worktree_state": "dirty_unstaged",
+  "staged_paths": [],
+  "changed_paths": ["src/app.py"],
+  "authorization_id": "AUTH-ACOS-EDIT-1",
+  "authorization_runtime": "Codex Executor Runtime",
+  "authorization_scope": "ACOS CORE",
+  "scope_conflict_known": true,
+  "authorization_branch": "main",
+  "authorization_head": "biz123",
+  "authorization_source": "CHATGPT REVIEW DECISION",
+  "authorized_paths": ["src/app.py"],
+  "expected_result": "DENY"
+}

@@ -1,0 +1,14 @@
+{
+  "case_id": "blocked-changed-paths-not-array",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "requested_operation": "inspect",
+  "authorized_operation": "inspect",
+  "repository_scope": "ACOS CORE",
+  "branch": "master",
+  "head": "abc123",
+  "worktree_state": "clean",
+  "staged_paths": [],
+  "changed_paths": "scripts/tool.py",
+  "expected_result": "BLOCKED"
+}

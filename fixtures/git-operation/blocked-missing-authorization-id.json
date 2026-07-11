@@ -1,0 +1,20 @@
+{
+  "case_id": "blocked-missing-authorization-id",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "requested_operation": "inspect",
+  "authorized_operation": "inspect",
+  "repository_scope": "ACOS CORE",
+  "branch": "master",
+  "head": "abc123",
+  "worktree_state": "clean",
+  "staged_paths": [],
+  "changed_paths": [],
+  "authorization_runtime": "Codex Executor Runtime",
+  "authorization_scope": "ACOS CORE",
+  "authorization_branch": "master",
+  "authorization_head": "abc123",
+  "authorization_source": "TASK",
+  "command": "git status",
+  "expected_result": "BLOCKED"
+}

@@ -1,0 +1,21 @@
+{
+  "case_id": "valid-advisory-inspect",
+  "runtime_identity": "External Advisory Runtime",
+  "producer": "External Advisory Reviewer",
+  "requested_operation": "inspect",
+  "authorized_operation": "inspect",
+  "repository_scope": "ACOS CORE",
+  "branch": "master",
+  "head": "abc123",
+  "worktree_state": "dirty_unstaged",
+  "staged_paths": [],
+  "changed_paths": ["scripts/tool.py"],
+  "authorization_id": "AUTH-ADVISORY-INSPECT-1",
+  "authorization_runtime": "External Advisory Runtime",
+  "authorization_scope": "ACOS CORE",
+  "authorization_branch": "master",
+  "authorization_head": "abc123",
+  "authorization_source": "TASK",
+  "command": "git diff",
+  "expected_result": "PASS"
+}

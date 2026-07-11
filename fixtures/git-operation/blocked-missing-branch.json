@@ -1,0 +1,13 @@
+{
+  "case_id": "blocked-missing-branch",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "requested_operation": "inspect",
+  "authorized_operation": "inspect",
+  "repository_scope": "ACOS CORE",
+  "head": "abc123",
+  "worktree_state": "clean",
+  "staged_paths": [],
+  "changed_paths": [],
+  "expected_result": "BLOCKED"
+}

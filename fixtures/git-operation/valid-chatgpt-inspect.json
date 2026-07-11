@@ -1,0 +1,21 @@
+{
+  "case_id": "valid-chatgpt-inspect",
+  "runtime_identity": "ChatGPT Review Runtime",
+  "producer": "ChatGPT Review",
+  "requested_operation": "inspect",
+  "authorized_operation": "inspect",
+  "repository_scope": "ACOS CORE",
+  "branch": "master",
+  "head": "abc123",
+  "worktree_state": "clean",
+  "staged_paths": [],
+  "changed_paths": [],
+  "authorization_id": "AUTH-INSPECT-1",
+  "authorization_runtime": "ChatGPT Review Runtime",
+  "authorization_scope": "ACOS CORE",
+  "authorization_branch": "master",
+  "authorization_head": "abc123",
+  "authorization_source": "TASK",
+  "command": "git status",
+  "expected_result": "PASS"
+}

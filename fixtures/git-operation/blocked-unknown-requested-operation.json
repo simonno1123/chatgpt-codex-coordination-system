@@ -1,0 +1,14 @@
+{
+  "case_id": "blocked-unknown-requested-operation",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "requested_operation": "teleport",
+  "authorized_operation": "inspect",
+  "repository_scope": "ACOS CORE",
+  "branch": "master",
+  "head": "abc123",
+  "worktree_state": "clean",
+  "staged_paths": [],
+  "changed_paths": [],
+  "expected_result": "BLOCKED"
+}

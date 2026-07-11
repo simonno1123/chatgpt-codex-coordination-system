@@ -1,0 +1,21 @@
+{
+  "case_id": "invalid-external-push",
+  "runtime_identity": "External Advisory Runtime",
+  "producer": "External Advisory Reviewer",
+  "requested_operation": "push",
+  "authorized_operation": "push",
+  "repository_scope": "ACOS CORE",
+  "branch": "master",
+  "head": "abc123",
+  "worktree_state": "clean",
+  "staged_paths": [],
+  "changed_paths": [],
+  "authorization_id": "AUTH-PUSH-EXT",
+  "authorization_runtime": "External Advisory Runtime",
+  "authorization_scope": "ACOS CORE",
+  "authorization_branch": "master",
+  "authorization_head": "abc123",
+  "authorization_source": "CHATGPT REVIEW DECISION",
+  "command": "git push origin master",
+  "expected_result": "DENY"
+}

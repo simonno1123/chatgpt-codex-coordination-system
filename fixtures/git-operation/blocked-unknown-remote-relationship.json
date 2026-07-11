@@ -1,0 +1,22 @@
+{
+  "case_id": "blocked-unknown-remote-relationship",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "requested_operation": "push",
+  "authorized_operation": "push",
+  "repository_scope": "ACOS CORE",
+  "branch": "master",
+  "head": "abc123",
+  "worktree_state": "clean",
+  "staged_paths": [],
+  "changed_paths": [],
+  "authorization_id": "AUTH-PUSH-1",
+  "remote": "origin",
+  "upstream_branch": "master",
+  "remote_relationship": "unknown",
+  "local_ahead": 1,
+  "local_behind": 0,
+  "diverged": false,
+  "command": "git push origin master",
+  "expected_result": "BLOCKED"
+}

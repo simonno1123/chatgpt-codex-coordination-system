@@ -1,0 +1,20 @@
+{
+  "case_id": "invalid-automation-release",
+  "runtime_identity": "Automation Runtime",
+  "producer": "Automation",
+  "requested_operation": "release",
+  "authorized_operation": "release",
+  "repository_scope": "ACOS CORE",
+  "branch": "master",
+  "head": "abc123",
+  "worktree_state": "clean",
+  "staged_paths": [],
+  "changed_paths": [],
+  "authorization_id": "AUTH-RELEASE-AUTO",
+  "authorization_runtime": "Automation Runtime",
+  "authorization_scope": "ACOS CORE",
+  "authorization_branch": "master",
+  "authorization_head": "abc123",
+  "authorization_source": "USER DECISION",
+  "expected_result": "DENY"
+}

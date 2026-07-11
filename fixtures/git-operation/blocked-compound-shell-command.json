@@ -1,0 +1,16 @@
+{
+  "case_id": "blocked-compound-shell-command",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "requested_operation": "inspect",
+  "authorized_operation": "inspect",
+  "repository_scope": "ACOS CORE",
+  "branch": "master",
+  "head": "abc123",
+  "worktree_state": "clean",
+  "staged_paths": [],
+  "changed_paths": [],
+  "authorization_id": "AUTH-INSPECT-1",
+  "command": "git status && git push origin master",
+  "expected_result": "BLOCKED"
+}

@@ -1,0 +1,23 @@
+{
+  "case_id": "invalid-stale-authorization",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "requested_operation": "commit",
+  "authorized_operation": "commit",
+  "repository_scope": "ACOS CORE",
+  "branch": "master",
+  "head": "abc123",
+  "worktree_state": "dirty_staged",
+  "staged_paths": ["scripts/tool.py"],
+  "changed_paths": ["scripts/tool.py"],
+  "authorization_id": "AUTH-COMMIT-OLD",
+  "authorization_runtime": "Codex Executor Runtime",
+  "authorization_scope": "ACOS CORE",
+  "authorization_branch": "master",
+  "authorization_head": "abc123",
+  "authorization_source": "CHATGPT REVIEW DECISION",
+  "authorization_expired": true,
+  "authorized_paths": ["scripts/tool.py"],
+  "command": "git commit -m 'feat: tool'",
+  "expected_result": "DENY"
+}

@@ -1,0 +1,15 @@
+{
+  "case_id": "invalid-combined-authorization",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "requested_operation": "commit",
+  "authorized_operation": "commit and push",
+  "repository_scope": "ACOS CORE",
+  "branch": "master",
+  "head": "abc123",
+  "worktree_state": "dirty_staged",
+  "staged_paths": ["scripts/tool.py"],
+  "changed_paths": ["scripts/tool.py"],
+  "authorization_id": "AUTH-COMBINED-1",
+  "expected_result": "DENY"
+}

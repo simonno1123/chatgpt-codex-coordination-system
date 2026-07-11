@@ -1,0 +1,22 @@
+{
+  "case_id": "invalid-git-clean-fd",
+  "runtime_identity": "Codex Executor Runtime",
+  "producer": "Codex Executor",
+  "requested_operation": "edit",
+  "authorized_operation": "edit",
+  "repository_scope": "ACOS CORE",
+  "branch": "master",
+  "head": "abc123",
+  "worktree_state": "untracked_only",
+  "staged_paths": [],
+  "changed_paths": ["generated.tmp"],
+  "authorization_id": "AUTH-EDIT-1",
+  "authorization_runtime": "Codex Executor Runtime",
+  "authorization_scope": "ACOS CORE",
+  "authorization_branch": "master",
+  "authorization_head": "abc123",
+  "authorization_source": "CHATGPT REVIEW DECISION",
+  "authorized_paths": ["generated.tmp"],
+  "command": "git clean -fd",
+  "expected_result": "DENY"
+}
