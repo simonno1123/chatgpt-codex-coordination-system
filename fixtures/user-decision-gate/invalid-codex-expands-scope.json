@@ -1,0 +1,1 @@
+{"template":"valid_consumption","case_id":"invalid-codex-expands-scope","decision_type":"authorize_commit","authorized_action":"commit","branch":"master","head":"abc123","to":"Codex Executor","consumer":"Codex Executor","consumer_runtime":"Codex Executor Runtime","requested_action":"commit","scope_changed":true}

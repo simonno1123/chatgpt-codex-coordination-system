@@ -1,0 +1,1 @@
+{"template":"valid_consumption","case_id":"invalid-auto-enable-enforcement","decision_type":"authorize_enforcement","authorized_action":"enable_enforcement","requested_action":"enable_enforcement","auto_execute":true}

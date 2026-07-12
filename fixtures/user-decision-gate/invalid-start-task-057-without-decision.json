@@ -1,0 +1,1 @@
+{"template":"valid_lifecycle","case_id":"invalid-start-task-057-without-decision","task_id":"TASK_057","requirement_category":"start_task_057_or_later","lifecycle_events":["requirement_classified","chatgpt_task_or_decision","codex_execution"],"attempt_execution":true}

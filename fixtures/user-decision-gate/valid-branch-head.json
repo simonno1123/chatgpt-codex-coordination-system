@@ -1,0 +1,1 @@
+{"template":"valid_scope","case_id":"valid-branch-head","decision_type":"authorize_commit","authorized_action":"commit","authorized_scope":["scripts/file.py"],"target":"scripts/file.py","branch":"master","head":"abc123","requested_action":"commit","requested_scope":["scripts/file.py"],"requested_target":"scripts/file.py","requested_branch":"master","requested_head":"abc123"}

@@ -1,0 +1,1 @@
+{"template":"valid_decision","case_id":"valid-push-no-release","decision_type":"authorize_push","authorized_action":"push","branch":"master","head":"abc123"}

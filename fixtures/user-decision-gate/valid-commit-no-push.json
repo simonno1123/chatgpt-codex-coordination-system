@@ -1,0 +1,1 @@
+{"template":"valid_decision","case_id":"valid-commit-no-push","decision_type":"authorize_commit","authorized_action":"commit","branch":"master","head":"abc123"}

@@ -1,0 +1,1 @@
+{"template":"valid_decision","case_id":"valid-push-decision","decision_type":"authorize_push","authorized_action":"push","authorized_scope":["abc123"],"target":"origin/master","branch":"master","head":"abc123","to":"Codex Executor"}

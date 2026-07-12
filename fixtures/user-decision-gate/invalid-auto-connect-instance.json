@@ -1,0 +1,1 @@
+{"template":"valid_consumption","case_id":"invalid-auto-connect-instance","decision_type":"authorize_live_connection","authorized_action":"connect_live_repository","requested_action":"connect_live_repository","auto_execute":true}
