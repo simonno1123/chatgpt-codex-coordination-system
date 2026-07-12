@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"valid-task-resume","scenario_type":"blocked_task_resume","component_inputs":{"user_decision_gate":{"fixture_path":"fixtures/user-decision-gate/valid-task-resume-decision.json"}}}

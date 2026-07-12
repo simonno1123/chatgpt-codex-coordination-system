@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"blocked-component-output-unknown-result","component_inputs":{"runtime_identity":{"simulate_output":{"result":"UNKNOWN","allowed":false,"reason":"Synthetic unknown result.","warnings":[],"source":"fixture"}}}}

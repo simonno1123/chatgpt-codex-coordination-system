@@ -1,0 +1,1 @@
+{"template":"drift","scenario_id":"invalid-policy-digest","scenario_type":"policy_mapping_drift","policy_digests":{"advisory_gate":"mismatch"},"expected_overall_result":"DENY"}

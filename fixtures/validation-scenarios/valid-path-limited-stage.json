@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"valid-path-limited-stage","component_inputs":{"git_operation":{"fixture_path":"fixtures/git-operation/valid-codex-stage-authorized.json"}}}

@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"invalid-illegal-lifecycle-order","scenario_type":"incomplete_lifecycle","lifecycle_steps":["TASK","RESULT","REVIEW","DECISION"],"completed_steps":["TASK","REVIEW","RESULT"],"expected_overall_result":"DENY"}

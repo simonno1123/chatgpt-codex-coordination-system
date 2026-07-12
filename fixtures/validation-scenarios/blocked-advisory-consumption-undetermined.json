@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"blocked-advisory-consumption-undetermined","component_inputs":{"advisory_gate":{"fixture_path":"fixtures/advisory-gate/blocked-review-consumption-undetermined.json"}},"expected_component_results":{"advisory_gate":"BLOCKED"},"expected_overall_result":"BLOCKED"}

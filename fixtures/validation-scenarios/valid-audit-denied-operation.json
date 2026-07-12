@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"valid-audit-denied-operation","component_inputs":{"audit_jsonl":{"fixture_path":"fixtures/audit-jsonl/valid-operation-denied-record.json"}}}

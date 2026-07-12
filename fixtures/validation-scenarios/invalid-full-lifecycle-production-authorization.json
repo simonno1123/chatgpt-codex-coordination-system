@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"invalid-full-lifecycle-production-authorization","scenario_type":"illegal_next_task_start","component_inputs":{"user_decision_gate":{"fixture_path":"fixtures/user-decision-gate/invalid-auto-enable-enforcement.json"}},"expected_component_results":{"user_decision_gate":"DENY"},"expected_overall_result":"DENY"}

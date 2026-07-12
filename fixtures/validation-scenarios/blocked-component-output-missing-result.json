@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"blocked-component-output-missing-result","component_inputs":{"runtime_identity":{"simulate_output":{"allowed":false,"reason":"Synthetic missing result.","warnings":[],"source":"fixture"}}}}

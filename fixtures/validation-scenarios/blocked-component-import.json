@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"blocked-component-import","component_inputs":{"runtime_identity":{"simulate_import_failure":true}}}

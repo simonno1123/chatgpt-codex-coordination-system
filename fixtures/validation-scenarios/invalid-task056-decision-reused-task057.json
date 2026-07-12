@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"invalid-task056-decision-reused-task057","scenario_type":"wrong_task_binding","component_inputs":{"user_decision_gate":{"fixture_path":"fixtures/user-decision-gate/invalid-old-task-authorization.json"}},"expected_component_results":{"user_decision_gate":"DENY"},"expected_overall_result":"DENY"}

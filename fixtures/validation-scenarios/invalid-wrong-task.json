@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"invalid-wrong-task","scenario_type":"wrong_task_binding","component_inputs":{"advisory_gate":{"fixture_path":"fixtures/advisory-gate/invalid-review-wrong-task.json"}},"expected_component_results":{"advisory_gate":"DENY"},"expected_overall_result":"DENY"}

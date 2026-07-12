@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"invalid-runtime-spoofing","scenario_type":"unauthorized_runtime","component_inputs":{"runtime_identity":{"fixture_path":"fixtures/runtime-identity/invalid-codex-decision.json"}},"expected_component_results":{"runtime_identity":"DENY"},"expected_overall_result":"DENY"}

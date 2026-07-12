@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"valid-push-authorization","component_inputs":{"git_operation":{"fixture_path":"fixtures/git-operation/valid-codex-push-authorized.json"}}}

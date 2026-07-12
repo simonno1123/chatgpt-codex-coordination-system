@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"invalid-wrong-project","scenario_type":"wrong_project_binding","component_inputs":{"user_decision_gate":{"fixture_path":"fixtures/user-decision-gate/invalid-other-project-authorization.json"}},"expected_component_results":{"user_decision_gate":"DENY"},"expected_overall_result":"DENY"}

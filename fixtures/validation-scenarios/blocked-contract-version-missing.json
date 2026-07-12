@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"blocked-contract-version-missing","component_inputs":{"runtime_identity":{"fixture_path":"fixtures/runtime-identity/valid-chatgpt-task.json","contract_version_override":null}}}

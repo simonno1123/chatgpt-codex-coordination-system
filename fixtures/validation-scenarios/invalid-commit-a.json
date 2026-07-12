@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"invalid-commit-a","scenario_type":"unauthorized_commit","component_inputs":{"git_operation":{"fixture_path":"fixtures/git-operation/invalid-git-commit-all.json"}},"expected_component_results":{"git_operation":"DENY"},"expected_overall_result":"DENY"}

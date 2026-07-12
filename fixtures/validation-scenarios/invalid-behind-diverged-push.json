@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"invalid-behind-diverged-push","scenario_type":"unauthorized_push","component_inputs":{"git_operation":{"fixture_path":"fixtures/git-operation/invalid-push-diverged.json"}},"expected_component_results":{"git_operation":"DENY"},"expected_overall_result":"DENY"}

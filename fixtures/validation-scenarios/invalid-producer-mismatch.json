@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"invalid-producer-mismatch","scenario_type":"producer_spoofing","component_inputs":{"runtime_identity":{"fixture_path":"fixtures/runtime-identity/invalid-producer-binding.json"}},"expected_component_results":{"runtime_identity":"DENY"},"expected_overall_result":"DENY"}

@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"invalid-commit-auth-reused-push","scenario_type":"git_authorization_inheritance","component_inputs":{"git_operation":{"fixture_path":"fixtures/git-operation/invalid-commit-auth-request-push.json"}},"expected_component_results":{"git_operation":"DENY"},"expected_overall_result":"DENY"}

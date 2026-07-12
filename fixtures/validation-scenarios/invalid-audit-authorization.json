@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"invalid-audit-authorization","scenario_type":"audit_as_authorization","component_inputs":{"audit_jsonl":{"fixture_path":"fixtures/audit-jsonl/invalid-audit-as-commit-authorization.json"}},"expected_component_results":{"audit_jsonl":"DENY"},"expected_overall_result":"DENY"}

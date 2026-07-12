@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"invalid-revoked-decision","scenario_type":"stale_user_decision","component_inputs":{"user_decision_gate":{"fixture_path":"fixtures/user-decision-gate/invalid-revoked-consumed.json"}},"expected_component_results":{"user_decision_gate":"DENY"},"expected_overall_result":"DENY"}

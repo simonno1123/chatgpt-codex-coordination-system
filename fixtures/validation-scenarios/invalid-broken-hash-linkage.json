@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"invalid-broken-hash-linkage","scenario_type":"audit_chain_tampering","component_inputs":{"audit_jsonl":{"fixture_path":"fixtures/audit-jsonl/invalid-previous-hash-replaced.json"}},"expected_component_results":{"audit_jsonl":"DENY"},"expected_overall_result":"DENY"}

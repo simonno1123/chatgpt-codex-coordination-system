@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"blocked-dependency-cycle","dependency_graph":{"runtime_identity":["git_operation"],"git_operation":["runtime_identity"]}}

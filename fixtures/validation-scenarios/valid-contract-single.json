@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"valid-contract-single","mode":"verify_component_contracts","required_components":["runtime_identity"],"component_order":["runtime_identity"],"expected_lifecycle_state":"SCENARIO_VALIDATED"}

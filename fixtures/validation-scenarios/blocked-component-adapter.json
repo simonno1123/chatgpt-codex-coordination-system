@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"blocked-component-adapter","component_inputs":{"runtime_identity":{"simulate_adapter_failure":true}}}

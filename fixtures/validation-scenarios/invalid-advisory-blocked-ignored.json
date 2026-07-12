@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"invalid-advisory-blocked-ignored","scenario_type":"advisory_blocked_ignored","component_inputs":{"advisory_gate":{"fixture_path":"fixtures/advisory-gate/invalid-blocked-forced-accepted.json"}},"expected_component_results":{"advisory_gate":"DENY"},"expected_overall_result":"DENY"}

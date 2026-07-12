@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"invalid-advisory-skipped","scenario_type":"mandatory_advisory_skipped","component_inputs":{"advisory_gate":{"fixture_path":"fixtures/advisory-gate/invalid-mandatory-change-skips-advisory.json"}},"expected_component_results":{"advisory_gate":"DENY"},"expected_overall_result":"DENY"}

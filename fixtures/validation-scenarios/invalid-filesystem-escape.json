@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"invalid-filesystem-escape","scenario_type":"filesystem_scope_escape","component_inputs":{"filesystem_permission":{"fixture_path":"fixtures/filesystem-permission/invalid-relative-traversal.json"}},"expected_component_results":{"filesystem_permission":"DENY"},"expected_overall_result":"DENY"}

@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"invalid-advisory-rework-ignored","scenario_type":"advisory_rework_ignored","component_inputs":{"advisory_gate":{"fixture_path":"fixtures/advisory-gate/invalid-rework-forced-accepted.json"}},"expected_component_results":{"advisory_gate":"DENY"},"expected_overall_result":"DENY"}

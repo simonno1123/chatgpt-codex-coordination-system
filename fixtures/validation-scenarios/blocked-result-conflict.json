@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"blocked-result-conflict","mode":"compare_results","scenario_type":"component_result_conflict","component_inputs":{"runtime_identity":{"fixture_path":"fixtures/runtime-identity/invalid-codex-decision.json"}}}

@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"invalid-force-push","scenario_type":"force_push_attempt","component_inputs":{"git_operation":{"fixture_path":"fixtures/git-operation/invalid-git-push-force.json"}},"expected_component_results":{"git_operation":"DENY"},"expected_overall_result":"DENY"}

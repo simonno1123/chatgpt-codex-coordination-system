@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"blocked-component-result-allowed","component_inputs":{"runtime_identity":{"simulate_output":{"result":"PASS","allowed":false,"reason":"Synthetic contradiction.","warnings":[],"source":"fixture"}}}}

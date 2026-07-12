@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"invalid-advisory-authorization","scenario_type":"advisory_as_authorization","component_inputs":{"advisory_gate":{"fixture_path":"fixtures/advisory-gate/invalid-advisory-authorizes-commit.json"}},"expected_component_results":{"advisory_gate":"DENY"},"expected_overall_result":"DENY"}

@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"invalid-advisory-as-user-decision","scenario_type":"advisory_as_authorization","component_inputs":{"user_decision_gate":{"fixture_path":"fixtures/user-decision-gate/invalid-advisory-as-user-decision.json"}},"expected_component_results":{"user_decision_gate":"DENY"},"expected_overall_result":"DENY"}

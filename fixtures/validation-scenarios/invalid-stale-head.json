@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"invalid-stale-head","scenario_type":"wrong_branch_or_head","component_inputs":{"git_operation":{"fixture_path":"fixtures/git-operation/invalid-stale-authorization.json"}},"expected_component_results":{"git_operation":"DENY"},"expected_overall_result":"DENY"}

@@ -1,0 +1,1 @@
+{"template":"drift","scenario_id":"invalid-policy-version","scenario_type":"policy_version_mismatch","policy_versions":{"git_operation":"2.0"},"expected_overall_result":"DENY"}

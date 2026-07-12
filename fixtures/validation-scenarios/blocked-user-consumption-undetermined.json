@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"blocked-user-consumption-undetermined","component_inputs":{"user_decision_gate":{"fixture_path":"fixtures/user-decision-gate/blocked-consumption-undetermined.json"}},"expected_component_results":{"user_decision_gate":"BLOCKED"},"expected_overall_result":"BLOCKED"}

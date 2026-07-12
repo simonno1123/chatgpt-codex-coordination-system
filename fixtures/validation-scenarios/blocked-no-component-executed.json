@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"blocked-no-component-executed","required_components":["runtime_identity"],"optional_components":[],"component_order":["runtime_identity"],"skip_optional_components":["runtime_identity"]}

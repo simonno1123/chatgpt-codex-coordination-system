@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"invalid-user-decision-inheritance","scenario_type":"user_decision_as_git_authorization","component_inputs":{"user_decision_gate":{"fixture_path":"fixtures/user-decision-gate/invalid-task-start-used-for-commit.json"}},"expected_component_results":{"user_decision_gate":"DENY"},"expected_overall_result":"DENY"}

@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"valid-optional-warning","required_components":["runtime_identity"],"optional_components":["audit_jsonl"],"component_order":["runtime_identity","audit_jsonl"],"skip_optional_components":["audit_jsonl"]}

@@ -1,0 +1,1 @@
+{"template":"valid","scenario_id":"invalid-automation-task058","scenario_type":"illegal_next_task_start","component_inputs":{"user_decision_gate":{"fixture_path":"fixtures/user-decision-gate/invalid-future-tasks-authorization.json"}},"expected_component_results":{"user_decision_gate":"DENY"},"expected_overall_result":"DENY"}
