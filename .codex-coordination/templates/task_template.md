@@ -15,6 +15,30 @@ MODE:
 PROJECT:
 [Project path or repository name]
 
+CURRENT RECEIVER:
+[Receiver responsible for the next physical action]
+
+ROLE:
+[Governance role of the current receiver]
+
+TASK STATUS:
+[DEFINED / MATERIALIZATION_REQUIRED / MATERIALIZED / READY]
+
+TASK FILE REQUIRED:
+[YES / NO]
+
+TARGET PATH:
+[Exact repository path, or N/A]
+
+CAN:
+[Actions the current receiver may perform]
+
+CANNOT:
+[Actions the current receiver must not perform]
+
+ACTION REQUIRED:
+[The single next action]
+
 AUTHORITY LIMIT:
 [Exactly what Codex may do for this task]
 
@@ -32,7 +56,15 @@ RESULT or BLOCKED RESULT only
 
 ## 2. Status
 
-READY
+DEFINED / MATERIALIZATION_REQUIRED / MATERIALIZED / READY
+
+`DEFINED` means the task specification exists. `MATERIALIZED` means a required
+task file has been verified at `TARGET PATH`. `READY` means authorization and,
+when required, materialization are both complete.
+
+ChatGPT must not claim that a repository file was created without repository
+evidence. A repository-capable executor may create the exact task file only
+when materialization and its target path are expressly authorized.
 
 ## 3. Background
 
@@ -68,6 +100,8 @@ Allowed commands:
 4. Artifact Routing metadata is preserved.
 5. Role authority remains unchanged.
 6. Risks and verification method are reported.
+7. If `TASK FILE REQUIRED` is `YES`, the exact file exists, is readable, and
+   matches the approved task before status becomes `READY`.
 
 ## 8. BLOCKED Rules
 
@@ -81,6 +115,8 @@ Codex must stop and output BLOCKED RESULT if:
 6. Domain-specific rules, project strategy, or acceptance standards are not authorized.
 7. Tests or checks fail and the fix is outside the authorized scope.
 8. The task would require Codex to produce REVIEW, DECISION, or self-acceptance.
+9. A required task file is absent, unreadable, at the wrong path, or inconsistent
+   with the received task. Use `BLOCKED: TASK FILE NOT MATERIALIZED` when absent.
 
 ## 9. RESULT Format
 

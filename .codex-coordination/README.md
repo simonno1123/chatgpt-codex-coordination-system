@@ -84,6 +84,9 @@ decisions/TASK_006_DECISION.md
 每个任务应处于以下状态之一：
 
 ```text
+DEFINED
+MATERIALIZATION_REQUIRED
+MATERIALIZED
 READY
 IN_PROGRESS
 BLOCKED
@@ -95,7 +98,10 @@ CANCELLED
 
 状态含义：
 
-* READY：任务已明确，可以交给 Codex 执行；
+* DEFINED：TASK 内容已确定，但不表示仓库文件已经创建；
+* MATERIALIZATION_REQUIRED：流程要求 TASK 文件落盘，但尚未验证；
+* MATERIALIZED：TASK 文件已在指定路径验证存在、可读且内容一致；
+* READY：任务已获得所需授权；如要求文件落盘，也已达到 MATERIALIZED；
 * IN_PROGRESS：Codex 正在执行；
 * BLOCKED：Codex 遇到问题，需要 ChatGPT 或用户决策；
 * DONE：Codex 已完成，等待 ChatGPT 审查；
@@ -104,6 +110,10 @@ CANCELLED
 * CANCELLED：任务取消。
 
 DONE 不等于 ACCEPTED。
+
+对于不要求仓库任务文件的对话原生任务，`DEFINED` 可在授权完成后进入
+`READY`。对于要求仓库任务文件的任务，不得从 `DEFINED` 直接进入
+`READY`。
 
 ---
 
@@ -114,7 +124,13 @@ DONE 不等于 ACCEPTED。
 ```text
 ChatGPT 生成 TASK
         ↓
-TASK 放入 inbox/
+TASK 状态为 DEFINED
+        ↓
+如要求文件落盘，由具备仓库写权限且获得明确授权的一方按精确路径创建
+        ↓
+验证文件存在、可读且内容一致，状态变为 MATERIALIZED
+        ↓
+授权与落盘要求均满足后，状态变为 READY
         ↓
 Codex Executor 执行授权任务
         ↓
@@ -125,6 +141,16 @@ ChatGPT Review 审查结果
 REVIEW 或 DECISION 写入 decisions/
         ↓
 ACCEPTED / REWORK / BLOCKED / CANCELLED / NO_FURTHER_ACTION
+```
+
+ChatGPT 可以生成 TASK 正文并指定目标路径，但不得在没有仓库写入证据时
+声称文件已经创建。落盘方可以是 Codex、人工操作或其他具备仓库写权限的
+工具；落盘本身不产生执行、stage、commit 或 push 权限。
+
+如要求的 TASK 文件不存在，Codex 必须返回：
+
+```text
+BLOCKED: TASK FILE NOT MATERIALIZED
 ```
 
 所有 artifact 必须包含以下路由和权限字段：

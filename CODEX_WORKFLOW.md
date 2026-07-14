@@ -273,8 +273,30 @@ Each Codex task should include:
 7. BLOCKED rules.
 8. DONE report format.
 9. Next handoff target.
+10. Task status and whether a repository TASK file is required.
+11. Exact target path when materialization is required.
 
 The task must be small enough to review with `git diff` and `git status`.
+
+### Task File Materialization Check
+
+`TASK DEFINED` means the task specification exists in the coordination channel.
+It does not mean that a repository file exists. `TASK MATERIALIZED` means a
+required TASK file has been verified at the exact target path. `READY` means all
+required authority is present and, when a file is required, materialization has
+also been verified.
+
+Before executing a repository-materialized task, Codex must confirm that the
+TASK file exists, is at the specified path, is readable, and matches the task it
+received. If the file is missing, Codex must return:
+
+```text
+BLOCKED: TASK FILE NOT MATERIALIZED
+```
+
+Codex must not infer that ChatGPT or another tool created a file. An explicitly
+authorized repository-capable executor may materialize the exact TASK content,
+but materialization does not authorize execution, staging, commit, or push.
 
 ## 9. Explicit Handoff Target Rule
 
@@ -283,9 +305,20 @@ Every task transition must explicitly state who receives the next step.
 Required fields:
 
 ```text
-Next Handoff Target: <ChatGPT Review | Codex Executor | User Decision | External Advisory Reviewer | None>
+CURRENT RECEIVER: <current receiver>
+ROLE: <governance role>
+TASK STATUS: <DEFINED | MATERIALIZATION_REQUIRED | MATERIALIZED | READY | other lifecycle state>
+TASK FILE REQUIRED: <YES | NO>
+TARGET PATH: <exact repository path | N/A>
+CAN: <authorized actions>
+CANNOT: <forbidden actions>
+ACTION REQUIRED: <single next action>
+NEXT RECEIVER: <ChatGPT Review | Codex Executor | User Decision | External Advisory Reviewer | None>
 Reason: <why this party receives the next step>
 ```
+
+`CAN` and `CANNOT` describe the current handoff only. They do not create new
+authority or imply that the named receiver has performed a repository action.
 
 Use `ChatGPT Review` when Codex reports DONE or BLOCKED and the result needs review, acceptance, rework, or a decision.
 
