@@ -1,0 +1,372 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:acos:schema:unified-policy:1.0",
+  "title": "ACOS Unified Policy Schema",
+  "type": "object",
+  "properties": {
+    "policy_metadata": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+(?:\\.[0-9]+)?$"
+        },
+        "policy_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+(?:\\.[0-9]+)?$"
+        },
+        "effective_time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "rollback_target_version": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9]+\\.[0-9]+(?:\\.[0-9]+)?$"
+        },
+        "minimum_supported_schema_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+(?:\\.[0-9]+)?$"
+        },
+        "maximum_supported_schema_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+(?:\\.[0-9]+)?$"
+        },
+        "traceability_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "signing_key_id": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128
+        },
+        "signature": {
+          "type": "string",
+          "pattern": "^sig:[A-Za-z0-9_-]{16,512}$"
+        },
+        "migration_notes": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "schema_version",
+        "policy_version",
+        "effective_time",
+        "minimum_supported_schema_version",
+        "maximum_supported_schema_version",
+        "traceability_digest",
+        "signing_key_id",
+        "signature",
+        "migration_notes"
+      ],
+      "additionalProperties": false
+    },
+    "role_permissions": {
+      "type": "object",
+      "minProperties": 5,
+      "propertyNames": {
+        "enum": [
+          "user_decision_source",
+          "chatgpt_review",
+          "codex_executor",
+          "external_advisory",
+          "automation"
+        ]
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "allowed_artifacts": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "USER DECISION",
+                "TASK",
+                "RESULT",
+                "BLOCKED RESULT",
+                "ADVISORY REVIEW",
+                "REVIEW",
+                "DECISION",
+                "AUTHORIZATION",
+                "ADVISORY REQUEST",
+                "AUDIT EVENT",
+                "EXECUTION RECEIPT",
+                "ERROR/BLOCKER RECORD"
+              ]
+            }
+          },
+          "allowed_actions": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          }
+        },
+        "required": [
+          "allowed_artifacts"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "requirement_categories": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "enum": [
+          "user_decision_required",
+          "user_decision_not_required",
+          "user_decision_already_satisfied"
+        ]
+      }
+    },
+    "advisory_triggers": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "trigger_on": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          },
+          "required_declarations": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          }
+        },
+        "required": [
+          "trigger_on"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "user_decision_mappings": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "decision_type": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "authorized_action": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "decision_type",
+          "authorized_action"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "filesystem_policies": {
+      "type": "object",
+      "properties": {
+        "protected_roots": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          }
+        },
+        "denied_path_classes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          }
+        }
+      },
+      "required": [
+        "protected_roots",
+        "denied_path_classes"
+      ],
+      "additionalProperties": false
+    },
+    "git_policies": {
+      "type": "object",
+      "properties": {
+        "enforce_separate_capabilities": {
+          "const": true
+        },
+        "branch_protections": {
+          "type": "object",
+          "properties": {
+            "require_signed_commits": {
+              "type": "boolean"
+            },
+            "allow_force_push": {
+              "const": false
+            }
+          },
+          "required": [
+            "require_signed_commits",
+            "allow_force_push"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "enforce_separate_capabilities",
+        "branch_protections"
+      ],
+      "additionalProperties": false
+    },
+    "lifecycle_order": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128
+      }
+    },
+    "aggregation_precedence": {
+      "type": "array",
+      "const": [
+        "BLOCKED",
+        "DENY",
+        "PASS"
+      ]
+    },
+    "contract_versions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+(?:\\.[0-9]+)?$"
+        }
+      }
+    },
+    "risk_levels": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "enum": [
+          "low",
+          "medium",
+          "high",
+          "critical"
+        ]
+      }
+    }
+  },
+  "required": [
+    "policy_metadata",
+    "role_permissions",
+    "requirement_categories",
+    "advisory_triggers",
+    "user_decision_mappings",
+    "filesystem_policies",
+    "git_policies",
+    "lifecycle_order",
+    "aggregation_precedence",
+    "contract_versions",
+    "risk_levels"
+  ],
+  "allOf": [
+    {
+      "properties": {
+        "role_permissions": {
+          "properties": {
+            "user_decision_source": {
+              "properties": {
+                "allowed_artifacts": {
+                  "items": {
+                    "const": "USER DECISION"
+                  }
+                }
+              }
+            },
+            "chatgpt_review": {
+              "properties": {
+                "allowed_artifacts": {
+                  "items": {
+                    "enum": [
+                      "TASK",
+                      "REVIEW",
+                      "DECISION",
+                      "AUTHORIZATION",
+                      "ADVISORY REQUEST"
+                    ]
+                  }
+                }
+              }
+            },
+            "codex_executor": {
+              "properties": {
+                "allowed_artifacts": {
+                  "items": {
+                    "enum": [
+                      "RESULT",
+                      "BLOCKED RESULT",
+                      "EXECUTION RECEIPT",
+                      "ERROR/BLOCKER RECORD"
+                    ]
+                  }
+                }
+              }
+            },
+            "external_advisory": {
+              "properties": {
+                "allowed_artifacts": {
+                  "items": {
+                    "const": "ADVISORY REVIEW"
+                  }
+                }
+              }
+            },
+            "automation": {
+              "properties": {
+                "allowed_artifacts": {
+                  "items": {
+                    "enum": [
+                      "RESULT",
+                      "AUDIT EVENT",
+                      "EXECUTION RECEIPT",
+                      "ERROR/BLOCKER RECORD"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

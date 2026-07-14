@@ -1,0 +1,61 @@
+{
+  "mode": "validate_policy",
+  "role_permissions": {
+    "user_decision_source": {
+      "allowed_artifacts": [
+        "USER DECISION"
+      ]
+    },
+    "chatgpt_review": {
+      "allowed_artifacts": [
+        "TASK",
+        "REVIEW",
+        "DECISION"
+      ]
+    },
+    "codex_executor": {
+      "allowed_artifacts": [
+        "RESULT",
+        "BLOCKED RESULT"
+      ]
+    },
+    "external_advisory": {
+      "allowed_artifacts": [
+        "ADVISORY REVIEW"
+      ]
+    },
+    "automation": {
+      "allowed_artifacts": [
+        "RESULT",
+        "AUDIT EVENT"
+      ]
+    }
+  },
+  "requirement_categories": {
+    "start_new_task": "user_decision_required"
+  },
+  "advisory_triggers": {},
+  "user_decision_mappings": {},
+  "filesystem_policies": {
+    "protected_roots": [],
+    "denied_path_classes": []
+  },
+  "git_policies": {
+    "enforce_separate_capabilities": true,
+    "branch_protections": {
+      "require_signed_commits": true,
+      "allow_force_push": false
+    }
+  },
+  "lifecycle_order": [
+    "task",
+    "result",
+    "review",
+    "decision"
+  ],
+  "aggregation_precedence": [
+    "PASS"
+  ],
+  "contract_versions": {},
+  "risk_levels": {}
+}

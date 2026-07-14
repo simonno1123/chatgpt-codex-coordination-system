@@ -1,0 +1,100 @@
+{
+  "mode": "validate_policy",
+  "policy_metadata": {
+    "schema_version": "1.0",
+    "policy_version": "1.0",
+    "effective_time": "2026-07-12T19:30:00Z",
+    "rollback_target_version": null,
+    "minimum_supported_schema_version": "1.0",
+    "maximum_supported_schema_version": "1.0",
+    "traceability_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "signing_key_id": "fixture-policy-key-059",
+    "signature": "sig:policy_fixture_signature_059",
+    "migration_notes": "Initial fixture-only policy schema release."
+  },
+  "role_permissions": {
+    "user_decision_source": {
+      "allowed_artifacts": [
+        "USER DECISION"
+      ]
+    },
+    "chatgpt_review": {
+      "allowed_artifacts": [
+        "TASK",
+        "REVIEW",
+        "DECISION"
+      ]
+    },
+    "codex_executor": {
+      "allowed_artifacts": [
+        "RESULT",
+        "BLOCKED RESULT"
+      ]
+    },
+    "external_advisory": {
+      "allowed_artifacts": [
+        "ADVISORY REVIEW"
+      ]
+    },
+    "automation": {
+      "allowed_artifacts": [
+        "RESULT",
+        "AUDIT EVENT"
+      ]
+    }
+  },
+  "requirement_categories": {
+    "start_new_task": "user_decision_required",
+    "readonly_validation": "user_decision_not_required"
+  },
+  "advisory_triggers": {
+    "git_push": {
+      "trigger_on": [
+        "push"
+      ],
+      "required_declarations": [
+        "read-only"
+      ]
+    }
+  },
+  "user_decision_mappings": {
+    "authorize_task_start": {
+      "decision_type": "authorize_task_start",
+      "authorized_action": "start_task"
+    }
+  },
+  "filesystem_policies": {
+    "protected_roots": [
+      ".codex-coordination/decisions/"
+    ],
+    "denied_path_classes": [
+      ".git/"
+    ]
+  },
+  "git_policies": {
+    "enforce_separate_capabilities": true,
+    "branch_protections": {
+      "require_signed_commits": true,
+      "allow_force_push": false
+    }
+  },
+  "lifecycle_order": [
+    "requirement_classified",
+    "user_decision",
+    "chatgpt_task_or_decision",
+    "codex_execution"
+  ],
+  "aggregation_precedence": [
+    "BLOCKED",
+    "DENY",
+    "PASS"
+  ],
+  "contract_versions": {
+    "git_operation": [
+      "1.0"
+    ]
+  },
+  "risk_levels": {
+    "git_push": "high"
+  }
+}

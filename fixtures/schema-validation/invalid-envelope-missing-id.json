@@ -1,0 +1,37 @@
+{
+  "mode": "validate_envelope",
+  "artifact_type": "USER DECISION",
+  "schema_version": "1.0",
+  "producer": "User Decision",
+  "producer_role": "user_decision_source",
+  "producer_runtime_id": "user-decision-local-059",
+  "project_id": "/Users/zhang/Documents/chatgpt-codex-coordination-system",
+  "task_id": "TASK_059",
+  "workflow_id": "WF-059",
+  "parent_artifact_id": null,
+  "correlation_id": "CORR-059-001",
+  "created_at": "2026-07-12T19:30:00Z",
+  "expires_at": "2026-07-13T19:30:00Z",
+  "sequence": 1,
+  "scope": [
+    "fixtures/schemas/envelope.schema.json"
+  ],
+  "requested_action": "start_task",
+  "authority_type": "user",
+  "authorization_id": "AUTH-059-001",
+  "policy_version": "1.0",
+  "content_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "signature": "sig:user_decision_fixture_signature_059",
+  "nonce": "nonce:fixture_nonce_059_abcdef",
+  "replay_protection": {
+    "class": "one_time",
+    "max_consumption": 1
+  },
+  "to": "ChatGPT Review",
+  "next_receiver": "ChatGPT Review",
+  "status": "accepted",
+  "payload": {
+    "authorized_action": "start_task",
+    "reason": "Authorized by user decision."
+  }
+}
