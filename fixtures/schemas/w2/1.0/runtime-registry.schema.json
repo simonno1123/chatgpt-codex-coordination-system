@@ -1,0 +1,138 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:acos:schema:w2:runtime-registry:1.0",
+  "title": "ACOS W2 Runtime Registry Shadow Schema 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "definitions": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "reference": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/#-]{1,511}$"
+    },
+    "contractBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract_version"],
+      "properties": {
+        "contract_version": {"const": "2.0"}
+      }
+    },
+    "trustDomain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trust_domain_id",
+        "environment_class",
+        "verification_methods",
+        "revocation_state",
+        "claim_status"
+      ],
+      "properties": {
+        "trust_domain_id": {"$ref": "#/definitions/reference"},
+        "environment_class": {
+          "type": "string",
+          "enum": ["LOCAL", "TEST", "SHADOW"]
+        },
+        "verification_methods": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "DECLARED_REFERENCE",
+              "DIGEST_COMPARISON",
+              "EXACT_BYTE_COMPARISON",
+              "EXPLICIT_OBSERVATION"
+            ]
+          }
+        },
+        "revocation_state": {
+          "type": "string",
+          "enum": ["UNKNOWN", "NOT_REVOKED", "REVOKED"]
+        },
+        "claim_status": {"const": "DECLARED_ONLY"},
+        "issuer_reference": {"$ref": "#/definitions/reference"},
+        "key_references": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {"$ref": "#/definitions/reference"}
+        },
+        "valid_from": {"type": "string", "format": "date-time"},
+        "valid_until": {"type": "string", "format": "date-time"},
+        "rotation_state": {
+          "type": "string",
+          "enum": ["NOT_DECLARED", "CURRENT_REFERENCE", "ROTATION_PLANNED", "SUPERSEDED_REFERENCE"]
+        }
+      }
+    },
+    "runtimeEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runtime_id",
+        "session_id",
+        "project_id",
+        "environment_id",
+        "trust_domain_id",
+        "identity_state",
+        "evidence_references",
+        "created_at"
+      ],
+      "properties": {
+        "runtime_id": {"$ref": "#/definitions/reference"},
+        "session_id": {"$ref": "#/definitions/reference"},
+        "project_id": {"$ref": "#/definitions/reference"},
+        "environment_id": {"$ref": "#/definitions/reference"},
+        "trust_domain_id": {"$ref": "#/definitions/reference"},
+        "identity_state": {
+          "type": "string",
+          "enum": ["DECLARED", "OBSERVED", "EVIDENCED", "SHADOW_VERIFIED", "REVOKED", "EXPIRED"]
+        },
+        "evidence_references": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {"$ref": "#/definitions/reference"}
+        },
+        "created_at": {"type": "string", "format": "date-time"},
+        "provider_id": {"$ref": "#/definitions/reference"},
+        "model_id": {"$ref": "#/definitions/reference"},
+        "key_id": {"$ref": "#/definitions/reference"},
+        "expires_at": {"type": "string", "format": "date-time"}
+      }
+    }
+  },
+  "required": [
+    "profile_version",
+    "contract_binding",
+    "profile_status",
+    "trust_domains",
+    "runtime_entries"
+  ],
+  "properties": {
+    "profile_version": {"const": "1.0"},
+    "contract_binding": {"$ref": "#/definitions/contractBinding"},
+    "profile_status": {"const": "SHADOW"},
+    "trust_domains": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {"$ref": "#/definitions/trustDomain"}
+    },
+    "runtime_entries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1024,
+      "items": {"$ref": "#/definitions/runtimeEntry"}
+    }
+  }
+}

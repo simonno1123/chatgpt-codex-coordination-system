@@ -1,0 +1,118 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:acos:schema:w2:evidence-record:1.0",
+  "title": "ACOS W2 Evidence Record Shadow Schema 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "definitions": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "reference": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/#-]{1,511}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "contractBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract_version"],
+      "properties": {
+        "contract_version": {"const": "2.0"}
+      }
+    },
+    "declaredAttribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor", "role", "claim_status"],
+      "properties": {
+        "actor": {"$ref": "#/definitions/nonEmptyString"},
+        "role": {
+          "type": "string",
+          "enum": [
+            "USER_DECISION_SOURCE",
+            "CHATGPT_REVIEW",
+            "CODEX_EXECUTOR",
+            "EXTERNAL_ADVISORY",
+            "AUTOMATION",
+            "GOVERNED_MATERIALIZER",
+            "OTHER_DECLARED"
+          ]
+        },
+        "identity_reference": {"$ref": "#/definitions/reference"},
+        "claim_status": {"const": "DECLARED_ONLY"}
+      }
+    }
+  },
+  "required": [
+    "profile_version",
+    "contract_binding",
+    "evidence_id",
+    "evidence_type",
+    "subject_reference",
+    "content_digest",
+    "producer_attribution",
+    "observed_at",
+    "verification_method",
+    "verification_result",
+    "claim_status"
+  ],
+  "properties": {
+    "profile_version": {"const": "1.0"},
+    "contract_binding": {"$ref": "#/definitions/contractBinding"},
+    "evidence_id": {"$ref": "#/definitions/reference"},
+    "evidence_type": {
+      "type": "string",
+      "enum": [
+        "IDENTITY_OBSERVATION",
+        "DIGEST_OBSERVATION",
+        "REFERENCE_BINDING",
+        "REVOCATION_OBSERVATION",
+        "EXPIRY_OBSERVATION",
+        "PERSISTENCE_VERIFICATION"
+      ]
+    },
+    "subject_reference": {"$ref": "#/definitions/reference"},
+    "content_digest": {"$ref": "#/definitions/digest"},
+    "producer_attribution": {"$ref": "#/definitions/declaredAttribution"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "verification_method": {
+      "type": "string",
+      "enum": [
+        "DECLARED_DIGEST_SHA256",
+        "EXACT_BYTE_SHA256",
+        "REFERENCE_MATCH",
+        "REVOCATION_STATUS",
+        "EXPIRY_STATUS"
+      ]
+    },
+    "verification_result": {
+      "type": "string",
+      "enum": ["NOT_VERIFIED", "MATCH", "MISMATCH", "EXPIRED", "REVOKED", "UNSUPPORTED"]
+    },
+    "claim_status": {"const": "DECLARED_ONLY"},
+    "observer_reference": {"$ref": "#/definitions/reference"},
+    "parent_evidence_ids": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"$ref": "#/definitions/reference"}
+    },
+    "nonce": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9._:-]+$"
+    },
+    "expires_at": {"type": "string", "format": "date-time"},
+    "revocation_state": {
+      "type": "string",
+      "enum": ["UNKNOWN", "NOT_REVOKED", "REVOKED"]
+    }
+  }
+}

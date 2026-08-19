@@ -1,0 +1,40 @@
+{
+  "case_id": "w2-valid-persistence-receipt",
+  "mode": "validate_persistence_receipt",
+  "expected_result": "PASS",
+  "profile_version": "1.0",
+  "contract_binding": {
+    "contract_version": "2.0"
+  },
+  "receipt_id": "receipt:acos:w2:evidence-record-001",
+  "receipt_type": "PERSISTENCE_RECEIPT",
+  "artifact_reference": "fixtures/schema-validation-w2/1.0/valid-evidence-record.json",
+  "content_digest": "sha256:77017ef8cb20d895d9016180aa97c9dc44a2da57b0beb92035847c33980adaf3",
+  "producer_attribution": {
+    "actor": "ChatGPT Review",
+    "role": "CHATGPT_REVIEW",
+    "claim_status": "DECLARED_ONLY"
+  },
+  "materializer_attribution": {
+    "actor": "Codex Executor",
+    "role": "CODEX_EXECUTOR",
+    "claim_status": "DECLARED_ONLY"
+  },
+  "materialization_target": {
+    "storage_class": "REPOSITORY",
+    "reference": "fixtures/schema-validation-w2/1.0/valid-evidence-record.json"
+  },
+  "materialized_at": "2026-08-19T08:03:00Z",
+  "exact_byte_verification": {
+    "method": "SHA256",
+    "observed_digest": "sha256:77017ef8cb20d895d9016180aa97c9dc44a2da57b0beb92035847c33980adaf3",
+    "result": "MATCH"
+  },
+  "git_durability": {
+    "commit_reference": "commit:b665cfe54a5226694e735683d7440233f41132f5",
+    "remote_reference": "origin/master",
+    "remote_verification_status": "NOT_VERIFIED",
+    "claim_status": "DECLARED_ONLY"
+  },
+  "claim_status": "DECLARED_ONLY"
+}

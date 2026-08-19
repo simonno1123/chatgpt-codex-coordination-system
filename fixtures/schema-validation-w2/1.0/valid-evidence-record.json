@@ -1,0 +1,29 @@
+{
+  "case_id": "w2-valid-evidence-record",
+  "mode": "validate_evidence_record",
+  "expected_result": "PASS",
+  "profile_version": "1.0",
+  "contract_binding": {
+    "contract_version": "2.0"
+  },
+  "evidence_id": "evidence:acos:w2:runtime-001",
+  "evidence_type": "IDENTITY_OBSERVATION",
+  "subject_reference": "runtime:acos:shadow:001",
+  "content_digest": "sha256:7d70bff7b9c72ed7a2ccb58f9025723b1667923454830d62c52f2a6a24350d23",
+  "producer_attribution": {
+    "actor": "Codex Executor",
+    "role": "CODEX_EXECUTOR",
+    "claim_status": "DECLARED_ONLY"
+  },
+  "observed_at": "2026-08-19T08:02:00Z",
+  "verification_method": "DECLARED_DIGEST_SHA256",
+  "verification_result": "MATCH",
+  "claim_status": "DECLARED_ONLY",
+  "observer_reference": "observer:acos:w2-shadow-verifier",
+  "parent_evidence_ids": [
+    "evidence:acos:w1:contract-baseline",
+    "evidence:acos:w0:semantic-baseline"
+  ],
+  "nonce": "w2-runtime-001-observation",
+  "revocation_state": "NOT_REVOKED"
+}

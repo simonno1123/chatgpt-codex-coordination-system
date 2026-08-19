@@ -1,0 +1,114 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:acos:schema:w2:persistence-receipt:1.0",
+  "title": "ACOS W2 Persistence Receipt Shadow Schema 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "definitions": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "reference": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/#-]{1,511}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "contractBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract_version"],
+      "properties": {
+        "contract_version": {"const": "2.0"}
+      }
+    },
+    "declaredAttribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor", "role", "claim_status"],
+      "properties": {
+        "actor": {"$ref": "#/definitions/nonEmptyString"},
+        "role": {
+          "type": "string",
+          "enum": [
+            "USER_DECISION_SOURCE",
+            "CHATGPT_REVIEW",
+            "CODEX_EXECUTOR",
+            "EXTERNAL_ADVISORY",
+            "AUTOMATION",
+            "GOVERNED_MATERIALIZER",
+            "OTHER_DECLARED"
+          ]
+        },
+        "identity_reference": {"$ref": "#/definitions/reference"},
+        "claim_status": {"const": "DECLARED_ONLY"}
+      }
+    }
+  },
+  "required": [
+    "profile_version",
+    "contract_binding",
+    "receipt_id",
+    "receipt_type",
+    "artifact_reference",
+    "content_digest",
+    "producer_attribution",
+    "materializer_attribution",
+    "materialization_target",
+    "materialized_at",
+    "exact_byte_verification",
+    "claim_status"
+  ],
+  "properties": {
+    "profile_version": {"const": "1.0"},
+    "contract_binding": {"$ref": "#/definitions/contractBinding"},
+    "receipt_id": {"$ref": "#/definitions/reference"},
+    "receipt_type": {"const": "PERSISTENCE_RECEIPT"},
+    "artifact_reference": {"$ref": "#/definitions/reference"},
+    "content_digest": {"$ref": "#/definitions/digest"},
+    "producer_attribution": {"$ref": "#/definitions/declaredAttribution"},
+    "materializer_attribution": {"$ref": "#/definitions/declaredAttribution"},
+    "materialization_target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["storage_class", "reference"],
+      "properties": {
+        "storage_class": {
+          "type": "string",
+          "enum": ["REPOSITORY", "MANAGED_CONVERSATION"]
+        },
+        "reference": {"$ref": "#/definitions/nonEmptyString"}
+      }
+    },
+    "materialized_at": {"type": "string", "format": "date-time"},
+    "exact_byte_verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "observed_digest", "result"],
+      "properties": {
+        "method": {"const": "SHA256"},
+        "observed_digest": {"$ref": "#/definitions/digest"},
+        "result": {
+          "type": "string",
+          "enum": ["MATCH", "MISMATCH", "NOT_VERIFIED"]
+        }
+      }
+    },
+    "git_durability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claim_status"],
+      "properties": {
+        "commit_reference": {"$ref": "#/definitions/reference"},
+        "remote_reference": {"$ref": "#/definitions/nonEmptyString"},
+        "remote_verification_status": {"const": "NOT_VERIFIED"},
+        "claim_status": {"const": "DECLARED_ONLY"}
+      }
+    },
+    "claim_status": {"const": "DECLARED_ONLY"}
+  }
+}

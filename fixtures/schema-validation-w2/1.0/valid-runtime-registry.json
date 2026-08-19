@@ -1,0 +1,54 @@
+{
+  "case_id": "w2-valid-runtime-registry",
+  "mode": "validate_runtime_registry",
+  "expected_result": "PASS",
+  "profile_version": "1.0",
+  "contract_binding": {
+    "contract_version": "2.0"
+  },
+  "profile_status": "SHADOW",
+  "trust_domains": [
+    {
+      "trust_domain_id": "trust:acos:local-shadow",
+      "environment_class": "SHADOW",
+      "verification_methods": [
+        "DECLARED_REFERENCE",
+        "DIGEST_COMPARISON"
+      ],
+      "revocation_state": "NOT_REVOKED",
+      "claim_status": "DECLARED_ONLY",
+      "issuer_reference": "issuer:acos:w2-local",
+      "rotation_state": "NOT_DECLARED"
+    }
+  ],
+  "runtime_entries": [
+    {
+      "runtime_id": "runtime:acos:shadow:001",
+      "session_id": "session:acos:shadow:001",
+      "project_id": "project:acos",
+      "environment_id": "environment:local-shadow",
+      "trust_domain_id": "trust:acos:local-shadow",
+      "identity_state": "SHADOW_VERIFIED",
+      "evidence_references": [
+        "evidence:acos:w2:runtime-001"
+      ],
+      "created_at": "2026-08-19T08:00:00Z",
+      "provider_id": "provider:openai",
+      "model_id": "model:codex"
+    },
+    {
+      "runtime_id": "runtime:acos:shadow:002",
+      "session_id": "session:acos:shadow:002",
+      "project_id": "project:acos",
+      "environment_id": "environment:local-shadow",
+      "trust_domain_id": "trust:acos:local-shadow",
+      "identity_state": "EVIDENCED",
+      "evidence_references": [
+        "evidence:acos:w2:runtime-002"
+      ],
+      "created_at": "2026-08-19T08:01:00Z",
+      "provider_id": "provider:openai",
+      "model_id": "model:codex"
+    }
+  ]
+}
