@@ -1,0 +1,82 @@
+{
+  "case_id": "valid-policy-2.0",
+  "mode": "validate_policy",
+  "expected_result": "PASS",
+  "policy_metadata": {
+    "contract_version": "2.0",
+    "schema_version": "2.0",
+    "policy_version": "2.0.0",
+    "profile_status": "SHADOW",
+    "effective_at": "2026-08-17T00:00:00Z",
+    "activation_state": "NOT_ACTIVE",
+    "legacy_policy_reference": "fixtures/schemas/policy.schema.json"
+  },
+  "supported_contract_schema_tuples": [
+    {
+      "contract_version": "2.0",
+      "schema_version": "2.0"
+    }
+  ],
+  "recognized_artifact_types": [
+    "USER DECISION",
+    "GOVERNANCE PROPOSAL",
+    "TASK",
+    "RESULT",
+    "BLOCKED RESULT",
+    "ADVISORY REQUEST",
+    "ADVISORY REVIEW",
+    "REVIEW",
+    "DECISION",
+    "AUTHORIZATION",
+    "RECORD",
+    "AUDIT EVENT",
+    "EXECUTION RECEIPT",
+    "ERROR/BLOCKER RECORD",
+    "CONTEXT PACK"
+  ],
+  "compatibility_import_classes": [
+    "VALID_NATIVE",
+    "VALID_LEGACY",
+    "REPRODUCED_EVIDENCE",
+    "NON_CONSUMABLE",
+    "UNTRUSTED_IMPORT",
+    "SUPERSEDED",
+    "REVOKED",
+    "EXPIRED",
+    "PROVENANCE_EXCEPTION"
+  ],
+  "role_declarations": {
+    "CHATGPT_REVIEW": {
+      "recognized_artifact_types": ["TASK", "REVIEW", "DECISION", "GOVERNANCE PROPOSAL"],
+      "capability_references": ["capability:task-define", "capability:task-review"],
+      "authority_status": "DECLARED_ONLY"
+    },
+    "CODEX_EXECUTOR": {
+      "recognized_artifact_types": ["RESULT", "BLOCKED RESULT"],
+      "capability_references": ["capability:bounded-execution"],
+      "authority_status": "DECLARED_ONLY"
+    }
+  },
+  "capability_declarations": {
+    "bounded-execution": {
+      "description": "Structural declaration only; no Grant is issued.",
+      "scope_types": ["PROJECT", "PATH", "OPERATION"],
+      "grant_status": "NOT_ISSUED"
+    }
+  },
+  "lifecycle_families": ["ARTIFACT", "TASK", "AUTHORIZATION", "GIT", "ACTIVATION", "OPERATIONAL_ENTRY"],
+  "storage_classes": ["REPOSITORY", "MANAGED_CONVERSATION"],
+  "scope_types": ["PROJECT", "REPOSITORY", "PATH", "OPERATION", "BRANCH", "COMMIT", "ARTIFACT", "ENVIRONMENT", "RESOURCE"],
+  "risk_levels": {
+    "schema_split_brain": "HIGH",
+    "authority_self_claim": "CRITICAL"
+  },
+  "legacy_compatibility": {
+    "mode": "IMMUTABLE_PARALLEL",
+    "legacy_contract_versions": ["1.0"],
+    "automatic_fallback": false,
+    "automatic_downgrade": false,
+    "default_consumption": false,
+    "cutover": false
+  }
+}

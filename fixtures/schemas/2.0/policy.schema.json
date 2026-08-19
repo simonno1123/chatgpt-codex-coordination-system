@@ -1,0 +1,205 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:acos:schema:unified-policy:2.0",
+  "title": "ACOS Unified Policy 2.0 Shadow Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "definitions": {
+    "semver": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(?:\\.[0-9]+)?$"
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "artifactType": {
+      "type": "string",
+      "enum": [
+        "USER DECISION",
+        "GOVERNANCE PROPOSAL",
+        "TASK",
+        "RESULT",
+        "BLOCKED RESULT",
+        "ADVISORY REQUEST",
+        "ADVISORY REVIEW",
+        "REVIEW",
+        "DECISION",
+        "AUTHORIZATION",
+        "RECORD",
+        "AUDIT EVENT",
+        "EXECUTION RECEIPT",
+        "ERROR/BLOCKER RECORD",
+        "CONTEXT PACK"
+      ]
+    },
+    "importClass": {
+      "type": "string",
+      "enum": [
+        "VALID_NATIVE",
+        "VALID_LEGACY",
+        "REPRODUCED_EVIDENCE",
+        "NON_CONSUMABLE",
+        "UNTRUSTED_IMPORT",
+        "SUPERSEDED",
+        "REVOKED",
+        "EXPIRED",
+        "PROVENANCE_EXCEPTION"
+      ]
+    }
+  },
+  "properties": {
+    "policy_metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_version",
+        "schema_version",
+        "policy_version",
+        "profile_status",
+        "effective_at",
+        "activation_state"
+      ],
+      "properties": {
+        "contract_version": {"const": "2.0"},
+        "schema_version": {"const": "2.0"},
+        "policy_version": {"$ref": "#/definitions/semver"},
+        "profile_status": {"const": "SHADOW"},
+        "effective_at": {"type": "string", "format": "date-time"},
+        "activation_state": {"const": "NOT_ACTIVE"},
+        "legacy_policy_reference": {"$ref": "#/definitions/nonEmptyString"}
+      }
+    },
+    "supported_contract_schema_tuples": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["contract_version", "schema_version"],
+        "properties": {
+          "contract_version": {"$ref": "#/definitions/semver"},
+          "schema_version": {"$ref": "#/definitions/semver"}
+        }
+      },
+      "contains": {
+        "type": "object",
+        "properties": {
+          "contract_version": {"const": "2.0"},
+          "schema_version": {"const": "2.0"}
+        },
+        "required": ["contract_version", "schema_version"]
+      }
+    },
+    "recognized_artifact_types": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/definitions/artifactType"}
+    },
+    "compatibility_import_classes": {
+      "type": "array",
+      "minItems": 9,
+      "maxItems": 9,
+      "uniqueItems": true,
+      "items": {"$ref": "#/definitions/importClass"}
+    },
+    "role_declarations": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["recognized_artifact_types", "authority_status"],
+        "properties": {
+          "recognized_artifact_types": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"$ref": "#/definitions/artifactType"}
+          },
+          "capability_references": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"$ref": "#/definitions/nonEmptyString"}
+          },
+          "authority_status": {"const": "DECLARED_ONLY"}
+        }
+      }
+    },
+    "capability_declarations": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["description", "grant_status"],
+        "properties": {
+          "description": {"$ref": "#/definitions/nonEmptyString"},
+          "scope_types": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"$ref": "#/definitions/nonEmptyString"}
+          },
+          "grant_status": {"const": "NOT_ISSUED"}
+        }
+      }
+    },
+    "lifecycle_families": {
+      "type": "array",
+      "const": ["ARTIFACT", "TASK", "AUTHORIZATION", "GIT", "ACTIVATION", "OPERATIONAL_ENTRY"]
+    },
+    "storage_classes": {
+      "type": "array",
+      "const": ["REPOSITORY", "MANAGED_CONVERSATION"]
+    },
+    "scope_types": {
+      "type": "array",
+      "const": ["PROJECT", "REPOSITORY", "PATH", "OPERATION", "BRANCH", "COMMIT", "ARTIFACT", "ENVIRONMENT", "RESOURCE"]
+    },
+    "risk_levels": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+      }
+    },
+    "legacy_compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "legacy_contract_versions",
+        "automatic_fallback",
+        "automatic_downgrade",
+        "default_consumption",
+        "cutover"
+      ],
+      "properties": {
+        "mode": {"const": "IMMUTABLE_PARALLEL"},
+        "legacy_contract_versions": {
+          "type": "array",
+          "const": ["1.0"]
+        },
+        "automatic_fallback": {"const": false},
+        "automatic_downgrade": {"const": false},
+        "default_consumption": {"const": false},
+        "cutover": {"const": false}
+      }
+    }
+  },
+  "required": [
+    "policy_metadata",
+    "supported_contract_schema_tuples",
+    "recognized_artifact_types",
+    "compatibility_import_classes",
+    "role_declarations",
+    "capability_declarations",
+    "lifecycle_families",
+    "storage_classes",
+    "scope_types",
+    "risk_levels",
+    "legacy_compatibility"
+  ]
+}

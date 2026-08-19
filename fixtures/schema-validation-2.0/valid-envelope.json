@@ -1,0 +1,108 @@
+{
+  "case_id": "valid-envelope-2.0",
+  "mode": "validate_envelope",
+  "expected_result": "PASS",
+  "artifact_id": "ART-W1-ENV-001",
+  "artifact_type": "TASK",
+  "contract_version": "2.0",
+  "schema_version": "2.0",
+  "policy_version": "2.0.0",
+  "producer_attribution": {
+    "actor": "ChatGPT Review",
+    "role": "CHATGPT_REVIEW",
+    "identity_reference": "runtime:chatgpt-review-shadow",
+    "claim_status": "DECLARED_ONLY"
+  },
+  "materializer_attribution": {
+    "actor": "Codex Executor",
+    "role": "CODEX_EXECUTOR",
+    "identity_reference": "runtime:codex-shadow",
+    "claim_status": "DECLARED_ONLY"
+  },
+  "runtime_identity_reference": "runtime:chatgpt-review-shadow",
+  "project_binding": {
+    "project_id": "ACOS",
+    "repository_reference": "repo:chatgpt-codex-coordination-system"
+  },
+  "environment_binding": {
+    "environment_id": "acos-w1-shadow",
+    "environment_class": "SHADOW"
+  },
+  "task_id": "ACOS-MIG-W1-FIXTURE",
+  "workflow_id": "ACOS-MIG-W1",
+  "correlation_id": "CORR-W1-001",
+  "receiver": "Codex Executor",
+  "next_receiver": "ChatGPT Review",
+  "created_at": "2026-08-17T00:00:00Z",
+  "expires_at": "2026-08-18T00:00:00Z",
+  "scope": [
+    {
+      "scope_type": "PATH",
+      "target": "fixtures/schemas/2.0/envelope.schema.json"
+    },
+    {
+      "scope_type": "OPERATION",
+      "target": "shadow_validate"
+    }
+  ],
+  "requested_action": "validate_shadow_fixture",
+  "content_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "storage": {
+    "storage_class": "REPOSITORY",
+    "reference": "fixtures/schema-validation-2.0/valid-envelope.json",
+    "content_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "claim_status": "DECLARED_ONLY"
+  },
+  "lifecycle": {
+    "family": "ARTIFACT",
+    "state": "VALIDATED"
+  },
+  "lineage": [
+    {
+      "artifact_id": "ART-W0-BASE-001",
+      "relation": "DERIVED_FROM",
+      "content_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    {
+      "artifact_id": "ART-W0-TAX-001",
+      "relation": "EVIDENCES"
+    }
+  ],
+  "authority_source": {
+    "reference": "decision:user-w1-balanced-7",
+    "authority_class": "IMPLEMENTATION_SCOPE",
+    "claim_status": "DECLARED_ONLY"
+  },
+  "capability_references": ["capability:file-create-shadow"],
+  "grant_reference": "grant:not-issued-w1",
+  "authorization_claim": {
+    "reference": "authorization:user-w1-balanced-7",
+    "claimed_state": "DECLARED"
+  },
+  "evidence_references": [
+    {
+      "reference": "evidence:w0-baseline",
+      "content_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "claim_status": "DECLARED_ONLY"
+    }
+  ],
+  "receipt_references": ["receipt:not-issued-w1"],
+  "receiver_acknowledgment": {
+    "claimed_state": "PENDING",
+    "reference": "ack:fixture-only"
+  },
+  "signature_metadata": {
+    "algorithm": "fixture-only",
+    "key_reference": "key:no-real-key",
+    "signature": "sig:fixture_only_not_verified_200",
+    "verification_status": "NOT_VERIFIED_BY_W1"
+  },
+  "revocation_metadata": {
+    "claimed_state": "UNKNOWN"
+  },
+  "historical_import_class": "VALID_NATIVE",
+  "payload": {
+    "purpose": "Deterministic W1 shadow fixture",
+    "operational_effect": "NONE"
+  }
+}

@@ -1,0 +1,344 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:acos:schema:artifact-envelope:2.0",
+  "title": "ACOS Artifact Envelope 2.0 Shadow Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "definitions": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "reference": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/#-]{1,511}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "declaredAttribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor", "role", "claim_status"],
+      "properties": {
+        "actor": {"$ref": "#/definitions/nonEmptyString"},
+        "role": {
+          "type": "string",
+          "enum": [
+            "USER_DECISION_SOURCE",
+            "CHATGPT_REVIEW",
+            "CODEX_EXECUTOR",
+            "EXTERNAL_ADVISORY",
+            "AUTOMATION",
+            "GOVERNED_MATERIALIZER",
+            "OTHER_DECLARED"
+          ]
+        },
+        "identity_reference": {"$ref": "#/definitions/reference"},
+        "claim_status": {"const": "DECLARED_ONLY"}
+      }
+    },
+    "scopeItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope_type", "target"],
+      "properties": {
+        "scope_type": {
+          "type": "string",
+          "enum": [
+            "PROJECT",
+            "REPOSITORY",
+            "PATH",
+            "OPERATION",
+            "BRANCH",
+            "COMMIT",
+            "ARTIFACT",
+            "ENVIRONMENT",
+            "RESOURCE"
+          ]
+        },
+        "target": {"$ref": "#/definitions/nonEmptyString"},
+        "qualifier": {"$ref": "#/definitions/nonEmptyString"}
+      }
+    },
+    "lineageParent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "relation"],
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "pattern": "^ART-[A-Za-z0-9][A-Za-z0-9._-]{2,127}$"
+        },
+        "relation": {
+          "type": "string",
+          "enum": ["DERIVED_FROM", "RESPONDS_TO", "REVIEWS", "DECIDES", "SUPERSEDES", "IMPORTS", "EVIDENCES"]
+        },
+        "content_digest": {"$ref": "#/definitions/digest"}
+      }
+    },
+    "evidenceReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reference"],
+      "properties": {
+        "reference": {"$ref": "#/definitions/reference"},
+        "content_digest": {"$ref": "#/definitions/digest"},
+        "claim_status": {"const": "DECLARED_ONLY"}
+      }
+    }
+  },
+  "properties": {
+    "artifact_id": {
+      "type": "string",
+      "pattern": "^ART-[A-Za-z0-9][A-Za-z0-9._-]{2,127}$"
+    },
+    "artifact_type": {
+      "type": "string",
+      "enum": [
+        "USER DECISION",
+        "GOVERNANCE PROPOSAL",
+        "TASK",
+        "RESULT",
+        "BLOCKED RESULT",
+        "ADVISORY REQUEST",
+        "ADVISORY REVIEW",
+        "REVIEW",
+        "DECISION",
+        "AUTHORIZATION",
+        "RECORD",
+        "AUDIT EVENT",
+        "EXECUTION RECEIPT",
+        "ERROR/BLOCKER RECORD",
+        "CONTEXT PACK"
+      ]
+    },
+    "contract_version": {"const": "2.0"},
+    "schema_version": {"const": "2.0"},
+    "policy_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(?:\\.[0-9]+)?$"
+    },
+    "producer_attribution": {"$ref": "#/definitions/declaredAttribution"},
+    "materializer_attribution": {"$ref": "#/definitions/declaredAttribution"},
+    "runtime_identity_reference": {"$ref": "#/definitions/reference"},
+    "project_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["project_id"],
+      "properties": {
+        "project_id": {"$ref": "#/definitions/nonEmptyString"},
+        "repository_reference": {"$ref": "#/definitions/nonEmptyString"}
+      }
+    },
+    "environment_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["environment_id", "environment_class"],
+      "properties": {
+        "environment_id": {"$ref": "#/definitions/nonEmptyString"},
+        "environment_class": {
+          "type": "string",
+          "enum": ["LOCAL", "TEST", "SHADOW", "STAGING", "PRODUCTION"]
+        }
+      }
+    },
+    "task_id": {"$ref": "#/definitions/nonEmptyString"},
+    "workflow_id": {"$ref": "#/definitions/nonEmptyString"},
+    "correlation_id": {"$ref": "#/definitions/nonEmptyString"},
+    "receiver": {"$ref": "#/definitions/nonEmptyString"},
+    "next_receiver": {"$ref": "#/definitions/nonEmptyString"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "expires_at": {"type": "string", "format": "date-time"},
+    "scope": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": {"$ref": "#/definitions/scopeItem"}
+    },
+    "requested_action": {"$ref": "#/definitions/nonEmptyString"},
+    "content_digest": {"$ref": "#/definitions/digest"},
+    "storage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["storage_class", "reference"],
+      "properties": {
+        "storage_class": {
+          "type": "string",
+          "enum": ["REPOSITORY", "MANAGED_CONVERSATION"]
+        },
+        "reference": {"$ref": "#/definitions/nonEmptyString"},
+        "content_digest": {"$ref": "#/definitions/digest"},
+        "claim_status": {"const": "DECLARED_ONLY"}
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["family", "state"],
+      "properties": {
+        "family": {
+          "type": "string",
+          "enum": ["ARTIFACT", "TASK", "AUTHORIZATION", "GIT", "ACTIVATION", "OPERATIONAL_ENTRY"]
+        },
+        "state": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{1,63}$"
+        }
+      }
+    },
+    "lineage": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {"$ref": "#/definitions/lineageParent"}
+    },
+    "authority_source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reference", "claim_status"],
+      "properties": {
+        "reference": {"$ref": "#/definitions/reference"},
+        "authority_class": {"$ref": "#/definitions/nonEmptyString"},
+        "claim_status": {"const": "DECLARED_ONLY"}
+      }
+    },
+    "capability_references": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {"$ref": "#/definitions/reference"}
+    },
+    "grant_reference": {"$ref": "#/definitions/reference"},
+    "authorization_claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reference", "claimed_state"],
+      "properties": {
+        "reference": {"$ref": "#/definitions/reference"},
+        "claimed_state": {
+          "type": "string",
+          "enum": ["DECLARED", "ISSUED", "VALIDATED", "ACTIVE", "CONSUMED", "REVOKED", "EXPIRED", "DENIED", "SUPERSEDED", "FAILED"]
+        }
+      }
+    },
+    "evidence_references": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {"$ref": "#/definitions/evidenceReference"}
+    },
+    "receipt_references": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {"$ref": "#/definitions/reference"}
+    },
+    "receiver_acknowledgment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claimed_state"],
+      "properties": {
+        "claimed_state": {
+          "type": "string",
+          "enum": ["NOT_DECLARED", "PENDING", "ACKNOWLEDGED", "REJECTED"]
+        },
+        "reference": {"$ref": "#/definitions/reference"},
+        "claimed_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "signature_metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "key_reference", "signature", "verification_status"],
+      "properties": {
+        "algorithm": {"$ref": "#/definitions/nonEmptyString"},
+        "key_reference": {"$ref": "#/definitions/reference"},
+        "signature": {
+          "type": "string",
+          "pattern": "^sig:[A-Za-z0-9_-]{16,512}$"
+        },
+        "verification_status": {"const": "NOT_VERIFIED_BY_W1"}
+      }
+    },
+    "revocation_metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claimed_state"],
+      "properties": {
+        "claimed_state": {
+          "type": "string",
+          "enum": ["UNKNOWN", "NOT_REVOKED", "REVOKED"]
+        },
+        "revoked_at": {"type": "string", "format": "date-time"},
+        "reason": {"$ref": "#/definitions/nonEmptyString"},
+        "evidence_reference": {"$ref": "#/definitions/reference"}
+      }
+    },
+    "historical_import_class": {
+      "type": "string",
+      "enum": [
+        "VALID_NATIVE",
+        "VALID_LEGACY",
+        "REPRODUCED_EVIDENCE",
+        "NON_CONSUMABLE",
+        "UNTRUSTED_IMPORT",
+        "SUPERSEDED",
+        "REVOKED",
+        "EXPIRED",
+        "PROVENANCE_EXCEPTION"
+      ]
+    },
+    "payload": {
+      "type": "object",
+      "maxProperties": 128
+    }
+  },
+  "required": [
+    "artifact_id",
+    "artifact_type",
+    "contract_version",
+    "schema_version",
+    "producer_attribution",
+    "project_binding",
+    "environment_binding",
+    "receiver",
+    "next_receiver",
+    "created_at",
+    "scope",
+    "content_digest",
+    "storage",
+    "lifecycle",
+    "lineage",
+    "historical_import_class",
+    "payload"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "artifact_type": {"enum": ["TASK", "RESULT", "BLOCKED RESULT"]}
+        },
+        "required": ["artifact_type"]
+      },
+      "then": {"required": ["task_id"]}
+    },
+    {
+      "if": {
+        "properties": {"artifact_type": {"const": "TASK"}},
+        "required": ["artifact_type"]
+      },
+      "then": {"required": ["requested_action"]}
+    },
+    {
+      "if": {
+        "properties": {"artifact_type": {"const": "AUTHORIZATION"}},
+        "required": ["artifact_type"]
+      },
+      "then": {"required": ["authorization_claim", "expires_at"]}
+    }
+  ]
+}
