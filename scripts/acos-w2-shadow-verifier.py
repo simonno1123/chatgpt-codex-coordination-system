@@ -33,6 +33,7 @@ MODES = {
 }
 SUPPORTED_PROFILE_VERSION = "1.0"
 SUPPORTED_CONTRACT_VERSION = "2.0"
+GOVERNANCE_STATUS = "UNAUTHENTICATED_SHADOW"
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE_ROOT = ROOT / "fixtures" / "schema-validation-w2" / "1.0"
@@ -92,7 +93,12 @@ class Result:
     reason: str
     notice: str
     replay_notice: str
+    governance_status: str
     authority_effect: str
+    identity_effect: str
+    execution_effect: str
+    activation_effect: str
+    eligible_for_execution: bool
     source: str
     expected_result: str | None
     expectation_met: bool | None
@@ -206,7 +212,12 @@ def make_result(
         reason=reason,
         notice=NOTICE,
         replay_notice=REPLAY_NOTICE,
+        governance_status=GOVERNANCE_STATUS,
         authority_effect="NONE",
+        identity_effect="NONE",
+        execution_effect="NONE",
+        activation_effect="NONE",
+        eligible_for_execution=False,
         source=source,
         expected_result=expected,
         expectation_met=(result == expected if expected else None),
@@ -396,11 +407,6 @@ def validate_persistence_receipt(
     exact_target: Path | None,
     exact_target_requested: bool,
 ) -> None:
-    producer = data["producer_attribution"]
-    materializer = data["materializer_attribution"]
-    if producer["actor"] == materializer["actor"]:
-        raise Denied("Producer and Materializer attribution must remain distinct")
-
     content_digest = data["content_digest"]
     observed = data["exact_byte_verification"]["observed_digest"]
     result = data["exact_byte_verification"]["result"]
@@ -542,7 +548,12 @@ def render_text(results: Sequence[Result]) -> str:
                     f"MODE: {result.mode or 'UNKNOWN'}",
                     f"RESULT: {result.result}",
                     f"REASON: {result.reason}",
+                    f"GOVERNANCE STATUS: {result.governance_status}",
                     f"AUTHORITY EFFECT: {result.authority_effect}",
+                    f"IDENTITY EFFECT: {result.identity_effect}",
+                    f"EXECUTION EFFECT: {result.execution_effect}",
+                    f"ACTIVATION EFFECT: {result.activation_effect}",
+                    f"ELIGIBLE FOR EXECUTION: {str(result.eligible_for_execution).lower()}",
                     f"NOTICE: {result.notice}",
                     f"REPLAY NOTICE: {result.replay_notice}",
                 ]

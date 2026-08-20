@@ -100,10 +100,13 @@ Producer attribution != governance authority
 
 A Persistence Receipt records declared Producer attribution, independently
 declared Materializer attribution, a materialization target, and exact-byte
-digest evidence. The two attributions remain separate.
+digest evidence. `Producer != Materializer` is semantic role-attribution
+separation, not a permanent actor-string inequality. The same actor may appear
+in both independently represented declared attribution objects.
 
 ```text
 Producer != Materializer
+Dual-role declaration != dual-role authority
 Persistence Receipt != Persistence Grant
 Persistence Receipt != Decision Authority
 Persistence Receipt != Authorization
@@ -114,12 +117,19 @@ Git reference != verified remote durability unless separately verified
 operationally sufficient persistence channel. Optional Git durability fields
 are structural claims with `DECLARED_ONLY` status.
 
+W2 does not verify that an actor named in both attribution objects is actually
+entitled, authenticated, granted, or authorized to hold both roles. Same-actor
+dual attribution does not establish dual-role authentication, execution
+authority, Decision Authority, a Persistence Grant, or any other authority.
+
 ## H. Deterministic Verification Semantics
 
 The verifier returns PASS, DENY, or BLOCKED. Invalid or refuted claims are
 DENY. A fact that cannot be established from supplied bounded inputs is
 BLOCKED. A valid shadow representation or comparison is PASS. Every result
-has `authority_effect` equal to `NONE`.
+has `governance_status` equal to `UNAUTHENTICATED_SHADOW`, all authority,
+identity, execution, and activation effects equal to `NONE`, and
+`eligible_for_execution` equal to `false`.
 
 Expiry evaluation uses only an explicit verifier time. Exact-byte checks use
 only an explicitly supplied repository-local target, reject traversal and
@@ -193,3 +203,6 @@ Operational Entry: LOCKED
 
 Activation remains distinct from Operational Entry. This profile authorizes
 neither and cannot be consumed as authority for either state.
+
+W2 remains SHADOW, NON-PRODUCTION, NON-DEFAULT, NON-CUTOVER, and
+NON-ACTIVATING.

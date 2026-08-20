@@ -70,7 +70,12 @@ class W2ShadowVerifierTests(unittest.TestCase):
     def assert_result(self, data, expected, **kwargs):
         result = gate.evaluate_document(copy.deepcopy(data), **kwargs)
         self.assertEqual(result.result, expected, result.reason)
+        self.assertEqual(result.governance_status, "UNAUTHENTICATED_SHADOW")
         self.assertEqual(result.authority_effect, "NONE")
+        self.assertEqual(result.identity_effect, "NONE")
+        self.assertEqual(result.execution_effect, "NONE")
+        self.assertEqual(result.activation_effect, "NONE")
+        self.assertFalse(result.eligible_for_execution)
         self.assertIn("does not authenticate runtime identity", result.notice)
         self.assertEqual(result.replay_notice, "W2 has no durable replay registry.")
         return result
@@ -186,14 +191,68 @@ class W2ShadowVerifierTests(unittest.TestCase):
             result = self.assert_result(document, gate.PASS)
             self.assertEqual(result.authority_effect, "NONE")
 
-    def test_producer_and_materializer_are_independent(self):
-        producer = self.receipt["producer_attribution"]
-        materializer = self.receipt["materializer_attribution"]
-        self.assertNotEqual(producer["actor"], materializer["actor"])
-
+    def test_w2_dual_role_same_actor_success(self):
         same_actor = copy.deepcopy(self.receipt)
         same_actor["materializer_attribution"]["actor"] = same_actor["producer_attribution"]["actor"]
-        self.assert_result(same_actor, gate.DENY)
+        self.assertEqual(
+            same_actor["producer_attribution"]["actor"],
+            same_actor["materializer_attribution"]["actor"],
+        )
+        self.assertIsNot(
+            same_actor["producer_attribution"],
+            same_actor["materializer_attribution"],
+        )
+        result = self.assert_result(same_actor, gate.PASS)
+        self.assertEqual(result.governance_status, "UNAUTHENTICATED_SHADOW")
+        self.assertEqual(result.authority_effect, "NONE")
+        self.assertEqual(result.identity_effect, "NONE")
+        self.assertEqual(result.execution_effect, "NONE")
+        self.assertEqual(result.activation_effect, "NONE")
+        self.assertFalse(result.eligible_for_execution)
+
+    def test_w2_missing_materializer_attribution_deny(self):
+        candidate = copy.deepcopy(self.receipt)
+        candidate.pop("materializer_attribution")
+        self.assert_result(candidate, gate.DENY)
+
+    def test_w2_missing_producer_attribution_deny(self):
+        candidate = copy.deepcopy(self.receipt)
+        candidate.pop("producer_attribution")
+        self.assert_result(candidate, gate.DENY)
+
+    def test_w2_conflated_single_attribution_deny(self):
+        candidate = copy.deepcopy(self.receipt)
+        attribution = candidate.pop("producer_attribution")
+        candidate.pop("materializer_attribution")
+        candidate["attribution"] = attribution
+        self.assert_result(candidate, gate.DENY)
+
+    def test_all_result_classes_preserve_taint(self):
+        denied = copy.deepcopy(self.registry)
+        denied["profile_version"] = "2.0"
+        blocked = copy.deepcopy(self.registry)
+        blocked["mode"] = "unknown_mode"
+
+        results = [
+            self.assert_result(self.receipt, gate.PASS),
+            self.assert_result(denied, gate.DENY),
+            self.assert_result(blocked, gate.BLOCKED),
+        ]
+        boundary = {
+            (
+                result.governance_status,
+                result.authority_effect,
+                result.identity_effect,
+                result.execution_effect,
+                result.activation_effect,
+                result.eligible_for_execution,
+            )
+            for result in results
+        }
+        self.assertEqual(
+            boundary,
+            {("UNAUTHENTICATED_SHADOW", "NONE", "NONE", "NONE", "NONE", False)},
+        )
 
     def test_digest_match_mismatch_and_malformed(self):
         self.assert_result(self.receipt, gate.PASS)
@@ -294,11 +353,14 @@ class W2ShadowVerifierTests(unittest.TestCase):
             "W2 AUXILIARY SCHEMA FAMILY:\n1.0",
             "Runtime Identity != Provider/Model",
             "Producer != Materializer",
+            "Dual-role declaration != dual-role authority",
+            "same actor may appear",
             "Evidence != Authority",
             "Persistence Receipt != Persistence Grant",
             "PARTIALLY ADDRESSED / NOT RESOLVED",
             "does not create an independently governed native ChatGPT governance persistence channel",
             "DEFER CRYPTO",
+            "NON-ACTIVATING",
         ]
         for item in required:
             with self.subTest(item=item):
