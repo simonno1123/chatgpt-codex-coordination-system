@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:acos:schema:w3:workflow-state-event:1.0",
+  "title": "ACOS W3A Workflow State Event Shadow Schema 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "definitions": {
+    "reference": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/#-]{1,511}$"},
+    "taskState": {
+      "type": "string",
+      "enum": [
+        "DRAFT", "TASK_DEFINED", "TASK_MATERIALIZED", "TASK_READY",
+        "TASK_EXECUTING", "TASK_RESULT", "TASK_REVIEW", "TASK_DECISION", "TASK_CLOSED"
+      ]
+    },
+    "contractBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract_version"],
+      "properties": {"contract_version": {"const": "2.0"}}
+    }
+  },
+  "required": [
+    "profile_version", "contract_binding", "workflow_event_id", "task_id",
+    "observed_from_state", "observed_to_state", "observer_state",
+    "source_reference", "observed_at", "governance_status",
+    "authority_effect", "identity_effect", "execution_effect",
+    "activation_effect", "eligible_for_execution"
+  ],
+  "properties": {
+    "profile_version": {"const": "1.0"},
+    "contract_binding": {"$ref": "#/definitions/contractBinding"},
+    "workflow_event_id": {"$ref": "#/definitions/reference"},
+    "task_id": {"$ref": "#/definitions/reference"},
+    "observed_from_state": {"$ref": "#/definitions/taskState"},
+    "observed_to_state": {"$ref": "#/definitions/taskState"},
+    "observer_state": {"const": "OBSERVED"},
+    "source_reference": {"$ref": "#/definitions/reference"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "governance_status": {"const": "UNAUTHENTICATED_SHADOW"},
+    "authority_effect": {"const": "NONE"},
+    "identity_effect": {"const": "NONE"},
+    "execution_effect": {"const": "NONE"},
+    "activation_effect": {"const": "NONE"},
+    "eligible_for_execution": {"const": false}
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:acos:schema:w3:authorization-state-event:1.0",
+  "title": "ACOS W3A Authorization State Event Shadow Schema 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "definitions": {
+    "reference": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/#-]{1,511}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "contractBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract_version"],
+      "properties": {"contract_version": {"const": "2.0"}}
+    }
+  },
+  "required": [
+    "profile_version", "contract_binding", "event_id", "authorization_id",
+    "operation_id", "nonce", "canonical_request_digest",
+    "claimed_governance_state", "previous_observer_state", "observer_state",
+    "observed_at", "governance_status", "authority_effect", "identity_effect",
+    "execution_effect", "activation_effect", "eligible_for_execution"
+  ],
+  "properties": {
+    "profile_version": {"const": "1.0"},
+    "contract_binding": {"$ref": "#/definitions/contractBinding"},
+    "event_id": {"$ref": "#/definitions/reference"},
+    "authorization_id": {"$ref": "#/definitions/reference"},
+    "operation_id": {"$ref": "#/definitions/reference"},
+    "nonce": {"type": "string", "minLength": 8, "maxLength": 256, "pattern": "^[A-Za-z0-9._:-]+$"},
+    "canonical_request_digest": {"$ref": "#/definitions/digest"},
+    "claimed_governance_state": {
+      "type": "string",
+      "enum": [
+        "DEFINED", "ISSUED", "VALIDATED", "ACTIVE", "CONSUMED",
+        "DENIED", "REVOKED", "EXPIRED", "SUPERSEDED", "FAILED"
+      ]
+    },
+    "previous_observer_state": {
+      "type": "string",
+      "enum": ["OBSERVED", "RESERVED", "CONSUMED", "REVOKED", "EXPIRED", "SUPERSEDED", "CONFLICTED"]
+    },
+    "observer_state": {
+      "type": "string",
+      "enum": ["OBSERVED", "RESERVED", "CONSUMED", "REVOKED", "EXPIRED", "SUPERSEDED", "CONFLICTED"]
+    },
+    "observed_at": {"type": "string", "format": "date-time"},
+    "governance_status": {"const": "UNAUTHENTICATED_SHADOW"},
+    "authority_effect": {"const": "NONE"},
+    "identity_effect": {"const": "NONE"},
+    "execution_effect": {"const": "NONE"},
+    "activation_effect": {"const": "NONE"},
+    "eligible_for_execution": {"const": false}
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "profile_version": "1.0",
+  "contract_binding": {
+    "contract_version": "2.0"
+  },
+  "event_id": "event:acos:w3:authorization-reserved-001",
+  "authorization_id": "authorization-claim:acos:shadow:001",
+  "operation_id": "operation:acos:shadow:reserve-001",
+  "nonce": "nonce-shadow-reserve-001",
+  "canonical_request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "claimed_governance_state": "VALIDATED",
+  "previous_observer_state": "OBSERVED",
+  "observer_state": "RESERVED",
+  "observed_at": "2026-08-20T09:01:00Z",
+  "governance_status": "UNAUTHENTICATED_SHADOW",
+  "authority_effect": "NONE",
+  "identity_effect": "NONE",
+  "execution_effect": "NONE",
+  "activation_effect": "NONE",
+  "eligible_for_execution": false
+}

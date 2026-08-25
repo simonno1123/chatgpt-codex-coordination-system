@@ -1,0 +1,19 @@
+{
+  "profile_version": "1.0",
+  "contract_binding": {
+    "contract_version": "2.0"
+  },
+  "observation_id": "observation:acos:w3:grant-001",
+  "grant_id": "grant-claim:acos:shadow:001",
+  "claimed_governance_state": "ACTIVE",
+  "observer_state": "OBSERVED",
+  "source_reference": "evidence:acos:w2:grant-claim-001",
+  "observed_at": "2026-08-20T09:00:00Z",
+  "claim_status": "DECLARED_ONLY",
+  "governance_status": "UNAUTHENTICATED_SHADOW",
+  "authority_effect": "NONE",
+  "identity_effect": "NONE",
+  "execution_effect": "NONE",
+  "activation_effect": "NONE",
+  "eligible_for_execution": false
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:acos:schema:w3:audit-event:1.0",
+  "title": "ACOS W3A Audit Event Shadow Schema 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "definitions": {
+    "reference": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/#-]{1,511}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "contractBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract_version"],
+      "properties": {"contract_version": {"const": "2.0"}}
+    }
+  },
+  "required": [
+    "profile_version", "contract_binding", "audit_event_id", "sequence",
+    "event_type", "aggregate_type", "aggregate_id", "payload_digest",
+    "previous_hash", "event_hash", "observed_at", "governance_status",
+    "authority_effect", "identity_effect", "execution_effect",
+    "activation_effect", "eligible_for_execution"
+  ],
+  "properties": {
+    "profile_version": {"const": "1.0"},
+    "contract_binding": {"$ref": "#/definitions/contractBinding"},
+    "audit_event_id": {"$ref": "#/definitions/reference"},
+    "sequence": {"type": "integer", "minimum": 1},
+    "event_type": {"$ref": "#/definitions/reference"},
+    "aggregate_type": {
+      "type": "string",
+      "enum": ["GRANT_OBSERVATION", "AUTHORIZATION_OBSERVATION", "WORKFLOW_OBSERVATION", "W2_SHADOW_OBSERVATION"]
+    },
+    "aggregate_id": {"$ref": "#/definitions/reference"},
+    "payload_digest": {"$ref": "#/definitions/digest"},
+    "previous_hash": {"anyOf": [{"const": "GENESIS"}, {"$ref": "#/definitions/digest"}]},
+    "event_hash": {"$ref": "#/definitions/digest"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "governance_status": {"const": "UNAUTHENTICATED_SHADOW"},
+    "authority_effect": {"const": "NONE"},
+    "identity_effect": {"const": "NONE"},
+    "execution_effect": {"const": "NONE"},
+    "activation_effect": {"const": "NONE"},
+    "eligible_for_execution": {"const": false}
+  }
+}
