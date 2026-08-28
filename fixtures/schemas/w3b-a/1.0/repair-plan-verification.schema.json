@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:acos:schema:w3b-a:repair-plan-verification:1.0",
+  "title": "ACOS W3B-A Repair Plan Verification 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "definitions": {
+    "reference": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/#-]{1,511}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  },
+  "required": [
+    "profile_version", "contract_binding", "object_type", "verification_id",
+    "plan_id", "plan_digest", "snapshot_digest", "evidence_set_digest",
+    "verification_state", "verified_at", "checks", "shadow_status",
+    "execution_eligibility", "authority_status", "mutation_status",
+    "governance_status", "authority_effect", "identity_effect",
+    "execution_effect", "activation_effect", "eligible_for_execution",
+    "plan_effect", "mutation_effect"
+  ],
+  "properties": {
+    "profile_version": {"const": "1.0"},
+    "contract_binding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["contract_version"],
+      "properties": {"contract_version": {"const": "2.0"}}
+    },
+    "object_type": {"const": "repair_plan_verification"},
+    "verification_id": {"$ref": "#/definitions/reference"},
+    "plan_id": {"$ref": "#/definitions/reference"},
+    "plan_digest": {"$ref": "#/definitions/digest"},
+    "snapshot_digest": {"$ref": "#/definitions/digest"},
+    "evidence_set_digest": {"$ref": "#/definitions/digest"},
+    "verification_state": {"const": "PLAN_VERIFIED"},
+    "verified_at": {"type": "string", "format": "date-time"},
+    "checks": {
+      "type": "array", "minItems": 8, "maxItems": 16, "uniqueItems": true,
+      "items": {"type": "string", "enum": [
+        "SCHEMA_VALID", "PLAN_DIGEST_MATCH", "SNAPSHOT_BINDING_MATCH",
+        "EVIDENCE_BINDING_MATCH", "VERSION_BINDING_MATCH",
+        "PROPOSED_DIFF_VOCABULARY_VALID", "DESTRUCTIVE_PROPOSAL_ABSENT",
+        "EXPECTED_INVARIANTS_VALID", "NON_AUTHORITY_TAINT_COMPLETE",
+        "TERMINAL_STATE_PRESERVED"
+      ]}
+    },
+    "shadow_status": {"const": "SHADOW_ONLY"},
+    "execution_eligibility": {"const": "EXECUTION_INELIGIBLE"},
+    "authority_status": {"const": "AUTHORITY_NONE"},
+    "mutation_status": {"const": "MUTATION_NONE"},
+    "governance_status": {"const": "UNAUTHENTICATED_SHADOW"},
+    "authority_effect": {"const": "NONE"},
+    "identity_effect": {"const": "NONE"},
+    "execution_effect": {"const": "NONE"},
+    "activation_effect": {"const": "NONE"},
+    "eligible_for_execution": {"const": false},
+    "plan_effect": {"const": "NONE"},
+    "mutation_effect": {"const": "NONE"}
+  }
+}

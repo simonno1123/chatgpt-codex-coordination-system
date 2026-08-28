@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:acos:schema:w3b-a:repair-evidence:1.0",
+  "title": "ACOS W3B-A Repair Evidence 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "definitions": {
+    "reference": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/#-]{1,511}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "classification": {"type": "string", "enum": [
+      "DETERMINISTIC_PLAN_CANDIDATE", "MANUAL_DECISION_REQUIRED",
+      "NON_REPAIRABLE_PRESERVE_AND_BLOCK", "AMBIGUOUS_FAIL_CLOSED"
+    ]}
+  },
+  "required": [
+    "profile_version", "contract_binding", "object_type", "evidence_id",
+    "snapshot_digest", "snapshot_size", "findings", "evidence_set_digest",
+    "created_at", "shadow_status", "execution_eligibility", "authority_status",
+    "mutation_status", "governance_status", "authority_effect", "identity_effect",
+    "execution_effect", "activation_effect", "eligible_for_execution",
+    "plan_effect", "mutation_effect"
+  ],
+  "properties": {
+    "profile_version": {"const": "1.0"},
+    "contract_binding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["contract_version"],
+      "properties": {"contract_version": {"const": "2.0"}}
+    },
+    "object_type": {"const": "repair_evidence"},
+    "evidence_id": {"$ref": "#/definitions/reference"},
+    "snapshot_digest": {"$ref": "#/definitions/digest"},
+    "snapshot_size": {"type": "integer", "minimum": 1, "maximum": 8388608},
+    "findings": {
+      "type": "array", "maxItems": 128,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["code", "classification", "object_kind", "object_reference", "evidence_digest", "summary"],
+        "properties": {
+          "code": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,63}$"},
+          "classification": {"$ref": "#/definitions/classification"},
+          "object_kind": {"type": "string", "enum": ["STORE", "METADATA", "TABLE", "INDEX", "TRIGGER", "AUDIT", "STATE_EVENT", "SCHEMA"]},
+          "object_reference": {"$ref": "#/definitions/reference"},
+          "evidence_digest": {"$ref": "#/definitions/digest"},
+          "summary": {"type": "string", "minLength": 1, "maxLength": 512}
+        }
+      }
+    },
+    "evidence_set_digest": {"$ref": "#/definitions/digest"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "shadow_status": {"const": "SHADOW_ONLY"},
+    "execution_eligibility": {"const": "EXECUTION_INELIGIBLE"},
+    "authority_status": {"const": "AUTHORITY_NONE"},
+    "mutation_status": {"const": "MUTATION_NONE"},
+    "governance_status": {"const": "UNAUTHENTICATED_SHADOW"},
+    "authority_effect": {"const": "NONE"},
+    "identity_effect": {"const": "NONE"},
+    "execution_effect": {"const": "NONE"},
+    "activation_effect": {"const": "NONE"},
+    "eligible_for_execution": {"const": false},
+    "plan_effect": {"const": "NONE"},
+    "mutation_effect": {"const": "NONE"}
+  }
+}

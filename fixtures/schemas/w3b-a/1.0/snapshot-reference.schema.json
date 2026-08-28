@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:acos:schema:w3b-a:snapshot-reference:1.0",
+  "title": "ACOS W3B-A Snapshot Reference 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "definitions": {
+    "reference": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/#-]{1,511}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "contractBinding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["contract_version"],
+      "properties": {"contract_version": {"const": "2.0"}}
+    }
+  },
+  "required": [
+    "profile_version", "contract_binding", "object_type", "snapshot_id",
+    "logical_store_claim", "physical_snapshot_path_observation",
+    "snapshot_digest", "snapshot_size", "observed_store_version",
+    "canonical_w3a_schema_digest", "observed_at", "snapshot_status",
+    "identity_limitations", "shadow_status", "execution_eligibility",
+    "authority_status", "mutation_status", "governance_status",
+    "authority_effect", "identity_effect", "execution_effect",
+    "activation_effect", "eligible_for_execution", "plan_effect",
+    "mutation_effect"
+  ],
+  "properties": {
+    "profile_version": {"const": "1.0"},
+    "contract_binding": {"$ref": "#/definitions/contractBinding"},
+    "object_type": {"const": "snapshot_reference"},
+    "snapshot_id": {"$ref": "#/definitions/reference"},
+    "logical_store_claim": {"$ref": "#/definitions/reference"},
+    "physical_snapshot_path_observation": {"type": "string", "minLength": 1, "maxLength": 4096},
+    "snapshot_digest": {"$ref": "#/definitions/digest"},
+    "snapshot_size": {"type": "integer", "minimum": 1, "maximum": 8388608},
+    "observed_store_version": {"type": "integer", "minimum": 0, "maximum": 2147483647},
+    "canonical_w3a_schema_digest": {"$ref": "#/definitions/digest"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "snapshot_status": {"const": "FROZEN_SUPPLIED"},
+    "identity_limitations": {
+      "type": "array", "minItems": 3, "maxItems": 8, "uniqueItems": true,
+      "items": {"type": "string", "enum": [
+        "FRESHNESS_NOT_ESTABLISHED", "AUTHENTICITY_NOT_ESTABLISHED",
+        "LOGICAL_STORE_IDENTITY_NOT_ESTABLISHED", "GOVERNANCE_AUTHORITY_NONE"
+      ]}
+    },
+    "shadow_status": {"const": "SHADOW_ONLY"},
+    "execution_eligibility": {"const": "EXECUTION_INELIGIBLE"},
+    "authority_status": {"const": "AUTHORITY_NONE"},
+    "mutation_status": {"const": "MUTATION_NONE"},
+    "governance_status": {"const": "UNAUTHENTICATED_SHADOW"},
+    "authority_effect": {"const": "NONE"},
+    "identity_effect": {"const": "NONE"},
+    "execution_effect": {"const": "NONE"},
+    "activation_effect": {"const": "NONE"},
+    "eligible_for_execution": {"const": false},
+    "plan_effect": {"const": "NONE"},
+    "mutation_effect": {"const": "NONE"}
+  }
+}

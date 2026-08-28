@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:acos:schema:w3b-a:repair-plan:1.0",
+  "title": "ACOS W3B-A Declarative Repair Plan 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "definitions": {
+    "reference": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/#-]{1,511}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "classification": {"type": "string", "enum": [
+      "DETERMINISTIC_PLAN_CANDIDATE", "MANUAL_DECISION_REQUIRED",
+      "NON_REPAIRABLE_PRESERVE_AND_BLOCK", "AMBIGUOUS_FAIL_CLOSED"
+    ]}
+  },
+  "required": [
+    "profile_version", "contract_binding", "object_type", "plan_id",
+    "logical_store_claim", "snapshot_digest", "snapshot_size",
+    "observed_store_version", "anomaly_classifications", "evidence_set_digest",
+    "proposed_diff", "expected_invariant_set", "created_at", "plan_digest",
+    "plan_state", "shadow_status", "execution_eligibility", "authority_status",
+    "mutation_status", "governance_status", "authority_effect", "identity_effect",
+    "execution_effect", "activation_effect", "eligible_for_execution",
+    "plan_effect", "mutation_effect"
+  ],
+  "properties": {
+    "profile_version": {"const": "1.0"},
+    "contract_binding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["contract_version"],
+      "properties": {"contract_version": {"const": "2.0"}}
+    },
+    "object_type": {"const": "repair_plan"},
+    "plan_id": {"$ref": "#/definitions/reference"},
+    "logical_store_claim": {"$ref": "#/definitions/reference"},
+    "snapshot_digest": {"$ref": "#/definitions/digest"},
+    "snapshot_size": {"type": "integer", "minimum": 1, "maximum": 8388608},
+    "observed_store_version": {"type": "integer", "minimum": 0, "maximum": 2147483647},
+    "anomaly_classifications": {
+      "type": "array", "maxItems": 4, "uniqueItems": true,
+      "items": {"$ref": "#/definitions/classification"}
+    },
+    "evidence_set_digest": {"$ref": "#/definitions/digest"},
+    "proposed_diff": {
+      "type": "array", "maxItems": 128,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["action", "subject", "effect", "rationale"],
+        "properties": {
+          "action": {"type": "string", "enum": [
+            "DECLARE_CANONICAL_INDEX_GAP", "REQUEST_MANUAL_DECISION",
+            "PRESERVE_AND_BLOCK", "REPORT_AMBIGUITY"
+          ]},
+          "subject": {"$ref": "#/definitions/reference"},
+          "effect": {"const": "NONE"},
+          "rationale": {"type": "string", "minLength": 1, "maxLength": 512}
+        }
+      }
+    },
+    "expected_invariant_set": {
+      "type": "array", "minItems": 1, "maxItems": 32, "uniqueItems": true,
+      "items": {"type": "string", "enum": [
+        "SOURCE_SNAPSHOT_UNCHANGED", "NO_STORE_MUTATION", "NO_AUTHORITY_EFFECT",
+        "NO_EXECUTION_EFFECT", "NO_ACTIVATION_EFFECT", "PLAN_TERMINATES_AT_VERIFICATION"
+      ]}
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "plan_digest": {"$ref": "#/definitions/digest"},
+    "plan_state": {"const": "PLANNED"},
+    "shadow_status": {"const": "SHADOW_ONLY"},
+    "execution_eligibility": {"const": "EXECUTION_INELIGIBLE"},
+    "authority_status": {"const": "AUTHORITY_NONE"},
+    "mutation_status": {"const": "MUTATION_NONE"},
+    "governance_status": {"const": "UNAUTHENTICATED_SHADOW"},
+    "authority_effect": {"const": "NONE"},
+    "identity_effect": {"const": "NONE"},
+    "execution_effect": {"const": "NONE"},
+    "activation_effect": {"const": "NONE"},
+    "eligible_for_execution": {"const": false},
+    "plan_effect": {"const": "NONE"},
+    "mutation_effect": {"const": "NONE"}
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "profile_version": "1.0",
+  "contract_binding": {"contract_version": "2.0"},
+  "object_type": "snapshot_reference",
+  "snapshot_id": "snapshot:w3b-a:fixture:001",
+  "logical_store_claim": "store:shadow:fixture:001",
+  "physical_snapshot_path_observation": "/supplied/frozen/state.snapshot.sqlite",
+  "snapshot_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "snapshot_size": 4096,
+  "observed_store_version": 100,
+  "canonical_w3a_schema_digest": "sha256:a9efb6b932eb2a45e9be2cb89c364ef02c20ac2de96771f38b3aecff4244c60d",
+  "observed_at": "2026-08-25T10:00:00Z",
+  "snapshot_status": "FROZEN_SUPPLIED",
+  "identity_limitations": [
+    "FRESHNESS_NOT_ESTABLISHED",
+    "AUTHENTICITY_NOT_ESTABLISHED",
+    "LOGICAL_STORE_IDENTITY_NOT_ESTABLISHED",
+    "GOVERNANCE_AUTHORITY_NONE"
+  ],
+  "shadow_status": "SHADOW_ONLY",
+  "execution_eligibility": "EXECUTION_INELIGIBLE",
+  "authority_status": "AUTHORITY_NONE",
+  "mutation_status": "MUTATION_NONE",
+  "governance_status": "UNAUTHENTICATED_SHADOW",
+  "authority_effect": "NONE",
+  "identity_effect": "NONE",
+  "execution_effect": "NONE",
+  "activation_effect": "NONE",
+  "eligible_for_execution": false,
+  "plan_effect": "NONE",
+  "mutation_effect": "NONE"
+}
