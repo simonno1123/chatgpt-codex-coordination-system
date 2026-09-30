@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://acos.example/schemas/w3b-b-p1/1.0/disposable-fixture-repair-result.schema.json",
+  "title": "ACOS W3B-B-P1 Disposable Fixture Repair Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile_version", "contract_version", "object_type", "operation",
+    "operation_id", "result", "reason_code", "reason", "state",
+    "fixture_instance_id", "binding_id", "plan_id", "prestate_digest",
+    "poststate_digest", "mutation_attempt_count", "transaction_outcome",
+    "mutation_effect", "poststate_status", "disposal_state", "started_at",
+    "completed_at", "scope", "evidence_class", "governance_status", "effects",
+    "eligible_for_execution", "fixture_mutation_scope", "production_repair_effect",
+    "production_eligibility", "operational_entry_effect"
+  ],
+  "properties": {
+    "profile_version": {"const": "1.0"},
+    "contract_version": {"const": "2.0"},
+    "object_type": {"const": "disposable_fixture_repair_result"},
+    "operation": {"const": "shadow_disposable_index_repair"},
+    "operation_id": {"type": "string", "minLength": 1},
+    "result": {"enum": ["PASS", "DENY", "BLOCKED", "FAILED_MUTATION", "FAILED_POSTSTATE", "FAILED_DISPOSAL"]},
+    "reason_code": {"type": "string", "minLength": 1},
+    "reason": {"type": "string", "minLength": 1},
+    "state": {"enum": ["INITIALIZING", "READY", "MUTATION_TASK_BOUND", "MUTATION_ATTEMPTED", "MUTATION_COMMITTED", "MUTATION_ROLLED_BACK", "MUTATION_OUTCOME_UNKNOWN", "VERIFYING", "DISPOSING", "DISPOSED", "QUARANTINED"]},
+    "fixture_instance_id": {"type": "string", "minLength": 1},
+    "binding_id": {"type": "string", "minLength": 1},
+    "plan_id": {"type": "string", "minLength": 1},
+    "prestate_digest": {"anyOf": [{"$ref": "#/definitions/digest"}, {"type": "null"}]},
+    "poststate_digest": {"anyOf": [{"$ref": "#/definitions/digest"}, {"type": "null"}]},
+    "mutation_attempt_count": {"type": "integer", "minimum": 0, "maximum": 1},
+    "transaction_outcome": {"enum": ["NOT_STARTED", "ROLLED_BACK_PROVEN", "COMMITTED_PROVEN", "UNKNOWN"]},
+    "mutation_effect": {"enum": ["NONE", "ATTEMPTED_AND_ROLLED_BACK", "COMMITTED_TEST_ONLY_DISPOSABLE_FIXTURE", "UNKNOWN_TEST_ONLY_DISPOSABLE_FIXTURE_EFFECT"]},
+    "poststate_status": {"enum": ["NOT_EVALUATED", "EXPECTED", "UNEXPECTED", "INDETERMINATE"]},
+    "disposal_state": {"enum": ["NOT_STARTED", "DISPOSED", "QUARANTINED", "FAILED"]},
+    "started_at": {"type": "string", "format": "date-time"},
+    "completed_at": {"type": "string", "format": "date-time"},
+    "scope": {"const": "DISPOSABLE_FIXTURE_ONLY"},
+    "evidence_class": {"const": "DECLARED_RESULT_EVIDENCE"},
+    "governance_status": {"const": "UNAUTHENTICATED_SHADOW"},
+    "effects": {"const": "NONE"},
+    "eligible_for_execution": {"const": false},
+    "fixture_mutation_scope": {"const": "TEST_ONLY_DISPOSABLE_FIXTURE"},
+    "production_repair_effect": {"const": "NONE"},
+    "production_eligibility": {"const": false},
+    "operational_entry_effect": {"const": "NONE"}
+  },
+  "definitions": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}
