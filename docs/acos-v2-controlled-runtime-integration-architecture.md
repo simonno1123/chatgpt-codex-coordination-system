@@ -284,6 +284,12 @@ environment ID, project binding, credential/key binding, allowed capabilities,
 allowed paths, network policy, issued/expiry times, attestation level, software
 digest, and revocation state.
 
+`allowed capabilities` and `credential/key binding` are identity-associated
+binding/metadata, not operation authority. Identity or credential possession
+does not authorize an operation. Capability authority requires an explicit
+authorization reference, execution identity, CapabilityEnvelope, exact scope,
+baseline, and expiry/consumption constraints under Section 24.
+
 Required identities are:
 
 - ChatGPT Review Runtime
@@ -556,7 +562,14 @@ audit history, or treats evidence as authority.
 Production topology requires separate implementation, security review, and User
 Decision. No provider credential belongs in the repository.
 
-## 20. Architecture Decisions
+## 20. Legacy Architecture Recommendations (Non-Frozen)
+
+LEGACY / NON-FROZEN RECOMMENDATIONS. The historical recommendations below are
+retained as architecture context. A specific recommendation has normative
+force only when expressly incorporated by a frozen decision under Section 24.
+The table does not independently freeze WAL, PostgreSQL migration, Unix
+sockets, mTLS, lease algorithms, polling, container topology, manual approval
+UI, or a specific Git enforcement stack.
 
 | Decision | Recommendation | Alternatives | Rationale / Security Impact | Complexity / Migration |
 | --- | --- | --- | --- | --- |
@@ -614,3 +627,355 @@ This architecture is acceptable when reviewers confirm that:
 TASK_058 does not implement any component described here. It does not connect a
 real agent, repository, instance, Git remote, user identity, advisory provider,
 or audit service. It does not modify TASK_051-057 and does not authorize TASK_059.
+
+## 24. Frozen Runtime Integration Design Baseline
+
+This section materializes User Decision
+`ACOS-V2-RUNTIME-INTEGRATION-DESIGN-BASELINE-01-DECISION-01`. It is a design
+baseline only. It narrows the initial runtime integration path without
+implementing, deploying, activating, or authorizing any component. D-07 is
+bound to User Decision
+`ACOS-V2-RUNTIME-INTEGRATION-DESIGN-D07-STATE-JOURNAL-WRITER-DECISION-01`.
+
+Section 24 Frozen Runtime Integration Design Baseline, together with
+subsequently approved numbered frozen decisions, takes normative precedence
+over Sections 1-23. Sections 1-23 remain background, candidate design,
+recommendation, or historical architecture context unless expressly
+incorporated by a frozen decision. Normative-looking legacy wording does not
+itself create implementation authority, capability authority, transition
+authority, or additional frozen decisions. Choices outside D-01 through D-07
+remain subject to their own later review and authorization.
+
+### 24.1 Objective And Architectural Position
+
+The proposed integration places durable task state and capability checks
+between governance decisions and executor-side effects. The runtime enforces
+already-established authority; it cannot manufacture governance authority from
+an agent message, schema-valid artifact, advisory opinion, or execution result.
+
+### 24.2 Role And Authority Model
+
+| Role | Owns | Does not own |
+| --- | --- | --- |
+| User Decision | Explicit decisions for reserved user gates, including Activation and Operational Entry | Executor identity or automatic task execution |
+| ChatGPT Review | Bounded TASK, REVIEW, and DECISION judgment and handoff within its established scope | Executor-side capability expansion or unapproved external mutation |
+| Codex Executor | Execution of a received, bounded task and RESULT or BLOCKED RESULT production | REVIEW, DECISION, self-acceptance, or state-transition authority |
+| External Advisory Reviewer | Non-binding advisory evaluation returned to ChatGPT Review | Blocking, execution, decision, or transition authority |
+
+Role labels alone prove neither identity nor authority. The runtime must bind
+each actor to an independently established authorization source and the exact
+action being attempted.
+
+### 24.3 Runtime Identity Model
+
+An execution attempt is bound to `project_id`, `stage_id`, `task_id`,
+`authorization_id`, `executor_role`, `execution_attempt_id`,
+`baseline_revision`, and `capability_scope`. The attempt ID identifies one
+materialization attempt, including retries only where explicitly authorized.
+The identity record must be attributable to the actual executor, not merely to
+a declared `PRODUCER` field. Missing or conflicting bindings fail closed.
+
+### 24.4 Durable State Architecture
+
+D-01 freezes an append-only event journal plus a derived current-state
+projection. The journal preserves ordered events and their authority/evidence
+references; the projection is rebuildable and cannot invent authority. D-02
+freezes SQLite with a single logical state writer for the initial durable
+store. This keeps journal append and projection update under one transactional
+ordering boundary. SQLite is an initial storage choice, not a grant to create a
+database in this design-materialization task or to enable multi-writer runtime
+use.
+
+D-07 places State Journal Writer, a narrow authenticated persistence identity,
+inside the governed State Store boundary. It is not an additional top-level
+runtime component. State Journal Writer alone appends accepted authoritative
+transitions and updates the derived projection in the same durable transaction
+under the single-logical-writer rule. Audit Writer remains a separate
+audit/provenance writer.
+
+The only authoritative state-event write path is:
+
+```text
+candidate event
+-> authentication
+-> authority/state/scope/baseline/gate validation
+-> accepted transition record
+-> State Journal Writer
+-> atomic journal append + projection update
+```
+
+Event submission, authority validation, authoritative append, and projection
+derivation are distinct operations and authorities. Generic datastore access
+does not grant access to this authoritative append path.
+
+### 24.5 State Ownership Rules
+
+- Authority is owned by the applicable User Decision or ChatGPT Review
+  decision source, never by an executor receipt or database row alone.
+- Durable state is owned by the governed state store; its journal is evidence
+  of transitions, and its projection is a derived view. State Journal Writer
+  is its only logical authoritative append authority.
+- External systems may be mutated only by an executor holding an exact,
+  unexpired capability for that operation and execution identity.
+- The transition engine may advance task state only on a valid, separately
+  attributable governance event and satisfied gates. Codex Result is evidence
+  to be recorded and reviewed, not state-transition authority.
+
+State Journal Writer has no governance decision authority,
+transition-selection authority, or capability-expansion authority. Codex
+Executor, Runtime Adapter, Orchestrator, Transition Engine, Audit Writer, and
+generic datastore access cannot bypass its accepted-transition write path.
+
+### 24.6 Transition Engine And Orchestrator Boundary
+
+D-03 freezes the orchestrator as an enforcement and routing component only. It
+checks identity, predecessor state, authority reference, scope, and baseline
+before routing. It cannot author REVIEW or DECISION, accept its own result, or
+promote a task after RESULT receipt without the required review/decision event.
+A failed check records a blocked outcome without widening the requested action.
+
+Transition Engine validates candidate transitions, including submitting
+identity, governance authority reference, predecessor state, scope, baseline,
+and required gates. It does not directly persist authoritative state
+transitions. Only the accepted transition record may enter State Journal
+Writer's append path. `Transition Engine != authoritative journal writer`;
+`State Journal Writer != governance decision source`.
+
+### 24.7 CapabilityEnvelope Model
+
+D-04 requires explicit grants per execution identity and default deny. A
+CapabilityEnvelope binds the authorization reference, attempt identity,
+project, stage, task, exact operation, exact target paths/resources, baseline,
+expiry, and consumption conditions. Candidate operation classes are
+`filesystem.read`, `filesystem.write`, `test.execute`, `git.stage`,
+`git.commit`, `git.push`, `sandbox.execute`, `network.read`, and
+`external.write`. Listing a class here grants none of them. Read never implies
+write; test never implies Git; stage, commit, and push require separate exact
+grants. A broader parent path or role name cannot substitute for exact scope.
+
+### 24.8 Materialization Boundary
+
+Materialization requires one authenticated execution identity and an exact
+artifact/action authorization. A physical writer cannot claim another role's
+producer authority through metadata or a TASK. Governance artifacts remain
+governed by their artifact-type authority rules. Repository durability, local
+file presence, and governance persistence are distinct; none alone grants an
+execution capability or resolves the governance-owned writer gap.
+
+### 24.9 Baseline And Drift Gate
+
+Before an effect, compare the bound `baseline_revision` with the current
+repository or target-state revision and verify the exact approved manifest.
+Missing, stale, diverged, or ambiguous baselines fail closed. Drift triggers a
+new review/authorization path; the executor does not self-rebase, reset, or
+silently substitute a newer baseline.
+
+### 24.10 Failure Taxonomy
+
+Distinguish `DENIED` (authority/scope rejection), `BLOCKED` (missing gate or
+unavailable dependency), `FAILED` (known unsuccessful attempt), `STOPPED`
+(terminated current attempt), and `UNKNOWN` (effect or attribution cannot be
+proven). `QUARANTINED` and `PRESERVE_ONLY` constrain evidence handling. None
+of these outcomes may be promoted to success by inference from a partial
+receipt, timeout, or valid schema.
+
+### 24.11 STOP And Retry Semantics
+
+STOP terminates the current execution attempt and consumes no implied next
+step. A retry requires new authority or an explicit retry scope bound to the
+same governed action, baseline, and evidence. Unknown effects are reconciled
+before any retry; the executor cannot use an idempotency label to justify a new
+external mutation.
+
+### 24.12 Evidence Preservation Model
+
+Historical and failed scenes retain their original attribution and lifecycle
+classification. `PRESERVE_ONLY` evidence cannot become disposable by default,
+cleanup convenience, or a later PASS. Corrections append new evidence rather
+than rewriting the old event. A digest or Git commit proves content identity
+or repository presence, not actor authority or governance acceptance.
+
+### 24.13 Git Adapter Design
+
+D-05 ties a GitHub checkpoint to an accepted stage-closure event; there is no
+scheduled automatic push. Stage closure and repository checkpoint are
+separate states. The adapter requires an approved exact-path checkpoint
+manifest and distinct stage, commit, and push capabilities. Push checks the
+expected remote tip and verifies the observed remote ref afterward. It never
+uses force, pull/rebase/reset, or hidden restaging as recovery. `CHECKPOINTED`
+is repository durability, not Activation.
+
+### 24.14 Codex And Agent Integration Model
+
+An Execution Package carries task identity, authority reference, baseline,
+capability scope, inputs, output contract, stop conditions, and next receiver.
+Only an explicitly granted package can start an attempt. A Result Package
+returns actual effects, evidence digests, failures, and `TO` / `NEXT RECEIVER`
+to ChatGPT Review. `RESULT` and `BLOCKED RESULT` do not select the next
+governance state or acquire REVIEW/DECISION authority.
+
+### 24.15 External Advisory Layer
+
+Advisory material is a non-binding input to ChatGPT Review. It may identify
+risks, but External Advisory is not blocking authority, execution authority,
+or decision authority. The transition engine checks any separately required
+review gate; it does not treat the advisor's output itself as a grant.
+
+### 24.16 Rollout Model
+
+D-06 freezes R0 Observer followed by selected R1 Guarded Semi-Automation,
+subject to separate gates. R0 observes and compares without authorizing or
+mutating. R1 may only perform individually approved, bounded actions with
+enforced capabilities and review gates. R2 full enforcement is not an initial
+rollout step and is not authorized by this baseline.
+
+### 24.17 Minimal Runtime Components
+
+The design names six logical responsibilities: Authority Resolver validates
+the referenced decision; State Store owns journal and projection; Transition
+Engine checks allowed state moves; Orchestrator enforces gates and routing;
+Capability Broker binds exact operation grants to attempts; Adapter Layer
+connects agents and external systems without inheriting their authority.
+Naming a component does not authorize its implementation or deployment.
+
+### 24.18 Runtime Invariants
+
+| ID | Frozen invariant |
+| --- | --- |
+| RI-01 | No execution without explicit authority reference. |
+| RI-02 | No authority expansion by executor. |
+| RI-03 | No state transition from execution result alone. |
+| RI-04 | Every materialization has one execution identity. |
+| RI-05 | Baseline mismatch is fail-closed. |
+| RI-06 | STOP terminates the current attempt. |
+| RI-07 | Retry requires new authority or explicit retry scope. |
+| RI-08 | Evidence scene cannot implicitly become disposable. |
+| RI-09 | Advisory artifact has zero transition authority. |
+| RI-10 | Git push requires approved checkpoint manifest. |
+| RI-11 | Stage closure and repository checkpoint are separate. |
+| RI-12 | Activation / Operational Entry require User Decision. |
+
+### 24.19 State Skeleton
+
+The governed path retains the following state skeleton; each arrow requires
+its own authorized transition event, and the two `REVIEW_PENDING` positions
+represent different review gates:
+
+```text
+DRAFT
+-> REVIEW_PENDING
+-> AUTHORIZED
+-> EXECUTING
+-> RESULT_RECORDED
+-> REVIEW_PENDING
+-> ACCEPTED / RETURNED / BLOCKED
+-> STAGE_CLOSED
+-> CHECKPOINT_PENDING
+-> CHECKPOINTED
+```
+
+Independent exceptional states are `STOPPED`, `QUARANTINED`, and
+`PRESERVE_ONLY`. A recorded executor result can supply evidence for review but
+cannot itself authorize the arrow to acceptance or stage closure.
+`STAGE_CLOSED != CHECKPOINTED`.
+`CHECKPOINTED != ACTIVATED`.
+
+Codex RESULT may provide execution evidence or a candidate event;
+`RESULT_RECORDED` does not automatically produce `ACCEPTED`. ChatGPT Review
+and User Decision supply governance decisions according to the applicable
+gate. Where a particular transition issuer is not uniquely determined by the
+frozen rules, the authority condition remains
+`REQUIRES APPLICABLE GOVERNANCE EVENT`.
+
+| Transition | Candidate input / evidence source | Authority condition |
+| --- | --- | --- |
+| DRAFT -> first REVIEW_PENDING | Candidate event | REQUIRES APPLICABLE GOVERNANCE EVENT |
+| REVIEW_PENDING -> AUTHORIZED | ChatGPT Review / User Decision according to the applicable gate | REQUIRES APPLICABLE GOVERNANCE EVENT |
+| AUTHORIZED -> EXECUTING | Codex Executor's bounded execution request | Explicit authority reference and capability; REQUIRES APPLICABLE GOVERNANCE EVENT |
+| EXECUTING -> RESULT_RECORDED | Codex RESULT execution evidence / candidate event | RESULT is not transition authority; REQUIRES APPLICABLE GOVERNANCE EVENT |
+| RESULT_RECORDED -> second REVIEW_PENDING | Recorded execution evidence | REQUIRES APPLICABLE GOVERNANCE EVENT |
+| REVIEW_PENDING -> ACCEPTED | ChatGPT Review / User Decision according to the applicable gate | REQUIRES APPLICABLE GOVERNANCE EVENT |
+| REVIEW_PENDING -> RETURNED | ChatGPT Review / User Decision according to the applicable gate | REQUIRES APPLICABLE GOVERNANCE EVENT |
+| REVIEW_PENDING -> BLOCKED | Candidate gate/decision evidence | REQUIRES APPLICABLE GOVERNANCE EVENT |
+| ACCEPTED -> STAGE_CLOSED | Governance closure evidence | REQUIRES APPLICABLE GOVERNANCE EVENT |
+| STAGE_CLOSED -> CHECKPOINT_PENDING | Stage-closure evidence triggering checkpoint consideration | REQUIRES APPLICABLE GOVERNANCE EVENT |
+| CHECKPOINT_PENDING -> CHECKPOINTED | Git execution and remote verification evidence | Approved checkpoint manifest and separate Git capabilities; REQUIRES APPLICABLE GOVERNANCE EVENT |
+
+Every accepted transition in this skeleton is persisted only through State
+Journal Writer after Transition Engine validation. State Journal Writer
+appends it and updates the derived projection atomically; neither a candidate
+event nor an execution Result can bypass that validation and persistence path.
+
+### 24.20 Frozen Decisions
+
+| ID | Frozen decision |
+| --- | --- |
+| D-01 | Append-only event journal plus derived current-state projection. |
+| D-02 | Initial durable store is SQLite with one logical state writer. |
+| D-03 | Orchestrator enforces only; it has no REVIEW or DECISION authority. |
+| D-04 | Capability is explicitly granted per execution identity; default deny. |
+| D-05 | GitHub checkpoint is triggered by stage closure, not scheduled automatic push. |
+| D-06 | Initial rollout is R0 Observer plus selected R1 Guarded Semi-Automation, not direct R2 full enforcement. |
+| D-07 | State Journal Writer is the only logical authoritative state-journal append authority inside the governed State Store boundary. |
+
+#### D-07: Authoritative State Journal Write Ownership
+
+1. Authoritative workflow/state event journal has exactly one
+   logical append authority: State Journal Writer.
+
+2. State Journal Writer is a narrow authenticated persistence
+   identity inside the governed State Store boundary.
+
+3. State Journal Writer has:
+   - NO governance decision authority;
+   - NO transition-selection authority;
+   - NO capability-expansion authority.
+
+4. Transition Engine validates candidate transitions but does not
+   directly persist authoritative state transitions.
+
+5. A transition may be appended only after validation of:
+   - submitting identity;
+   - governance authority reference;
+   - predecessor state;
+   - scope;
+   - baseline;
+   - required gates.
+
+6. The accepted transition record is the only input that may enter
+   the authoritative state-journal append path.
+
+7. State Journal Writer alone persists that accepted transition and
+   updates the derived projection in the same durable transaction,
+   subject to the single-logical-writer rule.
+
+8. Codex Executor, Runtime Adapter, Orchestrator, Transition Engine,
+   Audit Writer, or generic datastore access cannot bypass this path.
+
+9. Audit Writer remains a separate audit/provenance writer and is
+   not the authoritative workflow/state journal writer.
+
+10. Candidate-event submission, authority validation,
+    authoritative append, and projection derivation are distinct
+    operations and authorities.
+
+No D-08 or later architectural choice is frozen by this materialization.
+
+### 24.21 Explicit Non-Goals
+
+This baseline does not implement a runtime, state store, journal, orchestrator,
+broker, adapter, sandbox, Git automation, or persistence writer. It does not
+create a database, credential, grant, trust anchor, governance root, or
+Constitution. It does not change schema, contract, fixture, source, or tests;
+deploy to a real environment; enable default consumption; or authorize
+Activation or Operational Entry.
+
+### 24.22 Implementation Entry Criteria
+
+Implementation requires a later, separate User Decision and bounded TASK with
+an exact manifest, baseline, role/identity binding, security review, test plan,
+rollback/preservation rules, and operation-specific capabilities. The design
+stage must first receive ChatGPT architecture review and closure, followed by
+a separately approved GitHub checkpoint. Neither this document's existence
+nor a checkpoint satisfies implementation, Activation, or Operational Entry
+authority.
