@@ -21,6 +21,9 @@ import time
 ROOT = Path(__file__).resolve().parent.parent
 SELF = ROOT / "scripts/acos-v2-remote-context-live-launcher.py"
 ADAPTER = ROOT / "scripts/acos-v2-remote-context-live-adapter.py"
+PRODUCER = ROOT / "scripts/acos-v2-production-host-control-producer.py"
+PRODUCER_SHA = "d092f5062dc016b5d47d279727b7258c8799b49c763807b758e7cb3a15578d2b"
+_PRODUCER_MODULE = None
 PYTHON = "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3.13"
 DEPENDENCY_ROOT = "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages"
 DEPENDENCIES = {"httpx": "0.28.1", "httpcore": "1.0.9", "h11": "0.16.0",
@@ -284,11 +287,35 @@ class EstablishedBoundary:
     def source_qualified(self, kind, run):
         return False
 
+def _load_producer():
+    """Fixed reviewed implementation before any external-source establishment."""
+    global _PRODUCER_MODULE
+    try:
+        if PRODUCER.is_symlink() or PRODUCER.resolve() != PRODUCER:
+            _fail("RUNTIME")
+        raw = PRODUCER.read_bytes()
+        if hashlib.sha256(raw).hexdigest() != PRODUCER_SHA:
+            _fail("RUNTIME")
+        if _PRODUCER_MODULE is None:
+            _PRODUCER_MODULE = _load_source("acos_v2_production_host_control_producer",
+                                           PRODUCER, PRODUCER_SHA)
+        if (sys.modules.get("acos_v2_production_host_control_producer") is not _PRODUCER_MODULE
+                or _PRODUCER_MODULE.__file__ != str(PRODUCER)):
+            _fail("RUNTIME")
+        return _PRODUCER_MODULE
+    except Rejected:
+        raise
+    except Exception:
+        _fail("RUNTIME")
+
 def establish_boundaries(packet):
-    # Deliberately no trust from FD numbers, role strings, producer JSON or hashes.
-    # A future independent qualification tranche must establish the producers.
-    # This offline implementation has no production trust architecture provider.
-    _fail("HOST")
+    # Factory inputs do not establish sources. No credentials/third-party
+    # exposure precede this fixed pin and external provenance qualification.
+    producer = _load_producer()
+    try:
+        return producer.establish(packet)
+    except producer.Unavailable:
+        _fail("HOST")
 
 def _credential(a, profile, run, boundary):
     # Called only after every source/runtime/network gate and a qualified producer.
@@ -334,23 +361,31 @@ def run_bound(a, packet, boundary):
         raise
     except Exception:
         _fail("USAGE")
+    producer = _load_producer()
+    if type(boundary) is producer.ObservationBoundary:
+        boundary.bind_canonical(a, runtime)
     if (boundary.source_qualified("HOST", run) is not True
             or boundary.source_qualified("CONTROL", run) is not True):
         _fail("HOST")
-    network.verify(boundary.network, boundary.clock)
-    run.verify(runtime, network, boundary.lifecycle())
-    if _STOP:
-        _fail("LIFETIME")
-    # No FD5 read before producer qualification and runtime/network/lifetime checks.
-    lease = _credential(a, profile, run, boundary)
-    host = a.LiveHostReads(boundary.authority,
-        a._cap.CapabilityValidator(trusted_grant_resolver=boundary.grant,
-            trusted_state_reader=boundary.state, trusted_clock=boundary.clock),
-        boundary.baseline, boundary.target, boundary.revocation, boundary.credential_reference,
-        boundary.caller, boundary.clock, boundary.runtime, boundary.network,
-        boundary.lifecycle, boundary.source_qualified)
+    # Existing store only: opening verifies replay and takes the existing writer
+    # lock but creates/appends/consumes nothing. Close on every failure path.
     store = a.LiveEvidenceStore(handle)
     try:
+        try:
+            producer.credential_free_preflight(a, profile, envelope, runtime,
+                                               network, run, target, store, boundary, packet["operation"])
+        except producer.Unavailable:
+            _fail("HOST")
+        if _STOP:
+            _fail("LIFETIME")
+        # ALL non-secret preflight checks have passed before the first FD5 read.
+        lease = _credential(a, profile, run, boundary)
+        host = a.LiveHostReads(boundary.authority,
+            a._cap.CapabilityValidator(trusted_grant_resolver=boundary.grant,
+                trusted_state_reader=boundary.state, trusted_clock=boundary.clock),
+            boundary.baseline, boundary.target, boundary.revocation, boundary.credential_reference,
+            boundary.caller, boundary.clock, boundary.runtime, boundary.network,
+            boundary.lifecycle, boundary.source_qualified)
         worker = a.LiveWorker(store, host, lease, runtime, network, run)
         worker._validate(profile, envelope, run.phase, target)
         op = packet["operation"]
@@ -397,8 +432,8 @@ def main(argv=None):
         args = parse_cli(sys.argv[1:] if argv is None else argv)
         packet = _strict_json(read_frame(3, MAX_PACKET))
         bootstrap(packet, args)
-        # No producer qualification exists in this offline tranche. Default deny
-        # occurs before third-party loading, FD5 access or any DNS/TCP/TLS.
+        # Producer pin and independently established Host/Control sources precede
+        # third-party loading. Missing production registrations still deny.
         boundary = establish_boundaries(packet)
         a = load_bound_modules(packet)
         code = run_bound(a, packet, boundary)
