@@ -341,28 +341,29 @@ PUSHED
 
 ---
 
-## 当前任务
+## 当前项目状态索引（2026-10-16）
 
-当前无执行中的功能或治理任务。
+本节是已有接受事实的文档索引，不是正式任务状态转换或新的执行许可。下列分类不替代任务状态机；原始接受记录及其证据限制继续适用。
 
-说明：
+| 分类 | 当前记录 |
+|---|---|
+| ACCEPTED / CLOSED | EA 6/6、GD 5/5；EC01—EC08在已采用Option A非生产范围内SATISFIED WITH DOCUMENTED LIMITATIONS；v0.4 R01—R08、当前GR03/GR04工作已接受；B01/B02研究CLOSED/STOPPED |
+| BLOCKED | GR01 NOT SATISFIED，当前规范采用与EC09 BLOCKED；Initial Stage ACTIVE / NOT CLOSED |
+| HISTORICAL / STATUS UNVERIFIED | 原TASK016生命周期陈述保留，不在本轮重新验收；TASK021的旧READY记载不证明本轮执行资格或历史ACCEPTED |
+| CANDIDATE / NOT AUTHORIZED | 旧Shadow路线图和P5规划候选不构成实施许可；B03 NOT AUTHORIZED / NOT STARTED |
+| CURRENTLY AUTHORIZED（本次索引来源时点） | 文档维护准备TASK：ACOS-V2-CURRENT-PROJECT-STATUS-DOCS-MAINTENANCE-PREP-TASK-01；仅限Playground候选准备，实际执行范围及状态以原生TASK和Review为准，不授权修改本仓库 |
 
-- TASK_016 已完成、验收、提交并推送；
-- TASK_021 保持 READY，尚未启动；
-- 当前仅进行任务记录与项目状态对账。
+GR03为SATISFIED WITH DOCUMENTED PROVENANCE LIMITATIONS；GR04仅指当前顾问消费、必要返工和v0.4覆盖CLOSED，GR01发现仍保留。研究或草案验收不能推出规范生效、Stage Closure或生产资格。状态来源见PROJECT_BRIEF.md的当前阶段与证据引用。
 
----
-
-## 后续待办任务
+## 历史待办记录（不自动进入当前执行队列）
 
 ### TASK_021_CORRECT_TEMPLATES_SCOPE_WORDS
 
-状态：READY
+原记录状态：READY。该历史记载保留；本轮未核验到足以裁定其历史执行或ACCEPTED的完整生命周期证据，不追溯改判。
 
-目标：
+原目标：修正任务模板和上下文压缩模板，清理法律/业务特异性词汇。
 
-- 修正 `.codex-coordination/templates/` 下的任务模板和上下文压缩模板；
-- 清理残留的法律/业务特异性词汇，用标准通用协同描述替换。
+当前两个模板已经采用通用协同描述。未发现与原目标相符的必要清理点；通用的Domain-specific边界提醒应保留。此内容观察不证明TASK021实际执行或接受，也不启动模板修改。
 
 ---
 
@@ -372,11 +373,11 @@ PUSHED
 
 ---
 
-## 当前全局风险
+## 当前全局风险（2026-10-16索引）
 
-1. 历史旧文件仍大量处于 untracked 状态，需要继续选择性 add。
-2. TASK_016 生命周期已经完成，但相关状态记录与运行 artifact 仍需完成审查和版本固化。
-3. TASK_021 已 READY，但不得在状态对账完成前提前启动。
+1. 固定基线master@73aa1b0372b45b3ebc2872fce4708b58c5e44b12下有4个历史untracked；保持原状，本索引不授权纳管、删除或Git变更。
+2. EC09实体权限及优先关系仍未建立，Initial Stage未关闭；正式State Journal转换NOT AUTHORIZED / NOT PERFORMED，Live HOLD，Activation/Operational Entry LOCKED。
+3. 旧任务表、当前接受事实、设计候选和实际授权应按来源分辨；本次维护不新增功能/生产许可，也不重开已关闭研究。
 
 ---
 

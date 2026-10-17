@@ -18,19 +18,26 @@
 
 ## 二、当前阶段
 
-当前阶段：ACOS 核心建设完成，进入维护与状态收口阶段。
+当前阶段：ACOS v2 Initial Implementation Stage，ACTIVE / NOT CLOSED（2026-10-16事实索引）。本节不构成新的阶段决定或正式状态转换。
 
 当前状态：
 
 ```text
-Core Governance: COMPLETE
-Artifact Routing: COMPLETE
-Skill Layer: COMPLETE
-Remote Sync: COMPLETE
-Maintenance: ACTIVE
+Scope: adopted v1.0 Option A / nonproduction only
+EC01—EC08: SATISFIED WITH DOCUMENTED LIMITATIONS
+EC09: BLOCKED
+v0.4 / R01—R08: PASS / CLOSED
+GR03: SATISFIED WITH DOCUMENTED PROVENANCE LIMITATIONS
+GR04: current consumption, rework and v0.4 coverage CLOSED; GR01 retained
+B01/B02 research: ACCEPTED / CLOSED / STOPPED
+B03: NOT AUTHORIZED / NOT STARTED
+Live: HOLD
+Activation / Operational Entry: LOCKED
 ```
 
-已完成：
+状态依据为“协作一”已接受Review：EA reply `0afc38c9-1524-4b6d-9017-24e40790ec83`，GD reply `15e27311-f1fe-41d8-b13c-d50b8ce0a3ce`，v0.4 reply `8e3ef49c-6e50-41f1-b99f-912fb3a9c61a`，B01/B02 reply `4a0321b4-cc81-4e36-98ba-e0c740afd45d`。原生全文和来源保全副本目前在仓库外；本索引不替代它们，不宣称Review独立重算了本地证据。10月14日Review中的咨询状态仅代表当时，当前GR03/GR04以上述10月16日限定接受为准；历史UNKNOWN不追溯补写。
+
+以下为早期核心建设完成记录，不代表v2 Initial Stage退出或当前运行权限：
 
 - 主控 agent 并更新其角色定义；
 - 任务书生成、输出审查、BLOCKED 处理、上下文压缩和范围守护（scope_guardian）共 5 个协同 skills；
@@ -207,24 +214,21 @@ ACCEPTED / REWORK / BLOCKED / CANCELLED
 
 ---
 
-## 十、当前风险
+## 十、当前风险与历史待办限定
 
-1. 历史旧文件仍大量处于 untracked 状态，需要继续选择性 add。
-2. 已完成任务的状态记录可能与实际 Git 历史产生漂移，需要通过独立 bookkeeping 任务对账。
-3. TASK_021 已 READY，但不得在 TASK_016 生命周期记录收口前提前启动。
-4. 如后续发现协同文件内容缺口，应通过小范围 REWORK 修正。
+1. 固定基线73aa1b0372b45b3ebc2872fce4708b58c5e44b12下保留4个历史untracked，未授权重新纳管或Git变更。
+2. GR01实体改规权限及规范优先关系仍未证明，GR02 PREPARED / NOT EFFECTIVE，GR05 NOT SATISFIED，GR06 CURRENT MATRIX REVIEWED / FINAL DISPOSITION PENDING；不能据此关闭EC09或Stage。
+3. TASK016的既有完成/接受/提交/推送记载保留，本轮不重新验收其完整生命周期。TASK021旧READY仅为历史待办，当前模板通用化不证明其历史执行或接受。
+4. 实际生产来源、RuntimeBinding、Native Process/Channel、真实可信时钟及生产网络资格未获本次新增确认；正式State Journal转换NOT AUTHORIZED / NOT PERFORMED。
 
 ---
 
-## 十一、后续优先级
+## 十一、后续工作边界与索引
 
-建议后续按以下顺序推进：
-
-1. 完成 TASK_016 状态记录与运行 artifact 的审查、提交和同步；
-2. 启动 `TASK_021_CORRECT_TEMPLATES_SCOPE_WORDS`；
-3. 对 `.codex-coordination/templates/` 做模板层通用化清理；
-4. 根据模板清理结果局部修订使用说明；
-5. 维持 ACOS 与具体项目实例的边界隔离。
+1. 当前续作路由仅签发文档维护准备TASK `ACOS-V2-CURRENT-PROJECT-STATUS-DOCS-MAINTENANCE-PREP-TASK-01`，允许Playground内准备两份文档的候选文本并送Review；本页不授予正式仓库编辑权限。
+2. B01/B02已关闭并停止；没有新的具体有效材料时不重复权限来源研究，也不启动B03。
+3. Shadow路线图、P5整合规划及其他设计候选不是实施队列。后续开发、正式仓库编辑和Git动作分别以实际有界TASK与适用决定为准，不从本索引推导许可。
+4. 保持既有ACOS/业务项目边界。上述为状态导航，不变更范围规则、生命周期、D5、退出条件或权限结构。
 
 任何非协同作业能力仅能在用户另行明确授权后启动。
 
