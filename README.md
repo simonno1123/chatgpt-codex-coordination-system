@@ -373,6 +373,20 @@ inbox -> outbox -> decisions
 
 This workflow is optional. The system can also be used directly in chat.
 
+## 16A. Running Tests
+
+The scripts rely on POSIX primitives (`fcntl`, `os.fchmod`, `O_NOFOLLOW`, symlinks, file modes). Run tests on Linux or macOS; on Windows use WSL. Run them as a non-root user, because root bypasses the permission checks under test.
+
+```text
+python3 -m venv .venv
+.venv/bin/pip install -r requirements-schema-validator.txt -r requirements-acos-v2-remote-context-mutation-pilot.txt pytest
+.venv/bin/python scripts/acos-run-tests.py
+```
+
+`scripts/acos-run-tests.py` runs every test file in its own process. A single `pytest tests` process stops at collection by design, because scripts reject a second canonical module identity in one interpreter.
+
+The live adapter harness pins the python.org macOS Python 3.13 framework. On any other host, `test_acos_v2_remote_context_live_adapter.py` and the three files that load it (production host control producer, Core snapshot host preflight, D04 revocation preflight) are skipped with the reason shown. The pin itself is unchanged.
+
 ## 17. Current Boundary
 
 The current project is limited to the ChatGPT-Codex coordination system.

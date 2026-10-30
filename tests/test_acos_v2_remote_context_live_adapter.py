@@ -32,6 +32,14 @@ from unittest import mock
 ROOT = Path(__file__).resolve().parents[1]
 SELF = Path(__file__).resolve()
 DEPENDENCY_ROOT = "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages"
+PINNED_PYTHON = "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3.13"
+
+# The RuntimeBinding fixture pins the python.org macOS 3.13 framework. Off that
+# host the harness cannot be built, so skip before any guard is installed. This
+# also skips the frozen-harness importers (producer, Core snapshot, D04).
+if not os.path.isfile(PINNED_PYTHON):
+    raise unittest.SkipTest(f"pinned macOS runtime not present: {PINNED_PYTHON}")
+
 VIOLATIONS, PATCHES = [], []
 REAL_NETWORK_ATTEMPTS, REAL_CREDENTIAL_ATTEMPTS = [], []
 SECRET = b"fixture-only-secret"
