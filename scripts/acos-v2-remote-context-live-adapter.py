@@ -47,6 +47,11 @@ SOURCE_PINS = {
     "acos_v2_capability": ("acos-v2-capability.py", "884efc61d934e1c361bb9e7a97b4e8ee7807c3adc64fff6114088ad3f9817d40"),
     "acos_v2_remote_context_mutation_pilot": ("acos-v2-remote-context-mutation-pilot.py", "c0f54646059e85813463dbeb46adc389f1f9e54bdb251f4cfef5516210168829"),
 }
+# Reviewed repository approval of host runtimes; never a caller or packet input.
+HOST_PROFILES = ROOT / "acos-v2-host-runtime-profiles.json"
+HOST_PROFILE_FORMAT = "acos-v2-host-runtime-profiles/1"
+HOST_PROFILE_KEYS = {"interpreter", "process_binary", "runtime_files", "python_version",
+                     "architecture", "dependency_root"}
 def _sha(data):
     return hashlib.sha256(data).hexdigest()
 
@@ -84,6 +89,30 @@ class CommitUnknown(StoreBlocked):
 class FenceDenied(Denied):
     pass
 
+def host_profile(name):
+    """One approved host runtime from the fixed repository file, fail closed."""
+    try:
+        path = Path(HOST_PROFILES)
+        if not path.is_absolute() or path.is_symlink() or path.resolve() != path:
+            raise ValueError
+        document = shared._strict_json(path.read_bytes())
+        if (type(document) is not dict or set(document) != {"format", "profiles"}
+                or document["format"] != HOST_PROFILE_FORMAT or type(document["profiles"]) is not dict
+                or type(name) is not str or not re.fullmatch(r"[A-Za-z0-9_-]{1,128}", name)):
+            raise ValueError
+        value = document["profiles"][name]
+        if type(value) is not dict or set(value) != HOST_PROFILE_KEYS or type(value["runtime_files"]) is not list:
+            raise ValueError
+        paths = (value["interpreter"], value["process_binary"], value["dependency_root"], *value["runtime_files"])
+        if (any(type(p) is not str or not Path(p).is_absolute() for p in paths)
+                or len(set(value["runtime_files"])) != len(value["runtime_files"])
+                or value["process_binary"] not in (value["interpreter"], *value["runtime_files"])
+                or type(value["python_version"]) is not str or type(value["architecture"]) is not str):
+            raise ValueError
+        return value
+    except Exception:
+        raise Denied("HOST_PROFILE") from None
+
 def _modules_intact():
     try:
         return (_module("acos_v2_core_substrate") is _core
@@ -95,6 +124,11 @@ def _modules_intact():
                                             shared._identifier, shared._canonical))
     except Exception:
         return False
+
+# FilePin -> full stat identity at its last successful content hash. Pinned
+# files are re-hashed only when inode, size, mtime or ctime changes; rewriting
+# content updates ctime, so drift still forces a full re-hash.
+_VERIFIED_PINS = {}
 
 @dataclass(frozen=True)
 class FilePin:
@@ -111,8 +145,13 @@ class FilePin:
         s = p.stat()
         if (s.st_dev, s.st_ino, s.st_size) != (self.device, self.inode, self.size):
             raise Denied("FILE_IDENTITY")
+        identity = (s.st_dev, s.st_ino, s.st_size, s.st_mtime_ns, s.st_ctime_ns)
+        if _VERIFIED_PINS.get(self) == identity:
+            return True
+        _VERIFIED_PINS.pop(self, None)
         if _sha(p.read_bytes()) != self.sha256:
             raise Denied("FILE_DIGEST")
+        _VERIFIED_PINS[self] = identity
         return True
 
 @dataclass(frozen=True)
@@ -151,8 +190,9 @@ class RuntimeBinding:
     adapter_pin: FilePin
     requirements_pin: FilePin
     python_pin: FilePin
-    python_app_pin: FilePin
-    framework_pin: FilePin
+    host_profile: str
+    host_profile_pin: FilePin
+    runtime_file_pins: tuple
     python_version: str
     architecture: str
     dependency_location: str
@@ -173,26 +213,31 @@ class RuntimeBinding:
                 or self.flags != ("-I", "-S", "-B") or self.cwd != str(ROOT)
                 or not (sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode)):
             raise Denied("RUNTIME_BINDING")
-        if self.python_pin.path != "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3.13":
+        if (type(self.host_profile_pin) is not FilePin or self.host_profile_pin.path != str(HOST_PROFILES)
+                or type(self.runtime_file_pins) is not tuple):
+            raise Denied("HOST_PROFILE")
+        self.host_profile_pin.verify()
+        profile = host_profile(self.host_profile)
+        if self.python_pin.path != profile["interpreter"]:
             raise Denied("INTERPRETER_PATH")
         if (str(Path(sys.executable).resolve()) != self.python_pin.path
                 or platform.python_version() != self.python_version
-                or platform.machine() != self.architecture):
+                or platform.machine() != self.architecture
+                or (self.python_version, self.architecture) != (profile["python_version"], profile["architecture"])):
             raise Denied("INTERPRETER_IDENTITY")
         expected = {str(ROOT/"scripts"/x[0]): x[1] for x in SOURCE_PINS.values()}
         if {p.path: p.sha256 for p in self.source_pins} != expected:
             raise Denied("SOURCE_SCOPE")
         for pin in (*self.source_pins, self.launcher_pin, self.adapter_pin,
-                    self.requirements_pin, self.python_pin, self.python_app_pin,
-                    self.framework_pin, self.ca_pin):
+                    self.requirements_pin, self.python_pin, *self.runtime_file_pins, self.ca_pin):
             if type(pin) is not FilePin:
                 raise Denied("FILE_PIN")
             pin.verify()
         if (self.adapter_pin.path != str(ROOT/"scripts/acos-v2-remote-context-live-adapter.py")
                 or self.launcher_pin.path != str(ROOT/"scripts/acos-v2-remote-context-live-launcher.py")
                 or self.requirements_pin.path != str(ROOT/"requirements-acos-v2-remote-context-mutation-pilot.txt")
-                or self.python_app_pin.path != "/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python"
-                or self.framework_pin.path != "/Library/Frameworks/Python.framework/Versions/3.13/Python"
+                or [p.path for p in self.runtime_file_pins] != profile["runtime_files"]
+                or self.dependency_location != profile["dependency_root"]
                 or self.ca_pin.path != str(Path(self.dependency_location)/"certifi/cacert.pem")
                 or self.ca_pin.sha256 != "16be3f6feb15408195dcfe3aa1a75ef9db72f646b96ebbefdc68f56255f799f8"
                 or self.requirements_pin.sha256 != "fe11dc0a5dcd7695c49e577e055bac2afa17dfdba79b2b132ded338897fcdb75"):

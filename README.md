@@ -379,13 +379,25 @@ The scripts rely on POSIX primitives (`fcntl`, `os.fchmod`, `O_NOFOLLOW`, symlin
 
 ```text
 python3 -m venv .venv
-.venv/bin/pip install -r requirements-schema-validator.txt -r requirements-acos-v2-remote-context-mutation-pilot.txt pytest
+.venv/bin/pip install -r requirements-schema-validator.txt -r requirements-acos-v2-remote-context-mutation-pilot.txt -r requirements-test.txt
 .venv/bin/python scripts/acos-run-tests.py
 ```
 
-`scripts/acos-run-tests.py` runs every test file in its own process. A single `pytest tests` process stops at collection by design, because scripts reject a second canonical module identity in one interpreter.
+`scripts/acos-run-tests.py` runs every test file in its own process. A single `pytest tests` process stops at collection by design, because scripts reject a second canonical module identity in one interpreter. The four live-runtime harness files (live adapter, production host control producer, Core snapshot host preflight, D04 revocation preflight) run as their own `__main__` under `-I -S -B`, the isolated flags that RuntimeBinding requires.
 
-The live adapter harness pins the python.org macOS Python 3.13 framework. On any other host, `test_acos_v2_remote_context_live_adapter.py` and the three files that load it (production host control producer, Core snapshot host preflight, D04 revocation preflight) are skipped with the reason shown. The pin itself is unchanged.
+These harness tests use real-time channel limits: a 0.2 s frame timeout, a 0.1 s heartbeat gap and a 0.8 s lifecycle lease. On slow or heavily loaded hardware they can fail closed with `FRAME_TIMEOUT` or `CONTROL_LEASE`; that is the protocol refusing stale evidence, not a logic failure.
+
+## 16B. Host Runtime Profiles
+
+The live adapter, launcher and production host control producer are not tied to an operating system. They accept only an interpreter approved in `acos-v2-host-runtime-profiles.json`. Each profile pins the interpreter path, the OS-reported process binary, any extra runtime files (for example a macOS framework library), the Python version, the CPU architecture and the dependency directory. RuntimeBinding still hashes and identity-checks every pinned file.
+
+The repository ships the original macOS python.org 3.13 arm64 profile. To approve another host, print a candidate on that host, review it, and add it in a reviewed commit:
+
+```text
+.venv/bin/python -I -S -B scripts/acos-host-runtime-profile.py <profile_name>
+```
+
+The candidate is a proposal only; nothing becomes eligible until the entry is in the repository file. Tests on an unapproved host use a synthetic profile in a temporary file, which never qualifies a live runtime.
 
 ## 17. Current Boundary
 

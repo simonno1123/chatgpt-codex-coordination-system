@@ -1,0 +1,16 @@
+{
+  "format": "acos-v2-host-runtime-profiles/1",
+  "profiles": {
+    "macos_pythonorg_3_13_arm64": {
+      "interpreter": "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3.13",
+      "process_binary": "/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python",
+      "runtime_files": [
+        "/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python",
+        "/Library/Frameworks/Python.framework/Versions/3.13/Python"
+      ],
+      "python_version": "3.13.12",
+      "architecture": "arm64",
+      "dependency_root": "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages"
+    }
+  }
+}

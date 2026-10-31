@@ -21,8 +21,11 @@ import time
 
 ROOT = Path(__file__).resolve().parents[1]
 SELF = ROOT / "scripts/acos-v2-production-host-control-producer.py"
-PYTHON = "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3.13"
-PYTHON_APP = "/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python"
+# Reviewed repository approval of host runtimes; never a caller or packet input.
+HOST_PROFILES = ROOT / "acos-v2-host-runtime-profiles.json"
+HOST_PROFILE_FORMAT = "acos-v2-host-runtime-profiles/1"
+HOST_PROFILE_KEYS = {"interpreter", "process_binary", "runtime_files", "python_version",
+                     "architecture", "dependency_root"}
 HOST_SCHEMA = "acos-v2-production-host-observation/1"
 CONTROL_SCHEMA = "acos-v2-production-control-observation/1"
 QUERY_SCHEMA = "acos-v2-production-host-query/1"
@@ -247,6 +250,48 @@ def validate_query(query):
     _tree(query)
 
 
+def host_profile_for(interpreter):
+    """The one approved host runtime whose interpreter is this exact path."""
+    def pairs(items):
+        result = {}
+        for k, v in items:
+            if k in result:
+                raise ValueError
+            result[k] = v
+        return result
+    try:
+        path = Path(HOST_PROFILES)
+        if not path.is_absolute() or path.is_symlink() or path.resolve() != path:
+            raise ValueError
+        document = json.loads(path.read_bytes(), object_pairs_hook=pairs,
+                              parse_constant=lambda _: (_ for _ in ()).throw(ValueError()))
+        if (type(document) is not dict or set(document) != {"format", "profiles"}
+                or document["format"] != HOST_PROFILE_FORMAT or type(document["profiles"]) is not dict):
+            raise ValueError
+        matches = []
+        for name, value in document["profiles"].items():
+            if (not re.fullmatch(r"[A-Za-z0-9_-]{1,128}", name) or type(value) is not dict
+                    or set(value) != HOST_PROFILE_KEYS or type(value["runtime_files"]) is not list):
+                raise ValueError
+            paths = (value["interpreter"], value["process_binary"], value["dependency_root"], *value["runtime_files"])
+            if (any(type(p) is not str or not Path(p).is_absolute() for p in paths)
+                    or value["process_binary"] not in (value["interpreter"], *value["runtime_files"])):
+                raise ValueError
+            if value["interpreter"] == interpreter:
+                matches.append(value)
+        if len(matches) != 1:
+            raise ValueError
+        return matches[0]
+    except Exception:
+        fail("HOST_PROFILE")
+
+
+# Pin -> full stat identity at its last successful content hash. A large host
+# interpreter is re-hashed only when its inode, size, mtime or ctime changes;
+# rewriting content updates ctime, so drift still forces a full re-hash.
+_VERIFIED_PINS = {}
+
+
 @dataclass(frozen=True)
 class Pin:
     path: str
@@ -264,8 +309,13 @@ class Pin:
             stat = path.stat()
             if (stat.st_size, stat.st_dev, stat.st_ino) != (self.size, self.device, self.inode):
                 fail("IMPLEMENTATION_IDENTITY")
+            identity = (stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns)
+            if _VERIFIED_PINS.get(self) == identity:
+                return
+            _VERIFIED_PINS.pop(self, None)
             if hashlib.sha256(path.read_bytes()).hexdigest() != self.sha256:
                 fail("IMPLEMENTATION_DRIFT")
+            _VERIFIED_PINS[self] = identity
         except Unavailable:
             raise
         except Exception:
@@ -328,7 +378,8 @@ class Registration:
             _hash(getattr(self, field))
         _integer(self.sleep_wake_generation, 1)
         self.implementation.verify(SELF)
-        self.interpreter.verify(PYTHON)
+        profile = host_profile_for(self.interpreter.path)
+        self.interpreter.verify(profile["interpreter"])
         if (self.run_id, self.process_incarnation, self.runtime_digest, self.baseline, self.phase) != (
                 context["run_id"], context["process_incarnation"], context["runtime_binding_digest"],
                 context["baseline"], context["phase"]):
@@ -340,7 +391,7 @@ class Registration:
         _identifier(self.identity["boot_identity"])
         _hash(self.identity["parent_chain_digest"])
         _hash(self.identity["binary_digest"])
-        if self.identity["binary_path"] != PYTHON_APP:
+        if self.identity["binary_path"] != profile["process_binary"]:
             fail("PRODUCER_BINARY")
         # Worker/launcher cannot attest itself as its own control producer.
         if self.identity["process_id"] == os.getpid():

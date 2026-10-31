@@ -19,6 +19,7 @@ import os
 import socket
 import sqlite3
 import sys
+import tempfile
 import threading
 import time
 import unittest
@@ -33,6 +34,7 @@ exec(compile(Path(_spec.origin).read_bytes(), _spec.origin, "exec"), h.__dict__)
 # The guard installation above happened BEFORE these modules are accessible.
 a, cap, core, launcher = h.a, h.cap, h.core, h.launcher
 p = launcher._load_producer()
+p.HOST_PROFILES = h.HOST_PROFILES
 
 
 def pin(path):
@@ -56,15 +58,15 @@ class Fixture:
             "runtime_binding_digest": scenario.runtime.digest,
             "baseline": scenario.runtime.implementation_commit,
             "phase": scenario.run.phase, "profile_digest": p.digest(self.packet["profile"])}
-        app = h.file_pin(p.PYTHON_APP)
+        app = h.file_pin(h.PROFILE["process_binary"])
         self.identity = {"process_id": os.getppid(), "uid": os.getuid(),
             "process_incarnation": "parent_fixture_incarnation", "boot_identity": "boot_fixture",
             "parent_id": 1, "parent_chain_digest": "sha256:" + "a"*64,
-            "binary_path": p.PYTHON_APP, "binary_digest": "sha256:" + app.sha256}
+            "binary_path": h.PROFILE["process_binary"], "binary_digest": "sha256:" + app.sha256}
         self.host = p.Registration("HOST", "host_fixture", "host_qualification_fixture", "host_epoch",
             scenario.runtime.digest, scenario.runtime.implementation_commit,
             scenario.run.run_id, scenario.run.process_incarnation, scenario.run.phase,
-            pin(p.SELF), pin(p.PYTHON), "sha256:" + "b"*64, dict(self.identity),
+            pin(p.SELF), pin(h.PROFILE["interpreter"]), "sha256:" + "b"*64, dict(self.identity),
             "FD4_HOST_OBSERVATION", "host_custody_fixture", "continuous_fixture", 1)
         self.control = replace(self.host, role="CONTROL", reference="control_fixture",
             qualification_reference="control_qualification_fixture", epoch="control_epoch",
@@ -238,7 +240,7 @@ class ProducerTests(unittest.TestCase):
         f.sources = f.make_sources()
         with self.assertRaises(p.Unavailable):
             f.sources.qualify("HOST", f.context, 4)
-        f.host = replace(f.host, interpreter=pin(p.PYTHON), identity={**f.identity, "binary_path": "/tmp/wrapper"})
+        f.host = replace(f.host, interpreter=pin(h.PROFILE["interpreter"]), identity={**f.identity, "binary_path": "/tmp/wrapper"})
         f.sources = f.make_sources()
         with self.assertRaises(p.Unavailable):
             f.sources.qualify("HOST", f.context, 4)
@@ -913,6 +915,31 @@ class ProducerTests(unittest.TestCase):
         f.sources._provenance = host_proof_for_control
         with self.assertRaises(p.Unavailable):
             f.control_client().accept(f.control_package())
+
+    def test_HP_R14_cached_pin_rehashes_after_rewrite(self):
+        with tempfile.TemporaryDirectory(dir=str(Path(tempfile.gettempdir()).resolve())) as directory:
+            target = Path(directory) / "implementation.bin"
+            target.write_bytes(b"a" * 64)
+            fixed = pin(target)
+            fixed.verify(target)
+            fixed.verify(target)
+            target.write_bytes(b"b" * 64)  # same inode and size; content and ctime change
+            with self.assertRaises(p.Unavailable) as caught:
+                fixed.verify(target)
+            self.assertEqual(caught.exception.reason, "IMPLEMENTATION_DRIFT")
+
+    def test_HP_R15_registration_requires_approved_host_profile(self):
+        f = self.fixture()
+        self.assertTrue(f.sources.qualify("HOST", f.context, 4))
+        with tempfile.TemporaryDirectory(dir=str(Path(tempfile.gettempdir()).resolve())) as directory:
+            empty = Path(directory) / "profiles.json"
+            empty.write_text(json.dumps({"format": p.HOST_PROFILE_FORMAT, "profiles": {}}))
+            with mock.patch.object(p, "HOST_PROFILES", empty), self.assertRaises(p.Unavailable):
+                f.sources.qualify("HOST", f.context, 4)
+        f.host = replace(f.host, identity={**f.identity, "binary_path": "/tmp/other"})
+        f.sources = f.make_sources()
+        with self.assertRaises(p.Unavailable):
+            f.sources.qualify("HOST", f.context, 4)
 
 if __name__ == "__main__":
     suite = unittest.defaultTestLoader.loadTestsFromTestCase(ProducerTests)

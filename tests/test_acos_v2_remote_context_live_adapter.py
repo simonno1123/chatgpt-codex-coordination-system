@@ -9,6 +9,7 @@ from dataclasses import replace, asdict
 from datetime import datetime, timezone
 from contextlib import contextmanager
 import asyncio
+import atexit
 import hashlib
 import importlib.util
 import io
@@ -16,12 +17,15 @@ import json
 import logging
 import os
 import pickle
+import platform
 import select
+import shutil
 import socket
 import sqlite3
 import ssl
 import subprocess
 import sys
+import sysconfig
 import tempfile
 import threading
 import time
@@ -31,15 +35,46 @@ from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 SELF = Path(__file__).resolve()
-DEPENDENCY_ROOT = "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages"
-PINNED_PYTHON = "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3.13"
+INTERPRETER = str(Path(sys.executable).resolve())
+REPOSITORY_PROFILES = ROOT / "acos-v2-host-runtime-profiles.json"
 
-# The RuntimeBinding fixture pins the python.org macOS 3.13 framework. Off that
-# host the harness cannot be built, so skip before any guard is installed. This
-# also skips the frozen-harness importers (producer, Core snapshot, D04).
-if not os.path.isfile(PINNED_PYTHON):
-    raise unittest.SkipTest(f"pinned macOS runtime not present: {PINNED_PYTHON}")
+def dependency_root_fixture():
+    # -I ignores pyvenv.cfg, so locate a virtual environment's site-packages directly.
+    venv = Path(sys.executable).parent.parent
+    if (venv / "pyvenv.cfg").is_file():
+        version = "python%d.%d" % sys.version_info[:2]
+        return str((venv / "lib" / version / "site-packages").resolve())
+    return str(Path(sysconfig.get_path("purelib")).resolve())
 
+def host_profile_fixture():
+    """The repository profile approving this interpreter, else a synthetic one.
+
+    A synthetic profile is test-only instrumentation in a temporary file; it is
+    never written to the repository and never qualifies a live runtime.
+    """
+    profiles = json.loads(REPOSITORY_PROFILES.read_bytes())["profiles"]
+    for name, value in profiles.items():
+        if value["interpreter"] == INTERPRETER:
+            return REPOSITORY_PROFILES, name, value
+    inherited = os.environ.get("ACOS_TEST_HOST_PROFILES")
+    if inherited:
+        # Isolated children reuse the parent's file so its pinned identity holds.
+        path = Path(inherited)
+        name, value = next(iter(json.loads(path.read_bytes())["profiles"].items()))
+        return path, name, value
+    value = {"interpreter": INTERPRETER, "process_binary": INTERPRETER, "runtime_files": [],
+             "python_version": platform.python_version(), "architecture": platform.machine(),
+             "dependency_root": dependency_root_fixture()}
+    directory = tempfile.mkdtemp(prefix="acos-host-profile-", dir=str(Path(tempfile.gettempdir()).resolve()))
+    atexit.register(shutil.rmtree, directory, True)
+    path = Path(directory) / "acos-v2-host-runtime-profiles.json"
+    path.write_bytes(json.dumps({"format": "acos-v2-host-runtime-profiles/1",
+                                 "profiles": {"synthetic_test_host": value}}).encode("utf-8"))
+    os.environ["ACOS_TEST_HOST_PROFILES"] = str(path)
+    return path, "synthetic_test_host", value
+
+HOST_PROFILES, PROFILE_NAME, PROFILE = host_profile_fixture()
+DEPENDENCY_ROOT = PROFILE["dependency_root"]
 VIOLATIONS, PATCHES = [], []
 REAL_NETWORK_ATTEMPTS, REAL_CREDENTIAL_ATTEMPTS = [], []
 SECRET = b"fixture-only-secret"
@@ -102,6 +137,7 @@ if len(sys.argv) > 1 and sys.argv[1] == "--guarded-launcher-child":
     read_fd, result_fd = int(sys.argv[2]), int(sys.argv[3])
     os.dup2(read_fd, 3); os.dup2(result_fd, 7)
     launcher = load_module("launcher_child", ROOT/"scripts/acos-v2-remote-context-live-launcher.py")
+    launcher.HOST_PROFILES = HOST_PROFILES
     cli = sys.argv[4:]
     if cli[:1] == ["--signal-wait"]:
         cli = cli[1:]
@@ -123,6 +159,7 @@ cap = load_module("acos_v2_capability", ROOT/"scripts/acos-v2-capability.py")
 shared = load_module("acos_v2_remote_context_mutation_pilot", ROOT/"scripts/acos-v2-remote-context-mutation-pilot.py")
 a = load_module("acos_v2_remote_context_live_adapter", ROOT/"scripts/acos-v2-remote-context-live-adapter.py")
 launcher = load_module("acos_v2_remote_context_live_launcher", ROOT/"scripts/acos-v2-remote-context-live-launcher.py")
+a.HOST_PROFILES = launcher.HOST_PROFILES = HOST_PROFILES
 
 def file_pin(path):
     p = Path(path).resolve()
@@ -144,10 +181,9 @@ def runtime_fixture():
             file_pin(ROOT/"scripts/acos-v2-remote-context-live-launcher.py"),
             file_pin(ROOT/"scripts/acos-v2-remote-context-live-adapter.py"),
             file_pin(ROOT/"requirements-acos-v2-remote-context-mutation-pilot.txt"),
-            file_pin("/Library/Frameworks/Python.framework/Versions/3.13/bin/python3.13"),
-            file_pin("/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python"),
-            file_pin("/Library/Frameworks/Python.framework/Versions/3.13/Python"),
-            "3.13.12", "arm64", DEPENDENCY_ROOT, tuple(deps),
+            file_pin(PROFILE["interpreter"]), PROFILE_NAME, file_pin(HOST_PROFILES),
+            tuple(file_pin(f) for f in PROFILE["runtime_files"]),
+            PROFILE["python_version"], PROFILE["architecture"], DEPENDENCY_ROOT, tuple(deps),
             file_pin(Path(DEPENDENCY_ROOT)/"certifi/cacert.pem"), "sha256:" + "3"*64)
     return _RUNTIME
 
@@ -749,9 +785,11 @@ class LiveAdapterTests(unittest.TestCase):
                 if fault == "missing":
                     p.unlink()
                 elif fault == "replaced":
-                    raw = p.read_bytes()
-                    p.unlink()
-                    p.write_bytes(raw)
+                    # Create the copy while the original exists: some filesystems
+                    # (ext4) reuse a freed inode number for an unlink+create.
+                    replacement = p.with_name(p.name + ".replacement")
+                    replacement.write_bytes(p.read_bytes())
+                    os.replace(replacement, p)
                 else:
                     with sqlite3.connect(p) as c:
                         if fault == "projection":
@@ -1134,13 +1172,39 @@ class LiveAdapterTests(unittest.TestCase):
         self.assertEqual(s.peer.headers, 0)
         self.assertEqual(s.store.verify()["counts"]["MUTATION"], 1)
 
+    def test_R19_host_profile_is_repository_approval(self):
+        r = runtime_fixture()
+        self.assertTrue(r.verify())
+        for case, changed in enumerate((replace(r, host_profile="unapproved_host"),
+                replace(r, host_profile_pin=replace(r.host_profile_pin, sha256="0"*64)),
+                replace(r, host_profile_pin=replace(r.host_profile_pin, path="/tmp/profiles.json")),
+                replace(r, runtime_file_pins=r.runtime_file_pins + (r.adapter_pin,)),
+                replace(r, dependency_location="/tmp/unapproved"))):
+            with self.subTest(case=case), self.assertRaises(a.Denied):
+                changed.verify()
+        with tempfile.TemporaryDirectory(dir=str(Path(tempfile.gettempdir()).resolve())) as directory:
+            # A cached pin is re-hashed once content changes in place.
+            target = Path(directory) / "pinned.bin"
+            target.write_bytes(b"a" * 64)
+            fixed = file_pin(target)
+            self.assertTrue(fixed.verify() and fixed.verify())
+            target.write_bytes(b"b" * 64)
+            with self.assertRaises(a.Denied):
+                fixed.verify()
+            forged = Path(directory) / "profiles.json"
+            for document in ({"format": "acos-v2-host-runtime-profiles/2", "profiles": {}},
+                             {"format": "acos-v2-host-runtime-profiles/1",
+                              "profiles": {PROFILE_NAME: {**PROFILE, "process_binary": "/tmp/other"}}}):
+                forged.write_text(json.dumps(document))
+                with mock.patch.object(a, "HOST_PROFILES", forged), self.assertRaises(a.Denied):
+                    a.host_profile(PROFILE_NAME)
+
 def isolated_child(mode, packet, cli=(), signal_number=None):
     """Only the fixed test script/interpreter; no shell/arbitrary command."""
     reader, writer = os.pipe()
     result_reader, result_writer = os.pipe()
     raw = a._canonical(packet)
-    args = ["/Library/Frameworks/Python.framework/Versions/3.13/bin/python3.13",
-            "-I", "-S", "-B", str(SELF), mode, str(reader), str(result_writer), *cli]
+    args = [sys.executable, "-I", "-S", "-B", str(SELF), mode, str(reader), str(result_writer), *cli]
     process = _ORIGINAL_POPEN(args, cwd=ROOT, pass_fds=(reader, result_writer),
                               stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     os.close(reader); os.close(result_writer)

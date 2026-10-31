@@ -341,6 +341,84 @@ PUSHED
 
 ---
 
+### ACOS_TEST_PORTABILITY_TASK_01
+
+范围分类：TEST
+
+状态：ACCEPTED
+
+结果：
+
+- 用户于 2026-10-30 在对话中授权并审查通过；
+- 固定 macOS 运行时缺失时，live adapter 测试模块在安装 guards 前整体 skip，三个 frozen harness 引用文件随之 skip；`scripts/` 中的 RuntimeBinding 固定未改动；
+- 新增 `scripts/acos-run-tests.py`，逐文件独立进程运行测试；
+- README 新增 16A. Running Tests；
+- Linux（WSL Ubuntu 24.04）下 25/25 测试文件通过；固定 macOS 主机未实测；
+- 通过 commit `2d97dc0` 固化，并已 push 到 `origin/master`。
+
+生命周期状态：
+
+```text
+COMPLETED
+ACCEPTED
+COMMITTED
+PUSHED
+```
+
+相关记录：
+
+- `.codex-coordination/outbox/ACOS_TEST_PORTABILITY_TASK_01_RESULT.md`
+
+说明：
+
+- 本记录不改变 EC09、GR01、Initial Stage 或 Live/Activation 状态。
+
+---
+
+### ACOS_TEST_PORTABILITY_TASK_02
+
+范围分类：MAINTENANCE
+
+状态：ACCEPTED
+
+结果：
+
+- 新增 `requirements-test.txt`，固定 pytest 9.2.0 及其直接依赖；
+- README 16A 与 `scripts/acos-run-tests.py` 改为引用该文件；
+- 在本文件登记 ACOS_TEST_PORTABILITY_TASK_01；
+- 用户于 2026-10-30 审查通过，与 ACOS_HOST_RUNTIME_PROFILE_TASK_01 同一 commit 固化。
+
+相关记录：
+
+- `.codex-coordination/outbox/ACOS_TEST_PORTABILITY_TASK_02_RESULT.md`
+
+---
+
+### ACOS_HOST_RUNTIME_PROFILE_TASK_01
+
+范围分类：MAINTENANCE
+
+状态：ACCEPTED
+
+结果：
+
+- 依据用户 2026-10-30 确立的原则（本系统不限于任何操作系统），以仓库内经审核的 `acos-v2-host-runtime-profiles.json` 取代 live adapter、launcher、producer 中写死的 macOS 运行时；仓库仅含原 macOS 配置；
+- RuntimeBinding 以 `host_profile`、`host_profile_pin`、`runtime_file_pins` 取代 `python_app_pin`、`framework_pin`；launcher `PRODUCER_SHA` 同步更新；
+- FilePin / Pin 增加以完整 stat 身份为键的哈希缓存（用户审查接受）；
+- 新增 `scripts/acos-host-runtime-profile.py`（仅输出候选配置）；
+- 4 个 live-runtime harness 测试在 Linux 上以 `-I -S -B` 运行并通过；在低功耗主机上存在实时时限导致的偶发 `FRAME_TIMEOUT` / `CONTROL_LEASE`；macOS 主机未实测；
+- 用户于 2026-10-30 审查通过，与 ACOS_TEST_PORTABILITY_TASK_02 同一 commit 固化。
+
+相关记录：
+
+- `.codex-coordination/outbox/ACOS_HOST_RUNTIME_PROFILE_TASK_01_RESULT.md`
+
+说明：
+
+- 本记录不建立生产来源，不改变 EC09、GR01、Initial Stage 或 Live/Activation 状态；新增主机须另以审核提交加入配置文件。
+
+---
+
 ## 当前项目状态索引（2026-10-16）
 
 本节是已有接受事实的文档索引，不是正式任务状态转换或新的执行许可。下列分类不替代任务状态机；原始接受记录及其证据限制继续适用。

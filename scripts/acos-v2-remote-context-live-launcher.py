@@ -22,10 +22,13 @@ ROOT = Path(__file__).resolve().parent.parent
 SELF = ROOT / "scripts/acos-v2-remote-context-live-launcher.py"
 ADAPTER = ROOT / "scripts/acos-v2-remote-context-live-adapter.py"
 PRODUCER = ROOT / "scripts/acos-v2-production-host-control-producer.py"
-PRODUCER_SHA = "d092f5062dc016b5d47d279727b7258c8799b49c763807b758e7cb3a15578d2b"
+PRODUCER_SHA = "6e0d045c3a49879848d65fa6ce85e642c00af3c306a2f3ce5b3e4a42cc2c1741"
 _PRODUCER_MODULE = None
-PYTHON = "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3.13"
-DEPENDENCY_ROOT = "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages"
+# Reviewed repository approval of host runtimes; never a caller or packet input.
+HOST_PROFILES = ROOT / "acos-v2-host-runtime-profiles.json"
+HOST_PROFILE_FORMAT = "acos-v2-host-runtime-profiles/1"
+HOST_PROFILE_KEYS = {"interpreter", "process_binary", "runtime_files", "python_version",
+                     "architecture", "dependency_root"}
 DEPENDENCIES = {"httpx": "0.28.1", "httpcore": "1.0.9", "h11": "0.16.0",
                 "anyio": "4.13.0", "sniffio": "1.3.1", "certifi": "2026.4.22",
                 "idna": "3.13", "typing_extensions": "4.15.0"}
@@ -104,6 +107,39 @@ def _file_pin(pin, exact=None):
     except Exception:
         _fail("RUNTIME")
 
+def _host_profile(name):
+    """One approved host runtime from the fixed repository file, fail closed."""
+    def pairs(items):
+        result = {}
+        for k, v in items:
+            if k in result:
+                raise ValueError
+            result[k] = v
+        return result
+    try:
+        path = Path(HOST_PROFILES)
+        if not path.is_absolute() or path.is_symlink() or path.resolve() != path:
+            raise ValueError
+        document = json.loads(path.read_bytes(), object_pairs_hook=pairs,
+                              parse_constant=lambda _: (_ for _ in ()).throw(ValueError()))
+        import re
+        if (type(document) is not dict or set(document) != {"format", "profiles"}
+                or document["format"] != HOST_PROFILE_FORMAT or type(document["profiles"]) is not dict
+                or type(name) is not str or not re.fullmatch(r"[A-Za-z0-9_-]{1,128}", name)):
+            raise ValueError
+        value = document["profiles"][name]
+        if type(value) is not dict or set(value) != HOST_PROFILE_KEYS or type(value["runtime_files"]) is not list:
+            raise ValueError
+        paths = (value["interpreter"], value["process_binary"], value["dependency_root"], *value["runtime_files"])
+        if (any(type(p) is not str or not Path(p).is_absolute() for p in paths)
+                or len(set(value["runtime_files"])) != len(value["runtime_files"])
+                or value["process_binary"] not in (value["interpreter"], *value["runtime_files"])
+                or type(value["python_version"]) is not str or type(value["architecture"]) is not str):
+            raise ValueError
+        return value
+    except Exception:
+        _fail("RUNTIME")
+
 def read_frame(fd, maximum, timeout=1.0):
     """Bounded inherited-channel read, never a path/socket discovery operation."""
     try:
@@ -157,20 +193,27 @@ def bootstrap(packet, args):
     runtime = packet["runtime"]
     if type(runtime) is not dict or _digest(runtime) != args["--binding-digest"]:
         _fail("RUNTIME")
-    if (str(Path(sys.executable).resolve()) != PYTHON or not sys.flags.isolated
+    # Only the fixed repository approval file is read before the interpreter gate.
+    _file_pin(runtime.get("host_profile_pin"), HOST_PROFILES)
+    profile = _host_profile(runtime.get("host_profile"))
+    if (str(Path(sys.executable).resolve()) != profile["interpreter"] or not sys.flags.isolated
             or not sys.flags.no_site or not sys.dont_write_bytecode
             or Path.cwd() != ROOT or runtime.get("flags") != ["-I", "-S", "-B"]
             or runtime.get("cwd") != str(ROOT)
             or runtime.get("design_baseline") != "182e42d9578972798c43f998a9f7f1243edf28a1"
             or runtime.get("python_version") != platform.python_version()
-            or runtime.get("architecture") != platform.machine() or not _native_primitives()):
+            or runtime.get("python_version") != profile["python_version"]
+            or runtime.get("architecture") != platform.machine()
+            or runtime.get("architecture") != profile["architecture"] or not _native_primitives()):
         _fail("RUNTIME")
     _file_pin(runtime.get("launcher_pin"), SELF)
     _file_pin(runtime.get("adapter_pin"), ADAPTER)
-    _file_pin(runtime.get("python_pin"), PYTHON)
-    _file_pin(runtime.get("python_app_pin"),
-              "/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python")
-    _file_pin(runtime.get("framework_pin"), "/Library/Frameworks/Python.framework/Versions/3.13/Python")
+    _file_pin(runtime.get("python_pin"), profile["interpreter"])
+    files = runtime.get("runtime_file_pins")
+    if type(files) is not list or len(files) != len(profile["runtime_files"]):
+        _fail("RUNTIME")
+    for pin, path in zip(files, profile["runtime_files"]):
+        _file_pin(pin, path)
     _file_pin(runtime.get("requirements_pin"), ROOT/"requirements-acos-v2-remote-context-mutation-pilot.txt")
     if runtime["requirements_pin"]["sha256"] != "fe11dc0a5dcd7695c49e577e055bac2afa17dfdba79b2b132ded338897fcdb75":
         _fail("RUNTIME")
@@ -181,7 +224,8 @@ def bootstrap(packet, args):
     for pin in source:
         _file_pin(pin)
     location = runtime.get("dependency_location")
-    if location != DEPENDENCY_ROOT or Path(location).is_symlink() or str(Path(location).resolve()) != location:
+    if (location != profile["dependency_root"] or Path(location).is_symlink()
+            or str(Path(location).resolve()) != location):
         _fail("RUNTIME")
     deps = runtime.get("dependencies", [])
     if len(deps) != len(DEPENDENCIES) or {d.get("name"): d.get("version") for d in deps} != DEPENDENCIES:
@@ -190,7 +234,8 @@ def bootstrap(packet, args):
         if dep.get("location") != location or not dep.get("files"):
             _fail("RUNTIME")
         for pin in dep["files"]:
-            if not Path(pin["path"]).is_relative_to(Path("/Library/Frameworks/Python.framework/Versions/3.13")):
+            # Same installation scope as the adapter's DependencyPin check.
+            if not Path(pin["path"]).is_relative_to(Path(location).parents[2]):
                 _fail("RUNTIME")
             _file_pin(pin)
     _file_pin(runtime.get("ca_pin"), Path(location)/"certifi/cacert.pem")
@@ -201,6 +246,7 @@ def bootstrap(packet, args):
     # No sensitive value lookup: only approved non-secret proxy/debug policy names.
     forbidden = ("HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "http_proxy", "https_proxy", "all_proxy",
                  "SSLKEYLOGFILE", "PYTHONPATH", "PYTHONHOME", "DYLD_INSERT_LIBRARIES",
+                 "LD_PRELOAD", "LD_AUDIT",
                  "SSL_CERT_FILE", "SSL_CERT_DIR")
     if any(name in os.environ for name in forbidden):
         _fail("RUNTIME")
@@ -238,9 +284,10 @@ def decode_runtime(a, raw):
     try:
         raw = dict(raw)
         for name in ("launcher_pin", "adapter_pin", "requirements_pin", "python_pin",
-                     "python_app_pin", "framework_pin", "ca_pin"):
+                     "host_profile_pin", "ca_pin"):
             raw[name] = a.FilePin(**raw[name])
         raw["source_pins"] = tuple(a.FilePin(**p) for p in raw["source_pins"])
+        raw["runtime_file_pins"] = tuple(a.FilePin(**p) for p in raw["runtime_file_pins"])
         raw["dependencies"] = tuple(a.DependencyPin(
             name=d["name"], version=d["version"], location=d["location"],
             files=tuple(a.FilePin(**p) for p in d["files"])) for d in raw["dependencies"])
